@@ -1,0 +1,65 @@
+{ pkgs, ... }: {
+  users.users.sargo = {
+    shell = pkgs.unstable.fish;
+    isNormalUser = true;
+    initialHashedPassword =
+      "$6$Z7Ty/RzwsUJtd43I$6dCbqpYN1HOhTr5EoEgu6XyctK8lCYu6OqJGzREOjR5L0i6mn12vl2wF.nJzrAxqTCIl5idftqSOPI8WLNVky0";
+    description = "Oliver Sargison";
+    extraGroups = [ "networkmanager" "wheel" ];
+  };
+  security.sudo.extraRules = [{
+    users = [ "sargo" ];
+    commands = [{
+      command = "ALL";
+      options =
+        [ "NOPASSWD" ]; 
+    }];
+  }];
+  home-manager.users.sargo = { lib, ... }:   {
+    palette = import ../palettes/gruvbox.nix;
+    browser = "firefox";
+    imports = [
+      ./modules
+    ] ;
+    programs = {
+      home-manager.enable = true;
+      bat = {
+        enable = true;
+        config = { theme = "gruvbox-dark"; };
+      };
+      lazygit = {
+        enable = true;
+        settings = {
+          git = {
+            autofetch = true;
+            paging = {
+              colorarg = "always";
+              colorArg = "always";
+              pager = # bash
+                "delta --dark --paging=never --24-bit-color=never";
+            };
+          };
+        };
+      };
+
+      direnv = {
+        nix-direnv.enable = true;
+        enable = true;
+      };
+      git = {
+        enable = true;
+        userName = "Oliver Sargison";
+        userEmail = "sargo@sargo.cc";
+        delta.enable = true;
+      };
+      bash = { enable = true; };
+    };
+
+    # services.pueue.enable = true;
+    home.username = "sargo";
+    home.homeDirectory = "/home/sargo";
+    home.stateVersion = "23.05";
+  };
+}
+
+

@@ -1,0 +1,39 @@
+diff --git a/Makefile b/Makefile
+index 256e134..0dca0bb 100644
+--- a/Makefile
++++ b/Makefile
+@@ -12,7 +12,7 @@ older-kernel-patch:
+ 	git apply older-kernel.patch
+ 
+ modules:
+-	@$(MAKE) -C /lib/modules/$(shell uname -r)/build M=$(CURDIR) modules
++	@$(MAKE) -C $(KERNEL_DIR) M=$(CURDIR) modules
+ 
+ clean:
+ 	@$(MAKE) -C /lib/modules/$(shell uname -r)/build M=$(CURDIR) clean
+@@ -31,11 +31,7 @@ reload: unload load
+ reload-debug: unload load-debug
+ 
+ install:
+-	mkdir -p /lib/modules/$(shell uname -r)/extra
+-	cp msi-ec.ko /lib/modules/$(shell uname -r)/extra
+-	depmod -a
+-	echo msi-ec > /etc/modules-load.d/msi-ec.conf
+-	modprobe -v msi-ec
++	$(MAKE) -C $(KERNEL_DIR) M=$(PWD) modules_install
+ 
+ uninstall:
+ 	-modprobe -rv msi-ec
+diff --git a/msi-ec.c b/msi-ec.c
+index f1a1e4e..3c05578 100644
+--- a/msi-ec.c
++++ b/msi-ec.c
+@@ -688,7 +688,7 @@ static struct msi_ec_conf CONF7 __initdata = {
+ };
+ 
+ static const char *ALLOWED_FW_8[] __initconst = {
+-	"14F1EMS1.115",
++	"14F1EMS1.118",
+ 	NULL
+ };
+ 
