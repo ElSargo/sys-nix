@@ -3,7 +3,6 @@
     ./bash.nix
     ./dark-theme.nix
     ./dconf.nix
-    ./firefox_gnome_theme.nix
     ./firefox.nix
     ./fish.nix
     ./helix.nix

@@ -78,13 +78,6 @@
               "https://addons.mozilla.org/firefox/downloads/file/4121795/youtube_shorts_block-1.4.1.xpi";
             hash = "sha256-VxAqhUhFNxtqFhtQX0Ny+5Z+QNfprqm+5eLM55jSU1o=";
           })
-          (pkgs.fetchFirefoxAddon {
-            name = "terms-of-service-didnt-read"; # Has to be unique!
-            url =
-              "https://addons.mozilla.org/firefox/downloads/file/3827536/terms_of_service_didnt_read-4.1.2.xpi";
-            hash = "sha256-iGJj3UKOCMyFcnW3cffSjsDomnZjwVEmB9Yd0jP4P6g=";
-          })
-
         ];
 
         extraPolicies = {

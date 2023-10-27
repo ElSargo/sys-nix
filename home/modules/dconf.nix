@@ -75,17 +75,10 @@
 
       "org/gnome/shell" = {
         enabled-extensions = [
-          "apps-menu@gnome-shell-extensions.gcampax.github.com"
           "places-menu@gnome-shell-extensions.gcampax.github.com"
           "drive-menu@gnome-shell-extensions.gcampax.github.com"
-          "user-theme@gnome-shell-extensions.gcampax.github.com"
           "blur-my-shell@aunetx"
-          "color-picker@tuberry"
-          "pano@elhan.io"
           "dash-to-dock@micxgx.gmail.com"
-          "custom-accent-colors@demiskp"
-          "windowsNavigator@gnome-shell-extensions.gcampax.github.com"
-          "gnome-fuzzy-app-search@gnome-shell-extensions.Czarlie.gitlab.com"
           "caffeine@patapon.info"
           "uptime-indicator@gniourfgniourf.gmail.com"
           "grand-theft-focus@zalckos.github.com"
@@ -110,10 +103,6 @@
         hacks-level = 0;
         sigma = 200;
         brightness = 1;
-      };
-      "org/gnome/shell/extensions/auto-move-windows" = {
-        applications-list =
-          [ "firefox.desktop:1" "org.keepassxc.KeePassXC.desktop:10" ];
       };
 
       "org/gnome/shell/extensions/dash-to-dock" = {
@@ -147,7 +136,7 @@
       };
     };
 
-  home.file.".config/geary/user-style.css".text = ''
-    @media (prefers-color-scheme: dark) { :root, *:not(a) { color: #eeeeec !important; background-color: #353535 !important; } } 
-  '';
+  # home.file.".config/geary/user-style.css".text = ''
+  #   @media (prefers-color-scheme: dark) { :root, *:not(a) { color: #eeeeec !important; background-color: #353535 !important; } } 
+  # '';
 }

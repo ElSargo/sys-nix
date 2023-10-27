@@ -1,5 +1,5 @@
-{pkgs}: {
+{ pkgs, ... }: {
   home.packages = with pkgs; [
-    keepassxc inlyne libreoffice thunderbird 
+                  keepassxc inlyne libreoffice thunderbird 
   ];
 }

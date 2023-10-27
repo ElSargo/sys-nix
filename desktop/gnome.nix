@@ -20,7 +20,6 @@
       dash-to-dock
       blur-my-shell
       uptime-indicator
-      coverflow-alt-tab
       grand-theft-focus
     ];
   };
