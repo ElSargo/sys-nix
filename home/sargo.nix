@@ -11,17 +11,15 @@
     users = [ "sargo" ];
     commands = [{
       command = "ALL";
-      options =
-        [ "NOPASSWD" ]; 
+      options = [ "NOPASSWD" ];
     }];
   }];
-  home-manager.users.sargo = { lib, ... }:   {
+  home-manager.users.sargo = { lib, ... }: {
     palette = import ../palettes/gruvbox.nix;
     browser = "firefox";
-    imports = [
-      ./modules
-    ] ;
+    imports = [ ./modules ];
     programs = {
+      nix-index.enable = true;
       home-manager.enable = true;
       bat = {
         enable = true;
@@ -61,5 +59,4 @@
     home.stateVersion = "23.05";
   };
 }
-
 

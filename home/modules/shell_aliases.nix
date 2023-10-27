@@ -1,15 +1,12 @@
-{ pkgs, ... }: {
-  xc = "wl-copy";
-  clip = "wl-copy";
-  lf = "lfcd";
+{ pkgs, ... }:
+let lfcd = pkgs.writeShellScriptBin "lfcd " ''${pkgs.lf} -print-last-dir "$@"'';
+in {
+  xc = "${pkgs.wl-clipboard}/bin/wl-copy";
+  clip = "${pkgs.wl-clipboard}/bin/wl-copy";
+  lf = " cd $(${lfcd})";
   q = "exit";
   ":q" = "exit";
   c = "clear";
   r = "reset";
-  xplr = "cd $(${pkgs.xplr}/bin/xplr)";
   ns = "nix-shell";
-  za = "${pkgs.zellij}/bin/zellij a";
-  zl =
-    " ${pkgs.zellij}/bin/zellij a $(pwd | ${pkgs.sd} '/' '\\n' | tail -n 1) || zellij --layout ./layout.kdl -s $(pwd | sd '/' '\\n' | tail -n 1)";
-
 }

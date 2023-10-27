@@ -2,8 +2,8 @@
   # Disable root login
   users.users.root.hashedPassword = "!";
   home-manager.users.root = { lib, ... }: {
-    palette = import ../palettes/tokionight.nix ;
-      imports = [
+    palette = import ../palettes/tokionight.nix;
+    imports = [
       ./modules/bash.nix
       ./modules/starship.nix
       ./modules/lf.nix

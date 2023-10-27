@@ -10,17 +10,15 @@ stdenv.mkDerivation rec {
     sha256 = "m7xrv+FvggYHIvtysdY9M2BWL8WkE57aM7RWEmHp2m4=";
   };
 
-  hardeningDisable = [ "pic" "format" ];                                    # 1
-  nativeBuildInputs = kernel.moduleBuildDependencies;                       # 2
+  hardeningDisable = [ "pic" "format" ]; # 1
+  nativeBuildInputs = kernel.moduleBuildDependencies; # 2
 
-  patches  =[
-    ./msi-ec-patch.patch
-  ];
+  patches = [ ./msi-ec-patch.patch ];
 
   makeFlags = [
-    "KERNELRELEASE=${kernel.modDirVersion}"                                 # 3
-    "KERNEL_DIR=${kernel.dev}/lib/modules/${kernel.modDirVersion}/build"    # 4
-    "INSTALL_MOD_PATH=$(out)"                                               # 5
+    "KERNELRELEASE=${kernel.modDirVersion}" # 3
+    "KERNEL_DIR=${kernel.dev}/lib/modules/${kernel.modDirVersion}/build" # 4
+    "INSTALL_MOD_PATH=$(out)" # 5
   ];
 
   meta = with lib; {

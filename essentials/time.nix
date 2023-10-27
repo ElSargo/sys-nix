@@ -1,4 +1,5 @@
-{  time.timeZone = "Pacific/Auckland";
+{
+  time.timeZone = "Pacific/Auckland";
   i18n = {
     extraLocaleSettings = {
       LC_ADDRESS = "en_NZ.UTF-8";

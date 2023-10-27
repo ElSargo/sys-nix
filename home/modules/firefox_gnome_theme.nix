@@ -1,2 +1,1 @@
-{ firefox-theme, ... }: {
-}
+{ firefox-theme, ... }: { }

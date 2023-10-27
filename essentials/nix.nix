@@ -1,4 +1,6 @@
-{pkgs, ... }: {
+{ pkgs, ... }: {
+  programs.nix-index.enable = true;
+  programs.command-not-found.enable = false;
   nix = {
     generateRegistryFromInputs = true;
     generateNixPathFromInputs = true;
@@ -15,5 +17,8 @@
       options = "--delete-older-than 7d";
     };
   };
- environment.systemPackages = with pkgs; [ pkgs.nixVersions.nix_2_17 fup-repl ] ;
+  environment.systemPackages = with pkgs; [
+    pkgs.nixVersions.nix_2_17
+    fup-repl
+  ];
 }

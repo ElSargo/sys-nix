@@ -58,7 +58,9 @@
   ];
 
   boot.kernelModules = [ "kvm-intel" "acpi_ec" "ec_sys" "msi-ec" ];
-  boot.extraModulePackages = let msi-ec = config.boot.kernelPackages.callPackage ./msi-ec-patch.nix {}; in [ msi-ec ];
+  boot.extraModulePackages =
+    let msi-ec = config.boot.kernelPackages.callPackage ./msi-ec-patch.nix { };
+    in [ msi-ec ];
 
   fileSystems."/" = {
     device = "/dev/disk/by-uuid/ab032e3a-09d1-43eb-85df-1b6ea66d99eb";

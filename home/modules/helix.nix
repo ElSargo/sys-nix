@@ -74,7 +74,8 @@
         editor = {
           soft-wrap = { enable = false; };
           statusline = {
-            left = [ "mode" "spinner" "file-name" "file-modification-indicator" ];
+            left =
+              [ "mode" "spinner" "file-name" "file-modification-indicator" ];
             center = [ "workspace-diagnostics" "version-control" ];
             right = [
               "diagnostics"
@@ -140,6 +141,6 @@
         };
       };
       languages = { };
-    };  
+    };
   };
 }

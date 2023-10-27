@@ -1,6 +1,5 @@
 { lib, config, ... }: {
-  
-    
+
   dconf.settings = with builtins;
     with lib;
     let
@@ -58,7 +57,7 @@
         switch-windows-backward = [ "<Alt><Shift>Tab" ];
         toggle-fullscreen = [ "F11" ];
         close = [ "<Super>q" ];
-        launch-web-browser = ["<Shift><Super>Return"];
+        launch-web-browser = [ "<Shift><Super>Return" ];
       };
 
       "org/gnome/shell/keybindings" = {
