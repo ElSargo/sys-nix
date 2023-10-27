@@ -1,6 +1,5 @@
 { pkgs, config, ... }:
 with builtins; {
-  home.packages = with pkgs; [ ripgrep wl-clipboard ];
   programs.kitty.shellIntegration.enableFishIntegration = true;
   programs.fish = {
     package = pkgs.fish;

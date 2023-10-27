@@ -14,5 +14,7 @@
     ./zellij.nix
     ./zoxide.nix
     ./palettes.nix
+    ./desktop-programs.nix
+    ./cli-utils.nix
   ];
 }
