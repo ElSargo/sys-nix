@@ -1,6 +1,6 @@
 { pkgs, ... }:
-let lfcd = pkgs.writeShellScriptBin "lfcd" 
-''
+let
+  lfcd = pkgs.writeShellScriptBin "lfcd" ''
     tmp=$(mktemp)
     ${pkgs.lf}/bin/lf -last-dir-path=$tmp $@
     if [ -f "$tmp" ]; then
@@ -12,7 +12,7 @@ let lfcd = pkgs.writeShellScriptBin "lfcd"
             fi
         fi
     fi
-'';
+  '';
 in {
   xc = "${pkgs.wl-clipboard}/bin/wl-copy";
   clip = "${pkgs.wl-clipboard}/bin/wl-copy";

@@ -33,12 +33,11 @@
         Wojak = { modules = [ ./wojak ]; };
       };
 
-
       outputsBuilder = channels: {
 
-        devShell = channels.nixpkgs.mkShell { 
+        devShell = channels.nixpkgs.mkShell {
           name = "dev shell";
-          shellHook =  ''
+          shellHook = ''
             if [ -n "$ZELLIJ" ]; then
             echo "well" > /dev/null
             else

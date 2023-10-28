@@ -1,17 +1,21 @@
-{pkgs,  lib, config, ... }: let extensions   = with pkgs.gnomeExtensions; [
-            removable-drive-menu
-            caffeine
-            dash-to-dock
-            blur-my-shell
-            uptime-indicator
-            grand-theft-focus
-            pano
-            rounded-window-corners
-        ];
- in  {
-        home.packages = extensions;
+{ pkgs, lib, config, ... }:
+let
+  extensions = with pkgs.gnomeExtensions; [
+    removable-drive-menu
+    caffeine
+    dash-to-dock
+    blur-my-shell
+    uptime-indicator
+    grand-theft-focus
+    pano
+    rounded-window-corners
+  ];
+in {
+  home.packages = extensions;
 
-  dconf.settings = with builtins; with lib; let
+  dconf.settings = with builtins;
+    with lib;
+    let
       binds = [
         {
           binding = "<Super>Return";
@@ -36,7 +40,6 @@
           }" = v;
         }) binds);
     in (mkbinds binds) // {
-
 
       "org/gnome/settings-daemon/plugins/media-keys".custom-keybindings =
         mkreg binds;
@@ -94,10 +97,10 @@
         #   "grand-theft-focus@zalckos.github.com"
         # ];
 
-        enabled-extensions = map (extension: extension.extensionUuid) extensions;
-        disabled-extensions = [];
+        enabled-extensions =
+          map (extension: extension.extensionUuid) extensions;
+        disabled-extensions = [ ];
 
-        
         favorite-apps = [
           "${config.browser}.desktop"
           "kitty.desktop"

@@ -24,11 +24,11 @@
           "bind \"Alt 8\"" = { GoToTab = 8; };
           "bind \"Alt 9\"" = { GoToTab = 9; };
           "bind \"Alt 0\"" = { GoToTab = 10; };
-          "bind \"Alt s\"" = { 
-            "LaunchOrFocusPlugin \"zellij:session-manager\"" = { 
-              floating = true; 
-            }; 
-          } ;
+          "bind \"Alt s\"" = {
+            "LaunchOrFocusPlugin \"zellij:session-manager\"" = {
+              floating = true;
+            };
+          };
         };
       };
       theme = "gruvbox_dark";
