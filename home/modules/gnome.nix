@@ -1,8 +1,17 @@
-{ lib, config, ... }: {
+{pkgs,  lib, config, ... }: let extensions   = with pkgs.gnomeExtensions; [
+            removable-drive-menu
+            caffeine
+            dash-to-dock
+            blur-my-shell
+            uptime-indicator
+            grand-theft-focus
+            pano
+            rounded-window-corners
+        ];
+ in  {
+        home.packages = extensions;
 
-  dconf.settings = with builtins;
-    with lib;
-    let
+  dconf.settings = with builtins; with lib; let
       binds = [
         {
           binding = "<Super>Return";
@@ -27,6 +36,7 @@
           }" = v;
         }) binds);
     in (mkbinds binds) // {
+
 
       "org/gnome/settings-daemon/plugins/media-keys".custom-keybindings =
         mkreg binds;
@@ -74,15 +84,20 @@
       };
 
       "org/gnome/shell" = {
-        enabled-extensions = [
-          "places-menu@gnome-shell-extensions.gcampax.github.com"
-          "drive-menu@gnome-shell-extensions.gcampax.github.com"
-          "blur-my-shell@aunetx"
-          "dash-to-dock@micxgx.gmail.com"
-          "caffeine@patapon.info"
-          "uptime-indicator@gniourfgniourf.gmail.com"
-          "grand-theft-focus@zalckos.github.com"
-        ];
+        # enabled-extensions = [
+        #   "places-menu@gnome-shell-extensions.gcampax.github.com"
+        #   "drive-menu@gnome-shell-extensions.gcampax.github.com"
+        #   "blur-my-shell@aunetx"
+        #   "dash-to-dock@micxgx.gmail.com"
+        #   "caffeine@patapon.info"
+        #   "uptime-indicator@gniourfgniourf.gmail.com"
+        #   "grand-theft-focus@zalckos.github.com"
+        # ];
+
+        enabled-extensions = map (extension: extension.extensionUuid) extensions;
+        disabled-extensions = [];
+
+        
         favorite-apps = [
           "${config.browser}.desktop"
           "kitty.desktop"
@@ -106,7 +121,7 @@
       };
 
       "org/gnome/shell/extensions/dash-to-dock" = {
-        animation-time = 0.10000000000000002;
+        animation-time = 0.1;
         apply-custom-theme = false;
         background-color = "rgb(30,30,30)";
         background-opacity = 0.7;
@@ -116,7 +131,7 @@
         dash-max-icon-size = 48;
         dock-position = "LEFT";
         height-fraction = 0.74;
-        hide-delay = 0.10000000000000002;
+        hide-delay = 0.1;
         hot-keys = false;
         hotkeys-overlay = false;
         hotkeys-show-dock = true;

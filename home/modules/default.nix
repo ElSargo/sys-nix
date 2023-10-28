@@ -2,7 +2,7 @@
   imports = [
     ./bash.nix
     ./dark-theme.nix
-    ./dconf.nix
+    ./gnome.nix
     ./firefox.nix
     ./fish.nix
     ./helix.nix

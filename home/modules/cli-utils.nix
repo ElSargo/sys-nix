@@ -1,7 +1,7 @@
-{pkgs ,...}: {
-  home.packages = with pkgs;[
-    ripgrep 
-    wl-clipboard 
+{ pkgs, ... }: {
+  home.packages = with pkgs; [
+    ripgrep
+    wl-clipboard
     unzip
     exa
     wget

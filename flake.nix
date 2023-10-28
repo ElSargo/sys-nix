@@ -11,7 +11,7 @@
         [ (f: p: { unstable = channels.unstable; }) ];
 
       sharedOverlays = [
-        supabar.overlays."x86_64-linux".all
+        # supabar.overlays."x86_64-linux".all
         (utils.lib.genPkgOverlay helix "helix")
       ];
 
@@ -24,12 +24,28 @@
           {
             home-manager.users.sargo.firefox-gnome-theme = firefox-gnome-theme;
           }
+          ./virt/virt-manager.nix
         ];
       };
 
       hosts = {
         Basato = { modules = [ ./basato ]; };
         Wojak = { modules = [ ./wojak ]; };
+      };
+
+
+      outputsBuilder = channels: {
+
+        devShell = channels.nixpkgs.mkShell { 
+          name = "dev shell";
+          shellHook =  ''
+            if [ -n "$ZELLIJ" ]; then
+            echo "well" > /dev/null
+            else
+              ${channels.unstable.zellij}/bin/zellij
+            fi
+          '';
+        };
       };
     };
 

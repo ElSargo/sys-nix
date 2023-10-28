@@ -14,13 +14,5 @@
         hitori # sudoku game
         atomix # puzzle game
       ] ++ [ pkgs.gnome-tour ];
-    systemPackages = with pkgs.gnomeExtensions; [
-      removable-drive-menu
-      caffeine
-      dash-to-dock
-      blur-my-shell
-      uptime-indicator
-      grand-theft-focus
-    ];
   };
 }

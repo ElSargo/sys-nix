@@ -1,4 +1,4 @@
-{ stdenv, lib, fetchFromGitHub, kernel, kmod }:
+{ stdenv, lib, fetchFromGitHub, kernel }:
 stdenv.mkDerivation rec {
   name = "msi_ec-${version}-${kernel.version}";
   version = "1.6";
@@ -22,10 +22,10 @@ stdenv.mkDerivation rec {
   ];
 
   meta = with lib; {
-    description = "A kernel module to create V4L2 loopback devices";
+    description = "MSI laptop ec support";
     homepage = "https://github.com/aramg/droidcam";
-    license = licenses.gpl2;
-    maintainers = [ maintainers.makefu ];
+    license = licenses.gpl3;
+    # maintainers = [ maintainers.makefu ];
     platforms = platforms.linux;
   };
 }
