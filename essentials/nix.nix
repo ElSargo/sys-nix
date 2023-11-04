@@ -1,6 +1,7 @@
 { pkgs, ... }: {
   programs.nix-index.enable = true;
   programs.command-not-found.enable = false;
+  nixpkgs.config.allowUnfree = true; 
   nix = {
     generateRegistryFromInputs = true;
     generateNixPathFromInputs = true;
@@ -8,6 +9,7 @@
     settings = {
       warn-dirty = false;
       experimental-features = [ "nix-command" "flakes" ];
+      trusted-users = [ "root" "sargo" ];
       auto-optimise-store = true;
     };
 

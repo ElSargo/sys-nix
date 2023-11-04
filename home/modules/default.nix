@@ -15,5 +15,6 @@
     ./palettes.nix
     ./desktop-programs.nix
     ./cli-utils.nix
+    ./nu.nix
   ];
 }

@@ -15,70 +15,6 @@
     programs.firefox = {
       enable = true;
       package = pkgs.wrapFirefox pkgs.unstable.firefox-esr-unwrapped {
-        nixExtensions = [
-          (pkgs.fetchFirefoxAddon {
-            name = "trackmenot"; # Has to be unique!
-            url =
-              "https://addons.mozilla.org/firefox/downloads/file/3438065/trackmenot-0.10.46.xpi";
-            hash = "sha256-9e2c0kMlQ+IiE+4OebxmlB/GgCo1emrpzKLcvo5NEkw=";
-          })
-          (pkgs.fetchFirefoxAddon {
-            name = "clearurls"; # Has to be unique!
-            url =
-              "https://addons.mozilla.org/firefox/downloads/file/4064884/clearurls-1.26.1.xpi";
-            hash = "sha256-4gFo1jyxuLo60N5M20LFQNmf4AqpZ5tZ9JvMw28QYpE=";
-          })
-          (pkgs.fetchFirefoxAddon {
-            name = "decentraleyes"; # Has to be unique!
-            url =
-              "https://addons.mozilla.org/firefox/downloads/file/4158232/decentraleyes-2.0.18.xpi";
-            hash = "sha256-+PAx75HAKhyxplUqzQK49IhpNABla0BH1o8DugoQeNk=";
-          })
-          (pkgs.fetchFirefoxAddon {
-            name = "adnauseam"; # Has to be unique!
-            url =
-              "https://addons.mozilla.org/firefox/downloads/file/4122213/adnauseam-3.17.0.xpi";
-            hash = "sha256-7U0vNJiz6zeQU5cOJBUNMdTxn/WYeQf8mPhwaX3/t8k=";
-          })
-          (pkgs.fetchFirefoxAddon {
-            name = "keepassxc-browser"; # Has to be unique!
-            url =
-              "https://addons.mozilla.org/firefox/downloads/file/4134768/keepassxc_browser-1.8.7.xpi";
-            hash = "sha256-3rHDwp+r6Q3YEVNtQ01kwgDKq5qff+vDQoqhcO7+xfI=";
-          })
-          (pkgs.fetchFirefoxAddon {
-            name = "re-enable-right-click"; # Has to be unique!
-            url =
-              "https://addons.mozilla.org/firefox/downloads/file/3981363/re_enable_right_click-0.5.4.xpi";
-            hash = "sha256-ndlYFdcuuzvUrD7SO3gHPPvZOsylp69S3hNlGapCK20=";
-          })
-
-          (pkgs.fetchFirefoxAddon {
-            name = "sponsorblock"; # Has to be unique!
-            url =
-              "https://addons.mozilla.org/firefox/downloads/file/4169272/sponsorblock-5.4.20.xpi";
-            hash = "sha256-AHw/vVAH5Bwk4smZvnFObYyO/DRVll1szVAK7YhJ2fs=";
-          })
-          (pkgs.fetchFirefoxAddon {
-            name = "tabliss"; # Has to be unique!
-            url =
-              "https://addons.mozilla.org/firefox/downloads/file/3940751/tabliss-2.6.0.xpi";
-            hash = "sha256-3nZoEPI0scE//bcEeubL8G7XnD0ItRoH5HZvrf8InA8=";
-          })
-          (pkgs.fetchFirefoxAddon {
-            name = "vimium-c"; # Has to be unique!
-            url =
-              "https://addons.mozilla.org/firefox/downloads/file/4142362/vimium_c-1.99.995.xpi";
-            hash = "sha256-2BPJi05/u+zYIBTQ/w8WPiH2iqPe4YLGHBU2qIVPB2A=";
-          })
-
-          (pkgs.fetchFirefoxAddon {
-            name = "youtube-shorts-block"; # Has to be unique!
-            url =
-              "https://addons.mozilla.org/firefox/downloads/file/4121795/youtube_shorts_block-1.4.1.xpi";
-            hash = "sha256-VxAqhUhFNxtqFhtQX0Ny+5Z+QNfprqm+5eLM55jSU1o=";
-          })
-        ];
 
         extraPolicies = {
           CaptivePortal = false;
@@ -101,12 +37,77 @@
             ExtensionRecommendations = false;
             SkipOnboarding = true;
           };
+          ExtensionSettings = {
+            # "uBlock0@raymondhill.net" = {
+            #   installation_mode = "normal_installed";
+            #   install_url = "https://addons.mozilla.org/firefox/downloads/latest/ublock-origin/latest.xpi";
+            # };
+            "trackmenot@mrl.nyu.edu" = {
+            installation_mode = "normal_installed";
+             install_url = "https://addons.mozilla.org/firefox/downloads/latest/trackmenot/latest.xpi";
+            };
+            "{74145f27-f039-47ce-a470-a662b129930a}" = {
+            installation_mode = "normal_installed";
+             install_url = "https://addons.mozilla.org/firefox/downloads/latest/clearurls/latest.xpi";
+            };
+            "jid1-BoFifL9Vbdl2zQ@jetpack" = {
+            installation_mode = "normal_installed";
+             install_url = "https://addons.mozilla.org/firefox/downloads/latest/decentraleyes/latest.xpi";
+            };
+            "adnauseam@rednoise.org" = {
+            installation_mode = "normal_installed";
+             install_url = "https://addons.mozilla.org/firefox/downloads/latest/adnauseam/latest.xpi";
+            };
+            "keepassxc-browser@keepassxc.org" = {
+            installation_mode = "normal_installed";
+             install_url = "https://addons.mozilla.org/firefox/downloads/latest/keepassxc-browser/latest.xpi";
+            };
+            "{278b0ae0-da9d-4cc6-be81-5aa7f3202672}" = {
+            installation_mode = "normal_installed";
+             install_url = "https://addons.mozilla.org/firefox/downloads/latest/re-enable-right-click/latest.xpi";
+            };
+
+            "sponsorBlocker@ajay.app" = {
+            installation_mode = "normal_installed";
+             install_url = "https://addons.mozilla.org/firefox/downloads/latest/sponsorblock/latest.xpi";
+            };
+            "extension@tabliss.io" = {
+            installation_mode = "normal_installed";
+             install_url = "https://addons.mozilla.org/firefox/downloads/latest/tabliss/latest.xpi";
+            };
+            "vimium-c@gdh1995.cn" = {
+            installation_mode = "normal_installed";
+             install_url = "https://addons.mozilla.org/firefox/downloads/latest/vimium-c/latest.xpi";
+            };
+
+            "{34daeb50-c2d2-4f14-886a-7160b24d66a4}" = {
+            installation_mode = "normal_installed";
+             install_url = "https://addons.mozilla.org/firefox/downloads/latest/youtube-shorts-block/latest.xpi";
+            };
+
+            "tabcenter-reborn@ariasuni" = {
+          installation_mode = "normal_installed";
+             install_url = "https://addons.mozilla.org/firefox/downloads/latest/tabcenter-reborn/latest.xpi";
+            };
+          };
         };
       };
       profiles = {
         sargo = {
           id = 0;
           name = "sargo";
+          # extensions = with pkgs.nur.repos.rycee.firefox-addons; [
+          #   clearurls
+          #   decentraleyes
+          #   adnauseam
+          #   keepassxc-browser
+          #   re-enable-right-click
+          #   sponsorblock
+          #   tabliss
+          #   vimium-c
+          #   youtube-shorts-block
+          #   tabcenter-reborn
+          # ];
           search = {
             force = true;
             default = "Brave";
@@ -169,8 +170,18 @@
                 }];
                 iconUpdateURL =
                   "https://cdn.kastatic.org/images/favicon.ico?logo";
-                updateInterval = 24 * 60 * 60 * 1000;
+                updateInterval = 24 * 60 * 60 * 1001;
                 definedAliases = [ "@ka" "@k" ];
+              };
+              "Lib.rs" = {
+                urls = [{
+                  template =
+                    "https://lib.rs/search?q={searchTerms}";
+                }];
+                iconUpdateURL =
+                  "https://lib.rs/favicon.png";
+                updateInterval = 24 * 60 * 60 * 1000;
+                definedAliases = [ "@lb" "@rs" ];
               };
               "Wikipedia (en)".metaData.alias = "@wiki";
               "Google".metaData.hidden = true;
@@ -443,9 +454,11 @@
 
 
               /****************************************************************************
-               * START: MY OVERRIDES                                                      *
+               * END: BETTERFOX                                                           *
               ****************************************************************************/
-              // Enter your personal prefs below this line:
+
+
+              
               user_pref("mousewheel.min_line_scroll_amount", 30);
               user_pref("mousewheel.system_scroll_override_on_root_content.enabled", true);
               user_pref("mousewheel.system_scroll_override_on_root_content.horizontal.factor", 175);
@@ -463,9 +476,6 @@
               user_pref("general.smoothScroll.pages.durationMaxMS", 125);
               user_pref("general.smoothScroll.pages.durationMinMS", 125);
 
-
-
-
               user_pref("svg.context-properties.content.enabled", true);
               user_pref("layout.css.has-selector.enabled", true);
               user_pref("gfx.webrender.all", true);
@@ -473,14 +483,7 @@
               user_pref("layers.acceleration.force-enabled", true);
               user_pref("gfx.webrender.enabled", true);
               user_pref("layout.css.backdrop-filter.enabled", true);
-              user_pref("userChrome.Linux.Transparency.High.Enabled", true);
-              user_pref("userChrome.Toolbar.Transparency.High.Enable", true);
-              user_pref("userChrome.Tabs.SelectedTabIndicator.Enabled", true);
-              user_pref("userChrome.OneLine.NavBarFirst.Enabled", true);
 
-              /****************************************************************************
-               * END: BETTERFOX                                                           *
-              ****************************************************************************/
             '';
 
           userChrome = ''

@@ -10,7 +10,7 @@
     loader.grub.configurationLimit = 10;
     tmp.cleanOnBoot = true;
     # kernelPackages = pkgs.unstable.linuxPackages_xanmod_latest;
-    kernelPackages = pkgs.unstable.linuxPackages_6_5;
+    kernelPackages = pkgs.unstable.linuxPackages_zen;
     kernelParams = [ "i915.force_probe=46a6" ];
   };
   services.fprintd = { enable = true; };
@@ -72,8 +72,8 @@
     fsType = "vfat";
   };
 
-  swapDevices =
-    [{ device = "/dev/disk/by-uuid/05609abd-53d1-4a7e-a6c2-6b25e80867a3"; }];
+  # swapDevices =
+  #   [{ device = "/dev/disk/by-uuid/05609abd-53d1-4a7e-a6c2-6b25e80867a3"; }];
 
   # Enables DHCP on each ethernet and wireless interface. In case of scripted networking
   # (the default) this is the recommended approach. When using systemd-networkd it's
