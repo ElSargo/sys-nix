@@ -1,13 +1,13 @@
 { pkgs, ... }: {
-  programs.nushell = let 
-  nuscripts = pkgs.fetchFromGitHub {
-          owner = "nushell";
-          repo = "nu_scripts";
-          rev = "8add04deb892a4de743646f7d8e9ce9c0333d776";
-          sha256 = "sha256-9leFXzPKSiW0m0m/XswOeUFX6eWvV2YwBQL8hLxqu4Q=";
-    
-  }; in
-  {
+  programs.nushell = let
+    nuscripts = pkgs.fetchFromGitHub {
+      owner = "nushell";
+      repo = "nu_scripts";
+      rev = "8add04deb892a4de743646f7d8e9ce9c0333d776";
+      sha256 = "sha256-9leFXzPKSiW0m0m/XswOeUFX6eWvV2YwBQL8hLxqu4Q=";
+
+    };
+  in {
     package = pkgs.nushell;
     enable = false;
 

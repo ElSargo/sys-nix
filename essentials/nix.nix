@@ -1,7 +1,7 @@
 { pkgs, ... }: {
   programs.nix-index.enable = true;
   programs.command-not-found.enable = false;
-  nixpkgs.config.allowUnfree = true; 
+  nixpkgs.config.allowUnfree = true;
   nix = {
     generateRegistryFromInputs = true;
     generateNixPathFromInputs = true;

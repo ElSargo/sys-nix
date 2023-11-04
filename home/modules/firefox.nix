@@ -43,51 +43,62 @@
             #   install_url = "https://addons.mozilla.org/firefox/downloads/latest/ublock-origin/latest.xpi";
             # };
             "trackmenot@mrl.nyu.edu" = {
-            installation_mode = "normal_installed";
-             install_url = "https://addons.mozilla.org/firefox/downloads/latest/trackmenot/latest.xpi";
+              installation_mode = "normal_installed";
+              install_url =
+                "https://addons.mozilla.org/firefox/downloads/latest/trackmenot/latest.xpi";
             };
             "{74145f27-f039-47ce-a470-a662b129930a}" = {
-            installation_mode = "normal_installed";
-             install_url = "https://addons.mozilla.org/firefox/downloads/latest/clearurls/latest.xpi";
+              installation_mode = "normal_installed";
+              install_url =
+                "https://addons.mozilla.org/firefox/downloads/latest/clearurls/latest.xpi";
             };
             "jid1-BoFifL9Vbdl2zQ@jetpack" = {
-            installation_mode = "normal_installed";
-             install_url = "https://addons.mozilla.org/firefox/downloads/latest/decentraleyes/latest.xpi";
+              installation_mode = "normal_installed";
+              install_url =
+                "https://addons.mozilla.org/firefox/downloads/latest/decentraleyes/latest.xpi";
             };
             "adnauseam@rednoise.org" = {
-            installation_mode = "normal_installed";
-             install_url = "https://addons.mozilla.org/firefox/downloads/latest/adnauseam/latest.xpi";
+              installation_mode = "normal_installed";
+              install_url =
+                "https://addons.mozilla.org/firefox/downloads/latest/adnauseam/latest.xpi";
             };
             "keepassxc-browser@keepassxc.org" = {
-            installation_mode = "normal_installed";
-             install_url = "https://addons.mozilla.org/firefox/downloads/latest/keepassxc-browser/latest.xpi";
+              installation_mode = "normal_installed";
+              install_url =
+                "https://addons.mozilla.org/firefox/downloads/latest/keepassxc-browser/latest.xpi";
             };
             "{278b0ae0-da9d-4cc6-be81-5aa7f3202672}" = {
-            installation_mode = "normal_installed";
-             install_url = "https://addons.mozilla.org/firefox/downloads/latest/re-enable-right-click/latest.xpi";
+              installation_mode = "normal_installed";
+              install_url =
+                "https://addons.mozilla.org/firefox/downloads/latest/re-enable-right-click/latest.xpi";
             };
 
             "sponsorBlocker@ajay.app" = {
-            installation_mode = "normal_installed";
-             install_url = "https://addons.mozilla.org/firefox/downloads/latest/sponsorblock/latest.xpi";
+              installation_mode = "normal_installed";
+              install_url =
+                "https://addons.mozilla.org/firefox/downloads/latest/sponsorblock/latest.xpi";
             };
             "extension@tabliss.io" = {
-            installation_mode = "normal_installed";
-             install_url = "https://addons.mozilla.org/firefox/downloads/latest/tabliss/latest.xpi";
+              installation_mode = "normal_installed";
+              install_url =
+                "https://addons.mozilla.org/firefox/downloads/latest/tabliss/latest.xpi";
             };
             "vimium-c@gdh1995.cn" = {
-            installation_mode = "normal_installed";
-             install_url = "https://addons.mozilla.org/firefox/downloads/latest/vimium-c/latest.xpi";
+              installation_mode = "normal_installed";
+              install_url =
+                "https://addons.mozilla.org/firefox/downloads/latest/vimium-c/latest.xpi";
             };
 
             "{34daeb50-c2d2-4f14-886a-7160b24d66a4}" = {
-            installation_mode = "normal_installed";
-             install_url = "https://addons.mozilla.org/firefox/downloads/latest/youtube-shorts-block/latest.xpi";
+              installation_mode = "normal_installed";
+              install_url =
+                "https://addons.mozilla.org/firefox/downloads/latest/youtube-shorts-block/latest.xpi";
             };
 
             "tabcenter-reborn@ariasuni" = {
-          installation_mode = "normal_installed";
-             install_url = "https://addons.mozilla.org/firefox/downloads/latest/tabcenter-reborn/latest.xpi";
+              installation_mode = "normal_installed";
+              install_url =
+                "https://addons.mozilla.org/firefox/downloads/latest/tabcenter-reborn/latest.xpi";
             };
           };
         };
@@ -174,12 +185,9 @@
                 definedAliases = [ "@ka" "@k" ];
               };
               "Lib.rs" = {
-                urls = [{
-                  template =
-                    "https://lib.rs/search?q={searchTerms}";
-                }];
-                iconUpdateURL =
-                  "https://lib.rs/favicon.png";
+                urls =
+                  [{ template = "https://lib.rs/search?q={searchTerms}"; }];
+                iconUpdateURL = "https://lib.rs/favicon.png";
                 updateInterval = 24 * 60 * 60 * 1000;
                 definedAliases = [ "@lb" "@rs" ];
               };
@@ -458,7 +466,7 @@
               ****************************************************************************/
 
 
-              
+
               user_pref("mousewheel.min_line_scroll_amount", 30);
               user_pref("mousewheel.system_scroll_override_on_root_content.enabled", true);
               user_pref("mousewheel.system_scroll_override_on_root_content.horizontal.factor", 175);

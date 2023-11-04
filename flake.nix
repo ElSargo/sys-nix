@@ -34,7 +34,7 @@
         Basato = { modules = [ ./basato nur.nixosModules.nur ]; };
         Wojak = { modules = [ ./wojak ]; };
       };
-    } ;
+    };
 
   inputs = {
     nixpkgs.url = "nixpkgs/nixos-23.05";
