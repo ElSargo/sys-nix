@@ -1,4 +1,30 @@
-{ pkgs, lib, config, ... }: {
+{ pkgs, lib, config, ... }:
+let
+  extensions = {
+    "trackmenot@mrl.nyu.edu" =
+      "https://addons.mozilla.org/firefox/downloads/latest/trackmenot/latest.xpi";
+    "{74145f27-f039-47ce-a470-a662b129930a}" =
+      "https://addons.mozilla.org/firefox/downloads/latest/clearurls/latest.xpi";
+    "jid1-BoFifL9Vbdl2zQ@jetpack" =
+      "https://addons.mozilla.org/firefox/downloads/latest/decentraleyes/latest.xpi";
+    "adnauseam@rednoise.org" =
+      "https://addons.mozilla.org/firefox/downloads/latest/adnauseam/latest.xpi";
+    "keepassxc-browser@keepassxc.org" =
+      "https://addons.mozilla.org/firefox/downloads/latest/keepassxc-browser/latest.xpi";
+    "{278b0ae0-da9d-4cc6-be81-5aa7f3202672}" =
+      "https://addons.mozilla.org/firefox/downloads/latest/re-enable-right-click/latest.xpi";
+    "sponsorBlocker@ajay.app" =
+      "https://addons.mozilla.org/firefox/downloads/latest/sponsorblock/latest.xpi";
+    "extension@tabliss.io" =
+      "https://addons.mozilla.org/firefox/downloads/latest/tabliss/latest.xpi";
+    "vimium-c@gdh1995.cn" =
+      "https://addons.mozilla.org/firefox/downloads/latest/vimium-c/latest.xpi";
+    "{34daeb50-c2d2-4f14-886a-7160b24d66a4}" =
+      "https://addons.mozilla.org/firefox/downloads/latest/youtube-shorts-block/latest.xpi";
+    "tabcenter-reborn@ariasuni" =
+      "https://addons.mozilla.org/firefox/downloads/latest/tabcenter-reborn/latest.xpi";
+  };
+in {
 
   options = {
     firefox-gnome-theme = lib.mkOption {
@@ -37,69 +63,11 @@
             ExtensionRecommendations = false;
             SkipOnboarding = true;
           };
-          ExtensionSettings = {
-            # "uBlock0@raymondhill.net" = {
-            #   installation_mode = "normal_installed";
-            #   install_url = "https://addons.mozilla.org/firefox/downloads/latest/ublock-origin/latest.xpi";
-            # };
-            "trackmenot@mrl.nyu.edu" = {
-              installation_mode = "normal_installed";
-              install_url =
-                "https://addons.mozilla.org/firefox/downloads/latest/trackmenot/latest.xpi";
-            };
-            "{74145f27-f039-47ce-a470-a662b129930a}" = {
-              installation_mode = "normal_installed";
-              install_url =
-                "https://addons.mozilla.org/firefox/downloads/latest/clearurls/latest.xpi";
-            };
-            "jid1-BoFifL9Vbdl2zQ@jetpack" = {
-              installation_mode = "normal_installed";
-              install_url =
-                "https://addons.mozilla.org/firefox/downloads/latest/decentraleyes/latest.xpi";
-            };
-            "adnauseam@rednoise.org" = {
-              installation_mode = "normal_installed";
-              install_url =
-                "https://addons.mozilla.org/firefox/downloads/latest/adnauseam/latest.xpi";
-            };
-            "keepassxc-browser@keepassxc.org" = {
-              installation_mode = "normal_installed";
-              install_url =
-                "https://addons.mozilla.org/firefox/downloads/latest/keepassxc-browser/latest.xpi";
-            };
-            "{278b0ae0-da9d-4cc6-be81-5aa7f3202672}" = {
-              installation_mode = "normal_installed";
-              install_url =
-                "https://addons.mozilla.org/firefox/downloads/latest/re-enable-right-click/latest.xpi";
-            };
-
-            "sponsorBlocker@ajay.app" = {
-              installation_mode = "normal_installed";
-              install_url =
-                "https://addons.mozilla.org/firefox/downloads/latest/sponsorblock/latest.xpi";
-            };
-            "extension@tabliss.io" = {
-              installation_mode = "normal_installed";
-              install_url =
-                "https://addons.mozilla.org/firefox/downloads/latest/tabliss/latest.xpi";
-            };
-            "vimium-c@gdh1995.cn" = {
-              installation_mode = "normal_installed";
-              install_url =
-                "https://addons.mozilla.org/firefox/downloads/latest/vimium-c/latest.xpi";
-            };
-
-            "{34daeb50-c2d2-4f14-886a-7160b24d66a4}" = {
-              installation_mode = "normal_installed";
-              install_url =
-                "https://addons.mozilla.org/firefox/downloads/latest/youtube-shorts-block/latest.xpi";
-            };
-
-            "tabcenter-reborn@ariasuni" = {
-              installation_mode = "normal_installed";
-              install_url =
-                "https://addons.mozilla.org/firefox/downloads/latest/tabcenter-reborn/latest.xpi";
-            };
+          ExtensionSettings = (builtins.mapAttrs (k: v: {
+            installation_mode = "normal_installed";
+            install_url = v;
+          }) extensions) // {
+            "*" = { adminSettings = { firstInstall = false; }; };
           };
         };
       };
@@ -181,7 +149,7 @@
                 }];
                 iconUpdateURL =
                   "https://cdn.kastatic.org/images/favicon.ico?logo";
-                updateInterval = 24 * 60 * 60 * 1001;
+                updateInterval = 24 * 60 * 60 * 1000;
                 definedAliases = [ "@ka" "@k" ];
               };
               "Lib.rs" = {
@@ -268,7 +236,13 @@
                * SECTION: SECUREFOX                                                       *
               ****************************************************************************/
               /** TRACKING PROTECTION ***/
-              user_pref("browser.contentblocking.category", "strict");
+              ${
+              # Let adnauseam handle blocking
+              if builtins.hasAttr "adnauseam@rednoise.org" extensions then
+                ""
+              else ''
+                user_pref("browser.contentblocking.category", "strict");
+              ''}
               user_pref("urlclassifier.trackingSkipURLs", "*.reddit.com, *.twitter.com, *.twimg.com, *.tiktok.com");
               user_pref("urlclassifier.features.socialtracking.skipURLs", "*.instagram.com, *.twitter.com, *.twimg.com");
               user_pref("privacy.query_stripping.strip_list", "__hsfp __hssc __hstc __s _hsenc _openstat dclid fbclid gbraid gclid hsCtaTracking igshid mc_eid ml_subscriber ml_subscriber_hash msclkid oft_c oft_ck oft_d oft_id oft_ids oft_k oft_lk oft_sk oly_anon_id oly_enc_id rb_clickid s_cid twclid vero_conv vero_id wbraid wickedid yclid");

@@ -3,7 +3,7 @@
     ./bash.nix
     ./dark-theme.nix
     ./gnome.nix
-    ./firefox.nix
+    ./firefox
     ./fish.nix
     ./helix.nix
     ./kitty.nix

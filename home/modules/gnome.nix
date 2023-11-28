@@ -3,12 +3,10 @@ let
   extensions = with pkgs.gnomeExtensions; [
     removable-drive-menu
     caffeine
-    dash-to-dock
     blur-my-shell
-    uptime-indicator
-    grand-theft-focus
     pano
     rounded-window-corners
+    just-perfection
   ];
 in {
   home.packages = extensions;
@@ -87,18 +85,17 @@ in {
       };
 
       "org/gnome/shell" = {
-        # enabled-extensions = [
-        #   "places-menu@gnome-shell-extensions.gcampax.github.com"
-        #   "drive-menu@gnome-shell-extensions.gcampax.github.com"
-        #   "blur-my-shell@aunetx"
-        #   "dash-to-dock@micxgx.gmail.com"
-        #   "caffeine@patapon.info"
-        #   "uptime-indicator@gniourfgniourf.gmail.com"
-        #   "grand-theft-focus@zalckos.github.com"
-        # ];
-
-        enabled-extensions =
-          map (extension: extension.extensionUuid) extensions;
+        enabled-extensions = [
+          "drive-menu@gnome-shell-extensions.gcampax.github.com"
+          "caffeine@patapon.info"
+          "blur-my-shell@aunetx"
+          "pano@elhan.io"
+          "rounded-window-corners@yilozt"
+          "just-perfection-desktop@just-perfection"
+          "windowsNavigator@gnome-shell-extensions.gcampax.github.com"
+        ];
+        # enabled-extensions =
+        #   map (extension: extension.extensionUuid) extensions;
         disabled-extensions = [ ];
 
         favorite-apps = [
@@ -107,7 +104,6 @@ in {
           "org.keepassxc.KeePassXC.desktop"
           "org.gnome.Nautilus.desktop"
         ];
-
         disable-user-extensions = false;
 
       };
@@ -118,35 +114,62 @@ in {
         theme-shell = true;
       };
       "org/gnome/shell/extensions/blur-my-shell" = {
+        brightness = 0.9;
         hacks-level = 0;
-        sigma = 200;
-        brightness = 1;
+        noise-amount = 0.3;
+        noise-lightness = 1.04;
+        sigma = 40;
+      };
+      "org/gnome/shell/extensions/blur-my-shell/overview" = {
+        blur = true;
+        style-components = 3;
+      };
+      "org/gnome/shell/extensions/blur-my-shell/panel" = {
+        blur = true;
+        override-background = true;
+        override-background-dynamically = false;
+        style-panel = 0;
+        unblur-in-overview = false;
       };
 
-      "org/gnome/shell/extensions/dash-to-dock" = {
-        animation-time = 0.1;
-        apply-custom-theme = false;
-        background-color = "rgb(30,30,30)";
-        background-opacity = 0.7;
-        click-action = "focus-minimize-or-previews";
-        custom-background-color = true;
-        custom-theme-shrink = false;
-        dash-max-icon-size = 48;
-        dock-position = "LEFT";
-        height-fraction = 0.74;
-        hide-delay = 0.1;
-        hot-keys = false;
-        hotkeys-overlay = false;
-        hotkeys-show-dock = true;
-        intellihide-mode = "FOCUS_APPLICATION_WINDOWS";
-        multi-monitor = false;
-        preferred-monitor = -2;
-        preferred-monitor-by-connector = "HDMI-1";
-        preview-size-scale = 0.32;
-        scroll-action = "cycle-windows";
-        shortcut-timeout = 2.0;
-        transparency-mode = "FIXED";
+      "org/gnome/shell/extensions/just-perfection" = {
+        accessibility-menu = false;
+        alt-tab-icon-size = 0;
+        animation = 1;
+        app-menu = true;
+        app-menu-icon = true;
+        app-menu-label = true;
+        background-menu = true;
+        controls-manager-spacing-size = 0;
+        dash = true;
+        dash-icon-size = 0;
+        double-super-to-appgrid = true;
+        gesture = true;
+        hot-corner = false;
+        keyboard-layout = true;
+        osd = true;
+        panel = true;
+        panel-arrow = true;
+        panel-corner-size = 0;
+        panel-in-overview = true;
+        ripple-box = true;
+        search = true;
+        show-apps-button = true;
+        startup-status = 1;
+        theme = false;
+        window-demands-attention-focus = true;
+        window-picker-icon = true;
+        window-preview-caption = true;
+        window-preview-close-button = true;
+        workspace = true;
+        workspace-background-corner-size = 0;
+        workspace-popup = true;
+        workspace-switcher-should-show = false;
+        workspace-wrap-around = true;
+        workspaces-in-app-grid = true;
+        world-clock = false;
       };
+
       "org/gnome/desktop/peripherals/keyboard" = {
         delay = lib.hm.gvariant.mkUint32 175;
         repeat-interval = lib.hm.gvariant.mkUint32 18;

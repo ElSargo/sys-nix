@@ -9,6 +9,7 @@
     ./settings.nix
   ];
 
+  programs.fish.enable = true;
   users.defaultUserShell = pkgs.unstable.fish;
-  system.stateVersion = "23.05";
+  system.stateVersion = "23.11";
 }

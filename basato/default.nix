@@ -11,7 +11,7 @@
     tmp.cleanOnBoot = true;
     # kernelPackages = pkgs.unstable.linuxPackages_xanmod_latest;
     kernelPackages = pkgs.unstable.linuxPackages_zen;
-    kernelParams = [ "i915.force_probe=46a6" ];
+    kernelParams = [ "i915.force_probe=46a6" "i8042.dumbkbd=1" ];
   };
   services.fprintd = { enable = true; };
   nix.settings.system-features =
@@ -20,9 +20,9 @@
   services.xserver.deviceSection = ''
     Option "DRI" "3"   
   '';
-  nixpkgs.config.packageOverrides = pkgs: {
-    vaapiIntel = pkgs.vaapiIntel.override { enableHybridCodec = true; };
-  };
+  # nixpkgs.config.packageOverrides = pkgs: {
+  #   vaapiIntel = pkgs.vaapiIntel.override { enableHybridCodec = true; };
+  # };
 
   hardware.opengl = {
     driSupport = true;

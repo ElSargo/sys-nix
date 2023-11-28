@@ -1,7 +1,7 @@
 { pkgs, lib, config, ... }: {
   options = {
     helix-package = lib.mkOption {
-      default = pkgs.unstable.helix;
+      default = pkgs.helix;
       type = lib.types.package;
     };
   };

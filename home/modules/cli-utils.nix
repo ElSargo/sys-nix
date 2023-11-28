@@ -3,7 +3,7 @@
     ripgrep
     wl-clipboard
     unzip
-    exa
+    eza
     wget
     trash-cli
     delta

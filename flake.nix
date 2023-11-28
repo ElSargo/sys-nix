@@ -10,20 +10,19 @@
       channels.nixpkgs.overlaysBuilder = channels:
         [ (f: p: { unstable = channels.unstable; }) ];
 
-      sharedOverlays = [
-        # supabar.overlays."x86_64-linux".all
-        (utils.lib.genPkgOverlay helix "helix")
-        nur.overlay
-      ];
+      sharedOverlays = [ (utils.lib.genPkgOverlay helix "helix") nur.overlay ];
 
       hostDefaults = {
         modules = [
           ./desktop
           ./essentials
           ./home
+          ./virt/virt-manager.nix
           home-manager.nixosModules.home-manager
           nur.nixosModules.nur
           {
+            home-manager.users.sargo.helix-package =
+              helix.packages."x86_64-linux".helix;
             home-manager.users.sargo.firefox-gnome-theme = firefox-gnome-theme;
           }
           # ./virt/virt-manager.nix
@@ -37,8 +36,8 @@
     };
 
   inputs = {
-    nixpkgs.url = "nixpkgs/nixos-23.05";
-    home-manager.url = "github:nix-community/home-manager/release-23.05";
+    nixpkgs.url = "nixpkgs/nixos-23.11";
+    home-manager.url = "github:nix-community/home-manager/release-23.11";
     unstable.url = "nixpkgs/nixos-unstable";
     utils.url = "github:gytis-ivaskevicius/flake-utils-plus";
     supabar.url = "github:ElSargo/supabar";

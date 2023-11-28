@@ -15,7 +15,7 @@
     }];
   }];
   home-manager.users.sargo = { lib, ... }: {
-    palette = import ../palettes/gruvbox.nix;
+    palette = import ../palettes/gruv-adwaita.nix;
     browser = "firefox";
     imports = [ ./modules ];
     programs = {
@@ -56,7 +56,7 @@
     # services.pueue.enable = true;
     home.username = "sargo";
     home.homeDirectory = "/home/sargo";
-    home.stateVersion = "23.05";
+    home.stateVersion = "23.11";
   };
 }
 

@@ -89,13 +89,9 @@
           bg = "${config.palette.bg}"; # main background
           br_bg = "${bg}";
           bg2 = "${sep}";
-          bg3 = "${config.palette.bg3}";
-          bg4 = "${config.palette.bg4}";
           fg = "${config.palette.fg}";
           br_fg = "${config.palette.br_fg}"; # main foreground
           fg2 = "${config.palette.fg2}";
-          fg3 = "${config.palette.fg3}";
-          fg4 = "${config.palette.fg4}"; # gray0
           gray = "${config.palette.gray}";
           br_gray = "${config.palette.br_gray}";
           red = "${config.palette.red}";

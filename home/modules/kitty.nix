@@ -37,7 +37,7 @@
       color12 = config.palette.br_purple; # "#83a598"
       color13 = config.palette.br_aqua; # "#d3869b"
       color14 = config.palette.white; # "#8ec07c"
-      color15 = config.palette.tan; # "#fbf1c7"
+      color15 = config.palette.white; # "#fbf1c7"
 
       cursor = config.palette.fg2; # "#bdae93"
       cursor_text_color = config.palette.bg2; # "#665c54"
