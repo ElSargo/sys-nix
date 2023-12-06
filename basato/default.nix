@@ -5,11 +5,8 @@
   # Bootloader.
   # services.undervolt.enable = true;
   boot = {
-    # tmp.useTmpfs = true;
-    # binfmt.emulatedSystems = [ "wasm32-wasi" "x86_64-windows" "aarch64-linux" ];
     loader.grub.configurationLimit = 10;
     tmp.cleanOnBoot = true;
-    # kernelPackages = pkgs.unstable.linuxPackages_xanmod_latest;
     kernelPackages = pkgs.unstable.linuxPackages_zen;
     kernelParams = [ "i915.force_probe=46a6" "i8042.dumbkbd=1" ];
   };
