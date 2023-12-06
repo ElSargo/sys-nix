@@ -1,8 +1,8 @@
 {
   description = "NixOS config";
 
-  outputs = inputs@{ self, nixpkgs, unstable, utils, home-manager, 
-     firefox-gnome-theme, nur, ... }:
+  outputs = inputs@{ self, nixpkgs, unstable, utils, home-manager
+    , firefox-gnome-theme, nur, ... }:
     utils.lib.mkFlake {
       inherit self inputs;
       channelsConfig.allowUnfree = true;
@@ -12,7 +12,6 @@
       };
       channels.nixpkgs.overlaysBuilder = channels:
         [ (f: p: { unstable = channels.unstable; }) ];
-
 
       hostDefaults = {
         modules = [
