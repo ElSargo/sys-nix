@@ -41,8 +41,10 @@ in {
           }" = v;
         }) binds);
       addNum = s: x: s + (toString x);
-      wkb = a: s1: s2: x: setAttr a (addNum s1 x) [(addNum s2 x)]; 
-      workspace_binds = foldl' (a: x:  (wkb (wkb a "switch-to-workspace-" "<Super>" x) "move-to-workspace-" "<Shift><Super>" x) ) {} (range 1 10);
+      wkb = a: s1: s2: x: setAttr a (addNum s1 x) [ (addNum s2 x) ];
+      workspace_binds = foldl' (a: x:
+        (wkb (wkb a "switch-to-workspace-" "<Super>" x) "move-to-workspace-"
+          "<Shift><Super>" x)) { } (range 1 10);
     in (mkbinds binds) // {
 
       "org/gnome/settings-daemon/plugins/media-keys".custom-keybindings =
@@ -57,7 +59,9 @@ in {
         launch-web-browser = [ "<Shift><Super>Return" ];
       };
 
-      "org/gnome/shell/keybindings" = foldl' (a: x:  setAttr a ( addNum "switch-to-application-" x ) [] ) {} (range 1 10);
+      "org/gnome/shell/keybindings" =
+        foldl' (a: x: setAttr a (addNum "switch-to-application-" x) [ ]) { }
+        (range 1 10);
 
       "org/gnome/shell" = {
         enabled-extensions = [
