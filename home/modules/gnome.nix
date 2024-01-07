@@ -1,11 +1,9 @@
 { pkgs, lib, config, ... }:
 let
   extensions = with pkgs.gnomeExtensions; [
-    removable-drive-menu
     caffeine
-    blur-my-shell
     pano
-    rounded-window-corners
+    # rounded-window-corners
     just-perfection
   ];
 in {
@@ -25,6 +23,11 @@ in {
           command = "xdg-open https://search.nixos.org/";
           name = "package-search";
         }
+        {
+          binding = "<Super>f";
+          command = "nautilus";
+          name = "files";
+        }
 
       ];
       mkreg = imap (i: v:
@@ -37,31 +40,14 @@ in {
             toString (i - 1)
           }" = v;
         }) binds);
+      addNum = s: x: s + (toString x);
+      wkb = a: s1: s2: x: setAttr a (addNum s1 x) [(addNum s2 x)]; 
+      workspace_binds = foldl' (a: x:  (wkb (wkb a "switch-to-workspace-" "<Super>" x) "move-to-workspace-" "<Shift><Super>" x) ) {} (range 1 10);
     in (mkbinds binds) // {
 
       "org/gnome/settings-daemon/plugins/media-keys".custom-keybindings =
         mkreg binds;
-      "org/gnome/desktop/wm/keybindings" = {
-        switch-to-workspace-1 = [ "<Super>1" ];
-        switch-to-workspace-2 = [ "<Super>2" ];
-        switch-to-workspace-3 = [ "<Super>3" ];
-        switch-to-workspace-4 = [ "<Super>4" ];
-        switch-to-workspace-5 = [ "<Super>5" ];
-        switch-to-workspace-6 = [ "<Super>6" ];
-        switch-to-workspace-7 = [ "<Super>7" ];
-        switch-to-workspace-8 = [ "<Super>8" ];
-        switch-to-workspace-9 = [ "<Super>9" ];
-        switch-to-workspace-10 = [ "<Super>0" ];
-        move-to-workspace-1 = [ "<Shift><Super>1" ];
-        move-to-workspace-2 = [ "<Shift><Super>2" ];
-        move-to-workspace-3 = [ "<Shift><Super>3" ];
-        move-to-workspace-4 = [ "<Shift><Super>4" ];
-        move-to-workspace-5 = [ "<Shift><Super>5" ];
-        move-to-workspace-6 = [ "<Shift><Super>6" ];
-        move-to-workspace-7 = [ "<Shift><Super>7" ];
-        move-to-workspace-8 = [ "<Shift><Super>8" ];
-        move-to-workspace-9 = [ "<Shift><Super>9" ];
-        move-to-workspace-10 = [ "<Shift><Super>10" ];
+      "org/gnome/desktop/wm/keybindings" = workspace_binds // {
         switch-applications = [ "<Super>Tab" ];
         switch-applications-backward = [ "<Super><Shift>Tab" ];
         switch-windows = [ "<Alt>Tab" ];
@@ -71,18 +57,7 @@ in {
         launch-web-browser = [ "<Shift><Super>Return" ];
       };
 
-      "org/gnome/shell/keybindings" = {
-        switch-to-application-1 = [ ];
-        switch-to-application-2 = [ ];
-        switch-to-application-3 = [ ];
-        switch-to-application-4 = [ ];
-        switch-to-application-5 = [ ];
-        switch-to-application-6 = [ ];
-        switch-to-application-7 = [ ];
-        switch-to-application-8 = [ ];
-        switch-to-application-9 = [ ];
-        switch-to-application-10 = [ ];
-      };
+      "org/gnome/shell/keybindings" = foldl' (a: x:  setAttr a ( addNum "switch-to-application-" x ) [] ) {} (range 1 10);
 
       "org/gnome/shell" = {
         enabled-extensions = [
