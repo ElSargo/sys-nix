@@ -18,6 +18,7 @@
           ./desktop
           ./essentials
           ./home
+          ./modules
           # ./virt/virt-manager.nix
           home-manager.nixosModules.home-manager
           nur.nixosModules.nur

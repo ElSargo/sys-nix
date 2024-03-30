@@ -2,7 +2,6 @@
   imports = [
     ./audio.nix
     ./fonts.nix
-    ./gnome.nix
     ./network.nix
     ./power-management.nix
     ./remaps.nix
