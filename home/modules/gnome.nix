@@ -82,16 +82,16 @@ in {
 
         favorite-apps = [
           "firefox.desktop"
-           "kitty.desktop"
-           "org.gnome.Console.desktop"
-           "org.keepassxc.KeePassXC.desktop"
-           "org.gnome.Nautilus.desktop"
-           "org.gnome.Software.desktop"
-           "org.gnome.Calculator.desktop"
-           "org.gnome.Settings.desktop"
-           "thunderbird.desktop"
-           "com.spotify.Client.desktop"
-           "org.onlyoffice.desktopeditors.desktop" 
+          "kitty.desktop"
+          "org.gnome.Console.desktop"
+          "org.keepassxc.KeePassXC.desktop"
+          "org.gnome.Nautilus.desktop"
+          "org.gnome.Software.desktop"
+          "org.gnome.Calculator.desktop"
+          "org.gnome.Settings.desktop"
+          "thunderbird.desktop"
+          "com.spotify.Client.desktop"
+          "org.onlyoffice.desktopeditors.desktop"
         ];
         disable-user-extensions = false;
 
