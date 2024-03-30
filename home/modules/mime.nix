@@ -1,5 +1,5 @@
 { pkgs, config, ... }: {
-  home.packages = with pkgs; [ libreoffice ];
+  # home.packages = with pkgs; [ libreoffice ];
   xdg = {
     enable = true;
     mimeApps = {

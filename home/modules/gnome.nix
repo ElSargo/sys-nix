@@ -1,9 +1,12 @@
-{ pkgs, lib, config, ... }:
+{ pkgs, lib, ... }:
 let
   extensions = with pkgs.gnomeExtensions; [
     caffeine
     pano
     # rounded-window-corners
+    browser-tabs
+    onedrive
+    blur-my-shell
     just-perfection
   ];
 in {
@@ -78,10 +81,17 @@ in {
         disabled-extensions = [ ];
 
         favorite-apps = [
-          "${config.browser}.desktop"
-          "kitty.desktop"
-          "org.keepassxc.KeePassXC.desktop"
-          "org.gnome.Nautilus.desktop"
+          "firefox.desktop"
+           "kitty.desktop"
+           "org.gnome.Console.desktop"
+           "org.keepassxc.KeePassXC.desktop"
+           "org.gnome.Nautilus.desktop"
+           "org.gnome.Software.desktop"
+           "org.gnome.Calculator.desktop"
+           "org.gnome.Settings.desktop"
+           "thunderbird.desktop"
+           "com.spotify.Client.desktop"
+           "org.onlyoffice.desktopeditors.desktop" 
         ];
         disable-user-extensions = false;
 
@@ -101,7 +111,7 @@ in {
       };
       "org/gnome/shell/extensions/blur-my-shell/overview" = {
         blur = true;
-        style-components = 3;
+        style-components = 2;
       };
       "org/gnome/shell/extensions/blur-my-shell/panel" = {
         blur = true;

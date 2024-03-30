@@ -2,7 +2,7 @@
   home.packages = with pkgs; [
     keepassxc
     inlyne
-    libreoffice
+    # libreoffice
     thunderbird
     nextcloud-client
   ];

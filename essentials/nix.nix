@@ -20,7 +20,7 @@
     };
   };
   environment.systemPackages = with pkgs; [
-    pkgs.nixVersions.nix_2_17
+    pkgs.nixVersions.nix_2_18
     fup-repl
   ];
 }

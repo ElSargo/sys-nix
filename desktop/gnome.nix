@@ -1,6 +1,8 @@
 { pkgs, ... }: {
   services.xserver.desktopManager.gnome.enable = true;
   services.xserver.displayManager.gdm.enable = true;
+  services.gnome.sushi.enable = true;
+  services.gnome.gnome-browser-connector.enable = true;
   environment = {
     gnome.excludePackages = with pkgs.gnome;
       [
