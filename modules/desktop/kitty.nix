@@ -1,4 +1,5 @@
-{ pkgs, config, ... }: {
+ { home-manager.sharedModules = [({ pkgs, config, ... }:{
+    
   programs.kitty = {
     enable = true;
     package = pkgs.unstable.kitty;
@@ -46,4 +47,6 @@
 
     };
   };
+  })];
+
 }

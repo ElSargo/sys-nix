@@ -50,6 +50,7 @@
   swapDevices =
     [{ device = "/dev/disk/by-uuid/9241452f-368d-4e95-99cc-7ec8654c13a1"; }];
 
+  system.stateVersion = "23.11";
   # Enables DHCP on each ethernet and wireless interface. In case of scripted networking
   # (the default) this is the recommended approach. When using systemd-networkd it's
   # still possible to use this option, but it's recommended to use it in conjunction

@@ -1,4 +1,6 @@
-{ pkgs, ... }: {
+ {
+  home-manager.sharedModules = [({ pkgs, ... }:{
+    
   gtk = {
     enable = true;
     theme = {
@@ -15,4 +17,6 @@
       name = "adwaita-dark";
     };
   };
+  })];
+
 }

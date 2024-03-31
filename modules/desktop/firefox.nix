@@ -1,4 +1,4 @@
-{ pkgs, lib, config, ... }:
+
 let
   extensions = {
     "trackmenot@mrl.nyu.edu" =
@@ -26,9 +26,11 @@ let
   };
 in {
 
+
+  home-manager.sharedModules = [({ pkgs, lib, config, ... }:{
+    
   options = {
     firefox-gnome-theme = lib.mkOption {
-
     };
   };
 
@@ -481,4 +483,6 @@ in {
     home.file.".mozilla/firefox/sargo/chrome/firefox-gnome-theme/".source =
       "${config.firefox-gnome-theme}";
   };
+  })];
+
 }

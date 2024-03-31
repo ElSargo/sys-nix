@@ -1,4 +1,4 @@
-{ pkgs, ... }: {
+{ ... }: {
   imports = [
     ./audio.nix
     ./fonts.nix
@@ -6,10 +6,13 @@
     ./power-management.nix
     ./remaps.nix
     ./settings.nix
+    ./dark-theme.nix
+    ./desktop-programs.nix
+    ./firefox.nix
+    ./kitty.nix
+    ./mime.nix
+    ./gnome.nix
   ];
 
   services.preload.enable = true;
-  programs.fish.enable = true;
-  users.defaultUserShell = pkgs.unstable.fish;
-  system.stateVersion = "23.11";
 }

@@ -1,5 +1,6 @@
-{ pkgs, config, ... }: {
-  # home.packages = with pkgs; [ libreoffice ];
+ {
+  home-manager.sharedModules = [({  config, ... }:{
+    
   xdg = {
     enable = true;
     mimeApps = {
@@ -31,4 +32,6 @@
       };
     };
   };
+  })];
+
 }
