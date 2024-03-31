@@ -84,25 +84,11 @@
         "type": "indirect"
       }
     },
-    "nur": {
-      "locked": {
-        "lastModified": 1701194695,
-        "narHash": "sha256-Yvfo/i9O6mdhNg5R74hS4cT7p3qnphHTvunzcflNggE=",
-        "path": "/nix/store/sb3ifb2lqayf5ihcrvn5gnlix1mc8c5h-source",
-        "rev": "9b9e0863e8473fbad9df7ecac66fa4eeba3ee229",
-        "type": "path"
-      },
-      "original": {
-        "id": "nur",
-        "type": "indirect"
-      }
-    },
     "root": {
       "inputs": {
         "firefox-gnome-theme": "firefox-gnome-theme",
         "home-manager": "home-manager",
         "nixpkgs": "nixpkgs_2",
-        "nur": "nur",
         "unstable": "unstable",
         "utils": "utils"
       }

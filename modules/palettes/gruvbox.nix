@@ -1,4 +1,5 @@
 {
+options.palettes.gruvbox = {
   helix_theme = "gruvy";
   aqua = "#689d6a";
   bg = "#282828"; # main background
@@ -25,4 +26,5 @@
   red = "#cc241d";
   white = "#fbf1c7";
   yellow = "#d79921";
+};
 }

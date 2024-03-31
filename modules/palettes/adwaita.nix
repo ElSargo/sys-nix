@@ -1,4 +1,5 @@
-rec {
+{lib, ... }: {
+options.palettes.adwaita = lib.mkOption { default = rec {
   helix_theme = "adwaita-dark";
   aqua = teal_3;
   bg = libadwaita_dark; # main background
@@ -91,4 +92,5 @@ rec {
   violet_4 = "#4E57BA";
   yellow_6 = "#D38B09";
   split_and_borders = "#4F4F4F";
+};};
 }

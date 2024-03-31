@@ -1,4 +1,7 @@
 {
+  home-manager.sharedModules = [
+    {
+      
   imports = [
     ./bash.nix
     ./dark-theme.nix
@@ -11,9 +14,10 @@
     ./starship.nix
     ./zellij.nix
     ./zoxide.nix
-    ./palettes.nix
     ./desktop-programs.nix
     ./cli-utils.nix
     ./nu.nix
+  ];
+    }    
   ];
 }

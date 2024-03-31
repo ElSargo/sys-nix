@@ -2,7 +2,7 @@
   description = "NixOS config";
 
   outputs = inputs@{ self, nixpkgs, unstable, utils, home-manager
-    , firefox-gnome-theme, nur, ... }:
+    , firefox-gnome-theme, ... }:
     utils.lib.mkFlake {
       inherit self inputs;
       channelsConfig.allowUnfree = true;
@@ -15,23 +15,16 @@
 
       hostDefaults = {
         modules = [
-          ./desktop
-          ./essentials
-          ./home
           ./modules
-          # ./virt/virt-manager.nix
+          ./users
           home-manager.nixosModules.home-manager
-          nur.nixosModules.nur
           {
-            home-manager.users.sargo.firefox-gnome-theme = firefox-gnome-theme;
+            home-manager.sharedModules = [ { config.firefox-gnome-theme = firefox-gnome-theme; } ];
           }
         ];
       };
 
-      hosts = {
-        Basato = { modules = [ ./basato nur.nixosModules.nur ]; };
-        Wojak = { modules = [ ./wojak ]; };
-      };
+      hosts = import ./hosts;
     };
 
   inputs = {

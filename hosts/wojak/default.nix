@@ -1,6 +1,4 @@
 { config, lib, modulesPath, pkgs, ... }: {
-  networking.hostName = "Wojak";
-  # networking.defaultGateway = "192.168.1.201";
 
   # Bootloader.
   boot = {

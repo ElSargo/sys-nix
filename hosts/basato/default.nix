@@ -1,5 +1,4 @@
 { config, lib, modulesPath, pkgs, ... }: {
-  networking.hostName = "Basato"; # Define your hostname.
 
   boot = {
     loader.grub.configurationLimit = 10;

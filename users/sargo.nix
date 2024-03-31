@@ -1,4 +1,4 @@
-{ pkgs, ... }: {
+{ pkgs, config, ... }: {
   users.users.sargo = {
     shell = pkgs.unstable.fish;
     isNormalUser = true;
@@ -15,9 +15,8 @@
     }];
   }];
   home-manager.users.sargo = { lib, ... }: {
-    palette = import ../palettes/gruv-adwaita.nix;
+    palette = config.palettes.gruv-adwaita;
     browser = "firefox";
-    imports = [ ./modules ];
     programs = {
       nix-index.enable = true;
       home-manager.enable = true;

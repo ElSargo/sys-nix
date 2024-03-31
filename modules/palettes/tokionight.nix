@@ -1,4 +1,5 @@
-rec {
+{lib, ... }: {
+options.palettes.tokionight = lib.mkOption { default = rec {
   helix_theme = "tokio";
   aqua = "#89ddff";
   bg = "#16161e"; # main background
@@ -28,4 +29,5 @@ rec {
   tan = blue;
   white = "#c0caf5";
   yellow = "#e0af68";
+};};
 }

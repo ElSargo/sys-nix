@@ -1,4 +1,5 @@
-{
+{lib, ... }: {
+options.palettes.gruv-adwaita = lib.mkOption {default = {
   helix_theme = "gruvy";
   aqua = "#689d6a";
   fg = "#ffffff";
@@ -23,5 +24,6 @@
   red = "#cc241d";
   white = "#ffffff";
   yellow = "#d79921";
+};
+};
 }
-
