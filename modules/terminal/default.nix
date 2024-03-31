@@ -1,6 +1,6 @@
 {
-  imports = [ ./shell  ];
-  
+  imports = [ ./shell ];
+
   home-manager.sharedModules = [{
     imports = [
       ./bash.nix
