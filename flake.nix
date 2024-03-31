@@ -1,8 +1,15 @@
 {
   description = "NixOS config";
 
-  outputs = inputs@{ self, nixpkgs, unstable, utils, home-manager
-    , firefox-gnome-theme, ... }:
+  outputs =
+    inputs@{ self
+    , nixpkgs
+    , unstable
+    , utils
+    , home-manager
+    , firefox-gnome-theme
+    , ...
+    }:
     utils.lib.mkFlake {
       inherit self inputs;
       channelsConfig.allowUnfree = true;
@@ -26,6 +33,10 @@
       };
 
       hosts = import ./hosts;
+
+      outputsBuilder = channels: {
+        formatter = channels.nixpkgs.nixpkgs-fmt;
+      };
     };
 
   inputs = {

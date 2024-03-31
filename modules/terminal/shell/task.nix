@@ -22,7 +22,8 @@ let
     name = "task";
   };
 
-in {
+in
+{
   home.packages = [ pkgs.pueue ];
   wayland.windowManager.hyprland.extraConfig = "${pkgs.pueue}/bin/pueued -d";
   programs.nushell.extraConfig = "use ${module}/task.nu";

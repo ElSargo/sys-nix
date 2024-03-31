@@ -1,6 +1,5 @@
-{ pkgs, config, ... }: {
+{ config, ... }: {
   users.users.sargo = {
-    shell = pkgs.unstable.fish;
     isNormalUser = true;
     initialHashedPassword =
       "$6$Z7Ty/RzwsUJtd43I$6dCbqpYN1HOhTr5EoEgu6XyctK8lCYu6OqJGzREOjR5L0i6mn12vl2wF.nJzrAxqTCIl5idftqSOPI8WLNVky0";

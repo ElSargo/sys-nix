@@ -1,6 +1,6 @@
-{ pkgs, ... }: {
+{ config, ... }: {
   programs.bash = {
     enable = true;
-    shellAliases = (import ./shell_aliases.nix { inherit pkgs; });
+    shellAliases = config.shellAliases;
   };
 }

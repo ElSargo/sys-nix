@@ -21,9 +21,11 @@
       "rtsx_pci_sdmmc"
     ];
 
-    extraModulePackages = let
-      msi-ec = config.boot.kernelPackages.callPackage ./msi-ec-patch.nix { };
-    in [ msi-ec ];
+    extraModulePackages =
+      let
+        msi-ec = config.boot.kernelPackages.callPackage ./msi-ec-patch.nix { };
+      in
+      [ msi-ec ];
   };
 
   services = {

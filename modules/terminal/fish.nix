@@ -4,29 +4,31 @@ with builtins; {
   programs.fish = {
     package = pkgs.fish;
     enable = true;
-    functions = let
-      mk_config = op: {
-        argumentNames = [ "name" ];
-        description = "Rebuild the system configuration";
-        body = # fish
-          ''
-            if test -z $name
-              set name $hostname
-            end
-            ulimit -n 4096;
-            sudo nixos-rebuild ${op} --flake "/home/sargo/sys-nix/#$(echo $name)" -p $name
-          '';
+    functions =
+      let
+        mk_config = op: {
+          argumentNames = [ "name" ];
+          description = "Rebuild the system configuration";
+          body = # fish
+            ''
+              if test -z $name
+                set name $hostname
+              end
+              ulimit -n 4096;
+              sudo nixos-rebuild ${op} --flake "/home/sargo/sys-nix/#$(echo $name)" -p $name
+            '';
+        };
+      in
+      {
+        rbs = mk_config "switch";
+        rbb = mk_config "boot";
+        copy_history = {
+          body = # fish
+            "history | ${pkgs.skim}/bin/sk | xc";
+          description = "Copy a previously run command";
+        };
       };
-    in {
-      rbs = mk_config "switch";
-      rbb = mk_config "boot";
-      copy_history = {
-        body = # fish
-          "history | ${pkgs.skim}/bin/sk | xc";
-        description = "Copy a previously run command";
-      };
-    };
-    shellAliases = (import ./shell_aliases.nix { inherit pkgs; });
+    shellAliases = config.shellAliases;
     shellAbbrs = {
       q = "exit";
       ":q" = "exit";

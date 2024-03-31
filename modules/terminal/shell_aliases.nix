@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ pkgs, lib, ... }:
 let
   lfcd = pkgs.writeShellScriptBin "lfcd" ''
     tmp=$(mktemp)
@@ -13,13 +13,21 @@ let
         fi
     fi
   '';
-in {
-  xc = "${pkgs.wl-clipboard}/bin/wl-copy";
-  clip = "${pkgs.wl-clipboard}/bin/wl-copy";
-  lf = " cd $( ${lfcd}/bin/lfcd )";
-  q = "exit";
-  ":q" = "exit";
-  c = "clear";
-  r = "reset";
-  ns = "nix-shell";
+in
+{
+  options = {
+    shellAliases = lib.mkOption { };
+  };
+
+  config.shellAliases = {
+    xc = "${pkgs.wl-clipboard}/bin/wl-copy";
+    clip = "${pkgs.wl-clipboard}/bin/wl-copy";
+    lf = " cd $( ${lfcd}/bin/lfcd )";
+    q = "exit";
+    ":q" = "exit";
+    c = "clear";
+    r = "reset";
+    ns = "nix-shell";
+
+  };
 }

@@ -1,4 +1,4 @@
-{ pkgs, ... }: {
+{ pkgs, config, ... }: {
   users.defaultUserShell = pkgs.nushellFull;
   home-manager.sharedModules = [{
     imports = [ ./task.nix ./completion.nix ];
@@ -54,6 +54,7 @@
           $env.EDITOR = "hx"
           $env.VISUAL = "hx"
         '';
+      shellAliases = config.shellAliases;
     };
   }];
 

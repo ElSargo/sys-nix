@@ -23,7 +23,8 @@ let
     "tabcenter-reborn@ariasuni" =
       "https://addons.mozilla.org/firefox/downloads/latest/tabcenter-reborn/latest.xpi";
   };
-in {
+in
+{
 
   home-manager.sharedModules = [
     ({ pkgs, lib, config, ... }: {
@@ -61,10 +62,12 @@ in {
                 ExtensionRecommendations = false;
                 SkipOnboarding = true;
               };
-              ExtensionSettings = (builtins.mapAttrs (k: v: {
-                installation_mode = "normal_installed";
-                install_url = v;
-              }) extensions) // {
+              ExtensionSettings = (builtins.mapAttrs
+                (k: v: {
+                  installation_mode = "normal_installed";
+                  install_url = v;
+                })
+                extensions) // {
                 "*" = { adminSettings = { firstInstall = false; }; };
               };
             };
