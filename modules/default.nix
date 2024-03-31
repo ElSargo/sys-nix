@@ -1,9 +1,1 @@
-{
-  imports = [
-    ./desktop
-    ./essentials
-    ./modules
-    ./gnome.nix
-    ./palettes
-  ];
-}
+{ imports = [ ./desktop ./essentials ./modules ./gnome.nix ./palettes ]; }

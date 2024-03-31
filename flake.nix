@@ -19,7 +19,8 @@
           ./users
           home-manager.nixosModules.home-manager
           {
-            home-manager.sharedModules = [ { config.firefox-gnome-theme = firefox-gnome-theme; } ];
+            home-manager.sharedModules =
+              [{ config.firefox-gnome-theme = firefox-gnome-theme; }];
           }
         ];
       };
