@@ -1,7 +1,14 @@
-{ pkgs, config, ... }: {
+{ pkgs, ... }: {
   users.defaultUserShell = pkgs.nushellFull;
-  home-manager.sharedModules = [{
-    imports = [ ./task.nix ./completion.nix ];
+  home-manager.sharedModules = [({config, ...}: {
+
+    imports = [
+      ./bash.nix
+      ./completion.nix
+      ./fish.nix
+      ./shell_aliases.nix
+      ./task.nix
+    ];
 
     home.packages = with pkgs; [
       ripgrep
@@ -17,6 +24,7 @@
       pastel
       cargo
     ];
+
     programs.nushell = {
       enable = true;
       configFile.text = # nu
@@ -54,9 +62,9 @@
           $env.EDITOR = "hx"
           $env.VISUAL = "hx"
         '';
-      shellAliases = config.shellAliases;
+        shellAliases = config.shellAliases // { lf = " cd ( ${pkgs.lf}/bin/lf -print-last-dir )"; };
     };
-  }];
+  })];
 
 }
 

@@ -28,7 +28,7 @@ with builtins; {
           description = "Copy a previously run command";
         };
       };
-    shellAliases = config.shellAliases;
+    shellAliases = config.shellAliases // { lf = " cd $( ${pkgs.lf}/bin/lf -print-last-dir )"; };
     shellAbbrs = {
       q = "exit";
       ":q" = "exit";

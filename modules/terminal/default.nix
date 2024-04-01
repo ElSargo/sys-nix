@@ -3,8 +3,6 @@
 
   home-manager.sharedModules = [{
     imports = [
-      ./bash.nix
-      ./fish.nix
       ./helix.nix
       ./lf.nix
       ./starship.nix
