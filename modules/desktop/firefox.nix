@@ -1,38 +1,28 @@
 let
   extensions = {
-    "trackmenot@mrl.nyu.edu" =
-      "https://addons.mozilla.org/firefox/downloads/latest/trackmenot/latest.xpi";
-    "{74145f27-f039-47ce-a470-a662b129930a}" =
-      "https://addons.mozilla.org/firefox/downloads/latest/clearurls/latest.xpi";
-    "jid1-BoFifL9Vbdl2zQ@jetpack" =
-      "https://addons.mozilla.org/firefox/downloads/latest/decentraleyes/latest.xpi";
-    "adnauseam@rednoise.org" =
-      "https://addons.mozilla.org/firefox/downloads/latest/adnauseam/latest.xpi";
-    "keepassxc-browser@keepassxc.org" =
-      "https://addons.mozilla.org/firefox/downloads/latest/keepassxc-browser/latest.xpi";
-    "{278b0ae0-da9d-4cc6-be81-5aa7f3202672}" =
-      "https://addons.mozilla.org/firefox/downloads/latest/re-enable-right-click/latest.xpi";
-    "sponsorBlocker@ajay.app" =
-      "https://addons.mozilla.org/firefox/downloads/latest/sponsorblock/latest.xpi";
-    "extension@tabliss.io" =
-      "https://addons.mozilla.org/firefox/downloads/latest/tabliss/latest.xpi";
-    "vimium-c@gdh1995.cn" =
-      "https://addons.mozilla.org/firefox/downloads/latest/vimium-c/latest.xpi";
-    "{34daeb50-c2d2-4f14-886a-7160b24d66a4}" =
-      "https://addons.mozilla.org/firefox/downloads/latest/youtube-shorts-block/latest.xpi";
-    "tabcenter-reborn@ariasuni" =
-      "https://addons.mozilla.org/firefox/downloads/latest/tabcenter-reborn/latest.xpi";
+    "trackmenot@mrl.nyu.edu" = "https://addons.mozilla.org/firefox/downloads/latest/trackmenot/latest.xpi";
+    "{74145f27-f039-47ce-a470-a662b129930a}" = "https://addons.mozilla.org/firefox/downloads/latest/clearurls/latest.xpi";
+    "jid1-BoFifL9Vbdl2zQ@jetpack" = "https://addons.mozilla.org/firefox/downloads/latest/decentraleyes/latest.xpi";
+    "adnauseam@rednoise.org" = "https://addons.mozilla.org/firefox/downloads/latest/adnauseam/latest.xpi";
+    "keepassxc-browser@keepassxc.org" = "https://addons.mozilla.org/firefox/downloads/latest/keepassxc-browser/latest.xpi";
+    "{278b0ae0-da9d-4cc6-be81-5aa7f3202672}" = "https://addons.mozilla.org/firefox/downloads/latest/re-enable-right-click/latest.xpi";
+    "sponsorBlocker@ajay.app" = "https://addons.mozilla.org/firefox/downloads/latest/sponsorblock/latest.xpi";
+    "extension@tabliss.io" = "https://addons.mozilla.org/firefox/downloads/latest/tabliss/latest.xpi";
+    "vimium-c@gdh1995.cn" = "https://addons.mozilla.org/firefox/downloads/latest/vimium-c/latest.xpi";
+    "{34daeb50-c2d2-4f14-886a-7160b24d66a4}" = "https://addons.mozilla.org/firefox/downloads/latest/youtube-shorts-block/latest.xpi";
+    "tabcenter-reborn@ariasuni" = "https://addons.mozilla.org/firefox/downloads/latest/tabcenter-reborn/latest.xpi";
   };
-in
-{
-
+in {
   home-manager.sharedModules = [
-    ({ pkgs, lib, config, ... }: {
-
-      options = { firefox-gnome-theme = lib.mkOption { }; };
+    ({
+      pkgs,
+      lib,
+      config,
+      ...
+    }: {
+      options = {firefox-gnome-theme = lib.mkOption {};};
 
       config = {
-
         home.sessionVariables = {
           MOZ_ENABLE_WAYLAND = 1;
           MOZ_USE_XINPUT2 = 1;
@@ -40,7 +30,6 @@ in
         programs.firefox = {
           enable = true;
           package = pkgs.wrapFirefox pkgs.unstable.firefox-esr-unwrapped {
-
             extraPolicies = {
               CaptivePortal = false;
               DisableFirefoxStudies = true;
@@ -62,14 +51,16 @@ in
                 ExtensionRecommendations = false;
                 SkipOnboarding = true;
               };
-              ExtensionSettings = (builtins.mapAttrs
-                (k: v: {
-                  installation_mode = "normal_installed";
-                  install_url = v;
-                })
-                extensions) // {
-                "*" = { adminSettings = { firstInstall = false; }; };
-              };
+              ExtensionSettings =
+                (builtins.mapAttrs
+                  (k: v: {
+                    installation_mode = "normal_installed";
+                    install_url = v;
+                  })
+                  extensions)
+                // {
+                  "*" = {adminSettings = {firstInstall = false;};};
+                };
             };
           };
           profiles = {
@@ -93,72 +84,74 @@ in
                 default = "Brave";
                 engines = {
                   Brave = {
-                    urls = [{
-                      template = "https://search.brave.com/search";
-                      params = [{
-                        name = "q";
-                        value = "{searchTerms}";
-                      }];
-
-                    }];
-                    iconUpdateURL =
-                      "https://cdn.search.brave.com/serp/v1/static/brand/16c26cd189da3f0f7ba4e55a584ddde6a7853c9cc340ff9f381afc6cb18e9a1e-favicon-32x32.png";
+                    urls = [
+                      {
+                        template = "https://search.brave.com/search";
+                        params = [
+                          {
+                            name = "q";
+                            value = "{searchTerms}";
+                          }
+                        ];
+                      }
+                    ];
+                    iconUpdateURL = "https://cdn.search.brave.com/serp/v1/static/brand/16c26cd189da3f0f7ba4e55a584ddde6a7853c9cc340ff9f381afc6cb18e9a1e-favicon-32x32.png";
                     updateInterval = 24 * 60 * 60 * 1000;
-
                   };
                   "Nix Packages" = {
-                    urls = [{
-                      template = "https://search.nixos.org/packages";
-                      params = [
-                        {
-                          name = "type";
-                          value = "packages";
-                        }
-                        {
-                          name = "query";
-                          value = "{searchTerms}";
-                        }
-                      ];
-                    }];
-                    icon =
-                      "${pkgs.nixos-icons}/share/icons/hicolor/scalable/apps/nix-snowflake.svg";
-                    definedAliases = [ "@np" ];
+                    urls = [
+                      {
+                        template = "https://search.nixos.org/packages";
+                        params = [
+                          {
+                            name = "type";
+                            value = "packages";
+                          }
+                          {
+                            name = "query";
+                            value = "{searchTerms}";
+                          }
+                        ];
+                      }
+                    ];
+                    icon = "${pkgs.nixos-icons}/share/icons/hicolor/scalable/apps/nix-snowflake.svg";
+                    definedAliases = ["@np"];
                   };
                   "NixOS Wiki" = {
-                    urls = [{
-                      template =
-                        "https://nixos.wiki/index.php?search={searchTerms}";
-                    }];
+                    urls = [
+                      {
+                        template = "https://nixos.wiki/index.php?search={searchTerms}";
+                      }
+                    ];
                     iconUpdateURL = "https://nixos.wiki/favicon.png";
                     updateInterval = 24 * 60 * 60 * 1000;
-                    definedAliases = [ "@nw" ];
+                    definedAliases = ["@nw"];
                   };
                   "Home manager option search" = {
-                    urls = [{
-                      template =
-                        "https://mipmip.github.io/home-manager-option-search/?query={searchTerms}";
-                    }];
-                    iconUpdateURL =
-                      "https://mipmip.github.io/home-manager-option-search/images/favicon.png";
+                    urls = [
+                      {
+                        template = "https://mipmip.github.io/home-manager-option-search/?query={searchTerms}";
+                      }
+                    ];
+                    iconUpdateURL = "https://mipmip.github.io/home-manager-option-search/images/favicon.png";
                     updateInterval = 24 * 60 * 60 * 1000;
-                    definedAliases = [ "@hm" ];
+                    definedAliases = ["@hm"];
                   };
                   "Khan academy" = {
-                    urls = [{
-                      template =
-                        "https://www.khanacademy.org/search?search_again=1&page_search_query={searchTerms}";
-                    }];
-                    iconUpdateURL =
-                      "https://cdn.kastatic.org/images/favicon.ico?logo";
+                    urls = [
+                      {
+                        template = "https://www.khanacademy.org/search?search_again=1&page_search_query={searchTerms}";
+                      }
+                    ];
+                    iconUpdateURL = "https://cdn.kastatic.org/images/favicon.ico?logo";
                     updateInterval = 24 * 60 * 60 * 1000;
-                    definedAliases = [ "@ka" "@k" ];
+                    definedAliases = ["@ka" "@k"];
                   };
                   "Lib.rs" = {
-                    urls =
-                      [{ template = "https://lib.rs/search?q={searchTerms}"; }];
+                    urls = [{template = "https://lib.rs/search?q={searchTerms}";}];
                     iconUpdateURL = "https://lib.rs/favicon.png";
                     updateInterval = 24 * 60 * 60 * 1000;
-                    definedAliases = [ "@lb" "@rs" ];
+                    definedAliases = ["@lb" "@rs"];
                   };
                   "Wikipedia (en)".metaData.alias = "@wiki";
                   "Google".metaData.hidden = true;
@@ -168,10 +161,11 @@ in
                 };
               };
 
-              settings = { "general.smoothScroll" = true; };
-              extraConfig = # js
+              settings = {"general.smoothScroll" = true;};
+              extraConfig =
+                # js
                 ''
-                  lockPref("extensions.autoDisableScopes", 0); 
+                  lockPref("extensions.autoDisableScopes", 0);
                   user_pref("toolkit.legacyUserProfileCustomizations.stylesheets", true);
                   user_pref("full-screen-api.ignore-widgets", true);
                   user_pref("media.ffmpeg.vaapi.enabled", true);
@@ -238,12 +232,13 @@ in
                   ****************************************************************************/
                   /** TRACKING PROTECTION ***/
                   ${
-                  # Let adnauseam handle blocking
-                  if builtins.hasAttr "adnauseam@rednoise.org" extensions then
-                    ""
-                  else ''
-                    user_pref("browser.contentblocking.category", "strict");
-                  ''}
+                    # Let adnauseam handle blocking
+                    if builtins.hasAttr "adnauseam@rednoise.org" extensions
+                    then ""
+                    else ''
+                      user_pref("browser.contentblocking.category", "strict");
+                    ''
+                  }
                   user_pref("urlclassifier.trackingSkipURLs", "*.reddit.com, *.twitter.com, *.twimg.com, *.tiktok.com");
                   user_pref("urlclassifier.features.socialtracking.skipURLs", "*.instagram.com, *.twitter.com, *.twimg.com");
                   user_pref("privacy.query_stripping.strip_list", "__hsfp __hssc __hstc __s _hsenc _openstat dclid fbclid gbraid gclid hsCtaTracking igshid mc_eid ml_subscriber ml_subscriber_hash msclkid oft_c oft_ck oft_d oft_id oft_ids oft_k oft_lk oft_sk oly_anon_id oly_enc_id rb_clickid s_cid twclid vero_conv vero_id wbraid wickedid yclid");
@@ -479,10 +474,8 @@ in
             };
           };
         };
-        home.file.".mozilla/firefox/sargo/chrome/firefox-gnome-theme/".source =
-          "${config.firefox-gnome-theme}";
+        home.file.".mozilla/firefox/sargo/chrome/firefox-gnome-theme/".source = "${config.firefox-gnome-theme}";
       };
     })
   ];
-
 }

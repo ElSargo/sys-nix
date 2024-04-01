@@ -1,7 +1,6 @@
 {
   home-manager.sharedModules = [
-    ({ config, ... }: {
-
+    ({config, ...}: {
       xdg = {
         enable = true;
         mimeApps = {
@@ -35,5 +34,4 @@
       };
     })
   ];
-
 }

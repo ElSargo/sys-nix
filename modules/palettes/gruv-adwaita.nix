@@ -1,4 +1,4 @@
-{ lib, ... }: {
+{lib, ...}: {
   options.palettes.gruv-adwaita = lib.mkOption {
     default = {
       helix_theme = "gruvy";

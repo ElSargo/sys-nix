@@ -1,7 +1,10 @@
 {
   home-manager.sharedModules = [
-    ({ pkgs, config, ... }: {
-
+    ({
+      pkgs,
+      config,
+      ...
+    }: {
       programs.kitty = {
         enable = true;
         package = pkgs.unstable.kitty;
@@ -46,10 +49,8 @@
           cursor_text_color = config.palette.bg2; # "#665c54"
 
           url_color = config.palette.br_blue; # "#458588"
-
         };
       };
     })
   ];
-
 }

@@ -1,4 +1,4 @@
-{ lib, ... }: {
+{lib, ...}: {
   options.palettes.adwaita = lib.mkOption {
     default = rec {
       helix_theme = "adwaita-dark";

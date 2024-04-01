@@ -1,7 +1,10 @@
-{ pkgs, config, ... }: {
+{
+  pkgs,
+  config,
+  ...
+}: {
   programs.bash = {
     enable = true;
-    shellAliases = config.shellAliases // { lf = " cd $( ${pkgs.lf}/bin/lf -print-last-dir )"; };
-
+    shellAliases = config.shellAliases // {lf = " cd $( ${pkgs.lf}/bin/lf -print-last-dir )";};
   };
 }

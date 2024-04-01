@@ -1,6 +1,10 @@
-{ pkgs, config, ... }:
+{
+  pkgs,
+  config,
+  ...
+}:
 # let supabar-wasm = ''"file:${pkgs.supabar}/bin/zellij-supabar.wasm"'';
-# in 
+# in
 {
   programs.zellij = {
     enable = true;
@@ -9,21 +13,21 @@
     settings = {
       default_layout = "compact";
       pane_frames = true;
-      ui = { pane_frames = { rounded_corners = true; }; };
+      ui = {pane_frames = {rounded_corners = true;};};
       keybinds = {
         unbind = "Ctrl o";
         normal = {
-          "bind \"Ctrl d\"" = { "" = "Detach"; };
-          "bind \"Alt 1\"" = { GoToTab = 1; };
-          "bind \"Alt 2\"" = { GoToTab = 2; };
-          "bind \"Alt 3\"" = { GoToTab = 3; };
-          "bind \"Alt 4\"" = { GoToTab = 4; };
-          "bind \"Alt 5\"" = { GoToTab = 5; };
-          "bind \"Alt 6\"" = { GoToTab = 6; };
-          "bind \"Alt 7\"" = { GoToTab = 7; };
-          "bind \"Alt 8\"" = { GoToTab = 8; };
-          "bind \"Alt 9\"" = { GoToTab = 9; };
-          "bind \"Alt 0\"" = { GoToTab = 10; };
+          "bind \"Ctrl d\"" = {"" = "Detach";};
+          "bind \"Alt 1\"" = {GoToTab = 1;};
+          "bind \"Alt 2\"" = {GoToTab = 2;};
+          "bind \"Alt 3\"" = {GoToTab = 3;};
+          "bind \"Alt 4\"" = {GoToTab = 4;};
+          "bind \"Alt 5\"" = {GoToTab = 5;};
+          "bind \"Alt 6\"" = {GoToTab = 6;};
+          "bind \"Alt 7\"" = {GoToTab = 7;};
+          "bind \"Alt 8\"" = {GoToTab = 8;};
+          "bind \"Alt 9\"" = {GoToTab = 9;};
+          "bind \"Alt 0\"" = {GoToTab = 10;};
           "bind \"Alt s\"" = {
             "LaunchOrFocusPlugin \"zellij:session-manager\"" = {
               floating = true;

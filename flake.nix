@@ -1,24 +1,23 @@
 {
   description = "NixOS config";
 
-  outputs =
-    inputs@{ self
-    , nixpkgs
-    , unstable
-    , utils
-    , home-manager
-    , firefox-gnome-theme
-    , ...
-    }:
+  outputs = inputs @ {
+    self,
+    nixpkgs,
+    unstable,
+    utils,
+    home-manager,
+    firefox-gnome-theme,
+    ...
+  }:
     utils.lib.mkFlake {
       inherit self inputs;
       channelsConfig.allowUnfree = true;
 
       channels.nixpkgs.config.packageOverrides = pkgs: {
-        vaapiIntel = pkgs.vaapiIntel.override { enableHybridCodec = true; };
+        vaapiIntel = pkgs.vaapiIntel.override {enableHybridCodec = true;};
       };
-      channels.nixpkgs.overlaysBuilder = channels:
-        [ (f: p: { unstable = channels.unstable; }) ];
+      channels.nixpkgs.overlaysBuilder = channels: [(f: p: {unstable = channels.unstable;})];
 
       hostDefaults = {
         modules = [
@@ -26,8 +25,7 @@
           ./users
           home-manager.nixosModules.home-manager
           {
-            home-manager.sharedModules =
-              [{ config.firefox-gnome-theme = firefox-gnome-theme; }];
+            home-manager.sharedModules = [{config.firefox-gnome-theme = firefox-gnome-theme;}];
           }
         ];
       };
@@ -35,7 +33,7 @@
       hosts = import ./hosts;
 
       outputsBuilder = channels: {
-        formatter = channels.nixpkgs.nixpkgs-fmt;
+        formatter = channels.nixpkgs.alejandra;
       };
     };
 

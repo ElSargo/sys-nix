@@ -1,4 +1,4 @@
-{ lib, ... }: {
+{lib, ...}: {
   options.palettes.tokionight = lib.mkOption {
     default = rec {
       helix_theme = "tokio";

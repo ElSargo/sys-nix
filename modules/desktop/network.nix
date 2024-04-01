@@ -2,7 +2,7 @@
   networking = {
     networkmanager.enable = true;
     stevenblack = {
-      block = [ "fakenews" "gambling" "porn" ];
+      block = ["fakenews" "gambling" "porn"];
       enable = true;
     };
   };

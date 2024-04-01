@@ -1,4 +1,4 @@
-{ pkgs, ... }: {
+{pkgs, ...}: {
   programs.nix-index.enable = true;
   programs.command-not-found.enable = false;
 
@@ -8,8 +8,8 @@
     linkInputs = true;
     settings = {
       warn-dirty = false;
-      experimental-features = [ "nix-command" "flakes" ];
-      trusted-users = [ "root" "sargo" ];
+      experimental-features = ["nix-command" "flakes"];
+      trusted-users = ["root" "sargo"];
       auto-optimise-store = true;
     };
 

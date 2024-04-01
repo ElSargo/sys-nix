@@ -1,4 +1,9 @@
-{ stdenv, lib, fetchFromGitHub, kernel }:
+{
+  stdenv,
+  lib,
+  fetchFromGitHub,
+  kernel,
+}:
 stdenv.mkDerivation rec {
   name = "msi_ec-${version}-${kernel.version}";
   version = "1.6";
@@ -10,10 +15,10 @@ stdenv.mkDerivation rec {
     sha256 = "m7xrv+FvggYHIvtysdY9M2BWL8WkE57aM7RWEmHp2m4=";
   };
 
-  hardeningDisable = [ "pic" "format" ]; # 1
+  hardeningDisable = ["pic" "format"]; # 1
   nativeBuildInputs = kernel.moduleBuildDependencies; # 2
 
-  patches = [ ./msi-ec-patch.patch ];
+  patches = [./msi-ec-patch.patch];
 
   makeFlags = [
     "KERNELRELEASE=${kernel.modDirVersion}" # 3
@@ -29,4 +34,3 @@ stdenv.mkDerivation rec {
     platforms = platforms.linux;
   };
 }
-

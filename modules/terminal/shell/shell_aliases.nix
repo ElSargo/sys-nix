@@ -1,6 +1,10 @@
-{ pkgs, lib, ... }: {
+{
+  pkgs,
+  lib,
+  ...
+}: {
   options = {
-    shellAliases = lib.mkOption { };
+    shellAliases = lib.mkOption {};
   };
 
   config.shellAliases = {
@@ -11,6 +15,5 @@
     c = "clear";
     r = "reset";
     ns = "nix-shell";
-
   };
 }

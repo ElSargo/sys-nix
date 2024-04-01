@@ -1,6 +1,6 @@
-{ pkgs, ... }: {
-  environment = { sessionVariables = { NIXOS_OZONE_WL = "1"; }; };
-  xdg.portal = { enable = true; };
+{pkgs, ...}: {
+  environment = {sessionVariables = {NIXOS_OZONE_WL = "1";};};
+  xdg.portal = {enable = true;};
   hardware = {
     bluetooth.enable = true;
     opengl.enable = true;
@@ -15,9 +15,9 @@
     syncthing.enable = true;
     xserver = {
       enable = true;
-      desktopManager = { xterm.enable = false; };
+      desktopManager = {xterm.enable = false;};
       libinput.enable = true;
-      excludePackages = [ pkgs.xterm ];
+      excludePackages = [pkgs.xterm];
       layout = "us";
     };
   };

@@ -1,52 +1,58 @@
-{ pkgs, config, ... }:
+{
+  pkgs,
+  config,
+  ...
+}:
 with builtins; {
   programs.kitty.shellIntegration.enableFishIntegration = true;
   programs.fish = {
     package = pkgs.fish;
     enable = true;
-    functions =
-      let
-        mk_config = op: {
-          argumentNames = [ "name" ];
-          description = "Rebuild the system configuration";
-          body = # fish
-            ''
-              if test -z $name
-                set name $hostname
-              end
-              ulimit -n 4096;
-              sudo nixos-rebuild ${op} --flake "/home/sargo/sys-nix/#$(echo $name)" -p $name
-            '';
-        };
-      in
-      {
-        rbs = mk_config "switch";
-        rbb = mk_config "boot";
-        copy_history = {
-          body = # fish
-            "history | ${pkgs.skim}/bin/sk | xc";
-          description = "Copy a previously run command";
-        };
+    functions = let
+      mk_config = op: {
+        argumentNames = ["name"];
+        description = "Rebuild the system configuration";
+        body =
+          # fish
+          ''
+            if test -z $name
+              set name $hostname
+            end
+            ulimit -n 4096;
+            sudo nixos-rebuild ${op} --flake "/home/sargo/sys-nix/#$(echo $name)" -p $name
+          '';
       };
-    shellAliases = config.shellAliases // { lf = " cd $( ${pkgs.lf}/bin/lf -print-last-dir )"; };
+    in {
+      rbs = mk_config "switch";
+      rbb = mk_config "boot";
+      copy_history = {
+        body =
+          # fish
+          "history | ${pkgs.skim}/bin/sk | xc";
+        description = "Copy a previously run command";
+      };
+    };
+    shellAliases = config.shellAliases // {lf = " cd $( ${pkgs.lf}/bin/lf -print-last-dir )";};
     shellAbbrs = {
       q = "exit";
       ":q" = "exit";
       c = "clear";
       r = "reset";
     };
-    shellInit = # fish
+    shellInit =
+      # fish
       ''
         export EDITOR="hx"
         export VISUAL="hx"
       '';
-    interactiveShellInit = # fish
-      let color = mapAttrs (k: v: builtins.substring 1 6 v) config.palette;
-
+    interactiveShellInit =
+      # fish
+      let
+        color = mapAttrs (k: v: builtins.substring 1 6 v) config.palette;
       in ''
         set fish_greeting
         bind \ce edit_command_buffer
-        bind \ch copy_history  
+        bind \ch copy_history
         zoxide init fish | source
         starship init fish | source
         set -Ux STARSHIP_LOG error

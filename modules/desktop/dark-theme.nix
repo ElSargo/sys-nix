@@ -1,7 +1,6 @@
 {
   home-manager.sharedModules = [
-    ({ pkgs, ... }: {
-
+    ({pkgs, ...}: {
       gtk = {
         enable = true;
         theme = {
@@ -20,5 +19,4 @@
       };
     })
   ];
-
 }

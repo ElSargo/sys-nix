@@ -1,4 +1,4 @@
-{ pkgs, ... }: {
+{pkgs, ...}: {
   services = {
     acpid.enable = true;
     thermald = {
@@ -42,7 +42,6 @@
         CPU_MAX_PERF_ON_BAT = ""; # 30;
         CPU_BOOST_ON_AC = 1;
         CPU_HWP_DYN_BOOST_ON_AC = 1;
-
       };
     };
     power-profiles-daemon.enable = false;

@@ -1,4 +1,4 @@
-{ pkgs, ... }: {
+{pkgs, ...}: {
   home.file.".config/lf/icons".text = builtins.readFile ./lficons;
   home.packages = with pkgs; [
     bat
@@ -34,12 +34,14 @@
       esac
     '';
     commands = {
-      fuzy_search = # bash
+      fuzy_search =
+        # bash
         ''
           ''${{ res=$(sk --ansi -i -c 'rg --line-number "{}"' | cut -d : -f1)   ;   [ ! -z "$res" ] && lf -remote "send $id select \"$res\""
           }}
         '';
-      z = # bash
+      z =
+        # bash
         ''
           %{{
           	result="$(zoxide query --exclude $PWD $@)"
@@ -58,5 +60,4 @@
       T = "push $touch<space>";
     };
   };
-
 }
