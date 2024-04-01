@@ -33,6 +33,7 @@
             $env.DIR_STACK = {
               stack: [ $env.PWD ],
               level: 0
+              changed_by_bd = false;
             }
 
             def --env push_dir [dir] {
@@ -55,7 +56,12 @@
               }
               hooks: {
                   env_change: {
-                     PWD: {|before, after| push_dir $after }
+                     PWD: {|before, after| if $env.DIR_STACK.changed_by_bd {
+                        $env.DIR_STACK.changed_by_bd = false;
+                      } else {
+                        push_dir $after
+                      }
+                    }
                   }
                   command_not_found: {
                       |cmd| (
@@ -80,7 +86,10 @@
 
             def --env bd [] {
              let level = ( [($env.DIR_STACK.level - 1) 0] | math max )
-              $env.DIR_STACK.level = $level
+              cd ($env.DIR_STACK.stack | get $env.DIR_STACK.level)
+            }
+
+            def --env nd [] {
               cd ($env.DIR_STACK.stack | get $level)
             }
 
