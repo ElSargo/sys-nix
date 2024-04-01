@@ -78,15 +78,15 @@
               }
             }
 
-            def rbs [ opp ] {
+            def rb [ opp ] {
+              print Building system...
               let name = (sys | get host.hostname )
               cd ~/sys-nix/
-              nix fmt
-              git add -A
               git diff
+              git add -A
               git commit -m $"SYSTEM REBUILD ( date now )"
-              sudo nixos-rebuild switch --flake ( $"~/sys-nix#($name)" | path expand ) -p $name
-              ${pkgs.libnotify}/bin/notify-send "Rebuild complete"
+              sudo nixos-rebuild $opp --flake ( $"~/sys-nix#($name)" | path expand ) -p $name
+              ${pkgs.libnotify}/bin/notify-send $"Rebuild complete: ($name)"
             }
           '';
         shellAliases = config.shellAliases // {lf = " cd ( ${pkgs.lf}/bin/lf -print-last-dir )";};
