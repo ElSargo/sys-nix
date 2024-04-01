@@ -92,6 +92,7 @@
             }
 
             def --env nd [] {
+              $env.DIR_STACK.changed_by_bd = false
               cd ($env.DIR_STACK.stack | get ($env.DIR_STACK.level + 1))
             }
 
