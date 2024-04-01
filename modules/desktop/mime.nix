@@ -1,5 +1,17 @@
 {
   home-manager.sharedModules = [
+    ({
+      config,
+      lib,
+      ...
+    }: {
+      options = {
+        browser = lib.mkOption {
+          default = "firefox";
+          type = lib.types.str;
+        };
+      };
+    })
     ({config, ...}: {
       xdg = {
         enable = true;

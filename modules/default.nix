@@ -1,1 +1,1 @@
-{imports = [./desktop ./essentials ./terminal ./palettes];}
+{imports = [./desktop ./essentials ./terminal ./themes];}

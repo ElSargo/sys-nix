@@ -12,12 +12,13 @@
     services.gnome.sushi.enable = true;
     services.gnome.gnome-browser-connector.enable = true;
     environment = {
+      systemPackages = with pkgs; [valent];
       gnome.excludePackages = with pkgs.gnome;
         [
           cheese # webcam tool
           gnome-music
           gnome-terminal
-          gedit # text editor
+          # gedit # text editor
           epiphany # web browser
           tali # poker game
           iagno # go game

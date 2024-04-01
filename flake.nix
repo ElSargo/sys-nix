@@ -8,6 +8,7 @@
     utils,
     home-manager,
     firefox-gnome-theme,
+    stylix,
     ...
   }:
     utils.lib.mkFlake {
@@ -24,6 +25,7 @@
           ./modules
           ./users
           home-manager.nixosModules.home-manager
+          stylix.nixosModules.stylix
           {
             home-manager.sharedModules = [{config.firefox-gnome-theme = firefox-gnome-theme;}];
           }
@@ -46,5 +48,6 @@
       url = "github:rafaelmardojai/firefox-gnome-theme";
       flake = false;
     };
+    stylix.url = "github:danth/stylix/release-23.11";
   };
 }

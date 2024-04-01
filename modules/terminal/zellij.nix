@@ -35,20 +35,20 @@
           };
         };
       };
-      theme = "gruvbox_dark";
+      # theme = "gruvbox_dark";
       themes = {
         gruvbox_dark = {
-          fg = config.palette.br_bg;
-          bg = config.palette.bg;
-          black = config.palette.bg2;
-          red = config.palette.br_green;
-          green = config.palette.br_red;
-          yellow = config.palette.br_yellow;
-          blue = config.palette.br_blue;
-          magenta = config.palette.br_purple;
-          cyan = config.palette.br_aqua;
-          orange = config.palette.br_orange;
-          white = config.palette.white;
+          # fg = config.palette.br_bg;
+          # bg = config.palette.bg;
+          # black = config.palette.bg2;
+          # red = config.palette.br_green;
+          # green = config.palette.br_red;
+          # yellow = config.palette.br_yellow;
+          # blue = config.palette.br_blue;
+          # magenta = config.palette.br_purple;
+          # cyan = config.palette.br_aqua;
+          # orange = config.palette.br_orange;
+          # white = config.palette.white;
         };
       };
     };

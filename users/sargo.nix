@@ -17,7 +17,7 @@
     }
   ];
   home-manager.users.sargo = {lib, ...}: {
-    palette = config.palettes.gruv-adwaita;
+    # palette = config.palettes.gruv-adwaita;
     browser = "firefox";
     programs = {
       nix-index.enable = true;
