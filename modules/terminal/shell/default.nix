@@ -86,7 +86,7 @@
 
             def --env bd [] {
               let level = ( [($env.DIR_STACK.level - 1) 0] | math max )
-              $env.DIR_STACK.stack.changed_by_bd = true;
+              $env.DIR_STACK.changed_by_bd = true;
               cd ($env.DIR_STACK.stack | get $env.DIR_STACK.level)
             }
 
