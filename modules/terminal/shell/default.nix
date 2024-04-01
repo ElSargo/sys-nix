@@ -30,6 +30,7 @@
         configFile.text =
           # nu
           ''
+            $env.DIR_STACK = [ $env.PWD ]
             $env.config = {
               table: {
                 mode: rounded
@@ -43,6 +44,9 @@
                 always_trash: true
               }
               hooks: {
+                  env_change: {
+                     PWD: {|before, after| $env.DIR_STACK = ( $env.DIR_STACK | append $after); }
+                  }
                   command_not_found: {
                       |cmd| (
                          let foundCommands = (nix-locate --minimal --no-group --type x --type s --top-level --whole-name --at-root ("/bin/" + $cmd) | lines | str replace ".out" "");
@@ -62,6 +66,22 @@
             $env.DIRENV_LOG_FORMAT = ""
             $env.EDITOR = "hx"
             $env.VISUAL = "hx"
+
+
+            def --env bd [] {
+              try {
+                $env.DIR_STACK = ( $env.DIR_STACK | drop )
+                cd ( $env.DIR_STACK | last )
+                $env.DIR_STACK = ( $env.DIR_STACK | drop )
+              } catch {
+                print "No previous dir to jump to"
+              }
+            }
+
+            def rbs [] {
+              git add -A
+
+            }
           '';
         shellAliases = config.shellAliases // {lf = " cd ( ${pkgs.lf}/bin/lf -print-last-dir )";};
       };
