@@ -36,7 +36,7 @@
             }
 
             def --env push_dir [dir] {
-              let level = $env.DIR_STACK + 1;
+              let level = $env.DIR_STACK.level + 1;
               $env.DIR_STACK.level = $level
               $env.DIR_STACK.stack = ($env.DIR_STACK.stack | update $level $dir)
             }
