@@ -30,7 +30,17 @@
         configFile.text =
           # nu
           ''
-            $env.DIR_STACK = [ $env.PWD ]
+            $env.DIR_STACK = {
+              stack: [ $env.PWD ],
+              level: 0
+            }
+
+            def --env push_dir [dir] {
+              let level = $env.DIR_STACK + 1;
+              $env.DIR_STACK.level = $level
+              $env.DIR_STACK.stack = $env.DIR_STACK.stack | update $level $dir
+            }
+
             $env.config = {
               table: {
                 mode: rounded
@@ -45,7 +55,7 @@
               }
               hooks: {
                   env_change: {
-                     PWD: {|before, after| $env.DIR_STACK = ( $env.DIR_STACK | append $after); }
+                     PWD: {|before, after| push_dir $after }
                   }
                   command_not_found: {
                       |cmd| (
@@ -69,13 +79,9 @@
 
 
             def --env bd [] {
-              try {
-                $env.DIR_STACK = ( $env.DIR_STACK | drop )
-                cd ( $env.DIR_STACK | last )
-                $env.DIR_STACK = ( $env.DIR_STACK | drop )
-              } catch {
-                print "No previous dir to jump to"
-              }
+             let level = ( [($env.DIR_STACK.level - 1) 0] | math max )
+              $env.DIR_STACK.level = $level
+              cd ($env.DIR_STACK.stack | get $level)
             }
 
             def rb [ opp ] {
