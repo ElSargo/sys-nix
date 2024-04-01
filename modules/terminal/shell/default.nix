@@ -33,7 +33,7 @@
             $env.DIR_STACK = {
               stack: [ $env.PWD ],
               level: 0,
-              changed_by_bd = false
+              changed_by_bd: false
             }
 
             def --env push_dir [dir] {
