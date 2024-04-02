@@ -1,6 +1,7 @@
 {pkgs, ...}: {
   programs.nix-index.enable = true;
   programs.command-not-found.enable = false;
+  services.envfs.enable = true;
 
   nix = {
     generateRegistryFromInputs = true;
