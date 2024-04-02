@@ -12,6 +12,7 @@
     ./kitty.nix
     ./mime.nix
     ./gnome.nix
+    ./wezterm.nix
   ];
 
   services.preload.enable = true;
