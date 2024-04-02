@@ -4,7 +4,6 @@
     ({config, ...}: {
       imports = [
         ./bash.nix
-        ./completion.nix
         ./fish.nix
         ./shell_aliases.nix
         ./task.nix
@@ -25,6 +24,7 @@
         cargo
       ];
 
+      programs.carapace.enable = true;
       programs.nushell = {
         package = pkgs.unstable.nushellFull;
         enable = true;
