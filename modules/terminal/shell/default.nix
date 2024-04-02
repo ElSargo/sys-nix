@@ -1,5 +1,5 @@
 {pkgs, ...}: {
-  users.defaultUserShell = pkgs.nushellFull;
+  users.defaultUserShell = pkgs.unstable.nushellFull;
   home-manager.sharedModules = [
     ({config, ...}: {
       imports = [
