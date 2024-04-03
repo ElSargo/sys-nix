@@ -60,6 +60,10 @@
                 | if ($in | default [] | where value =~ '^-.*ERR$' | is-empty) { $in } else { null }
             }
 
+            let zoxide_completer = {|spans|
+                $spans | skip 1 | zoxide query -l ...$in | lines | where {|x| $x != $env.PWD}
+            }
+
             # This completer will use carapace by default
             let external_completer = {|spans|
                 let expanded_alias = scope aliases
