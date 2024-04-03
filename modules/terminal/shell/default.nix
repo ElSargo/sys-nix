@@ -26,7 +26,7 @@
 
       programs.carapace.enable = true;
       programs.nushell = {
-        package = pkgs.unstable.nushellFull;
+        package = pkgs.nushellFull; # Nu shell 0.91 is broken with carapace
         enable = true;
         configFile.text =
           # nu
