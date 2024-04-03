@@ -25,7 +25,7 @@
       ];
 
       programs.carapace.enable = true;
-      programs.carapace.programs.carapace.enableNushellIntegration = false;
+      programs.carapace.enableNushellIntegration = false;
       programs.nushell = {
         package = pkgs.nushellFull; # Nu shell 0.91 is broken with carapace
         enable = true;
