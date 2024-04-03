@@ -27,7 +27,7 @@
       programs.carapace.enable = true;
       programs.carapace.enableNushellIntegration = false;
       programs.nushell = {
-        package = pkgs.nushellFull; # Nu shell 0.91 is broken with carapace
+        package = pkgs.unstable.nushellFull; # Nu shell 0.91 is broken with carapace
         enable = true;
         configFile.text =
           # nu
@@ -61,7 +61,7 @@
             }
 
             let zoxide_completer = {|spans|
-                $spans | skip 1 | zoxide query -l ...$in | lines | where {|x| $x != $env.PWD}
+              zoxide query -l --exclude $env.PWD | lines | where {|x| $x =~ $spans.1}
             }
 
             # This completer will use carapace by default
