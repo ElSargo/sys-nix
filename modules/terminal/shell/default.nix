@@ -48,12 +48,6 @@
               }
             }
 
-            let fish_completer = {|spans|
-                fish --command $'complete "--do-complete=($spans | str join " ")"'
-                | $"value(char tab)description(char newline)" + $in
-                | from tsv --flexible --no-infer
-            }
-
             let carapace_completer = {|spans: list<string>|
                 carapace $spans.0 nushell ...$spans
                 | from json
@@ -79,9 +73,6 @@
                 }
 
                 match $spans.0 {
-                    nu => $fish_completer
-                    git => $fish_completer
-                    asdf => $fish_completer
                     __zoxide_z | __zoxide_zi => $zoxide_completer
                     _ => $carapace_completer
                 } | do $in $spans
