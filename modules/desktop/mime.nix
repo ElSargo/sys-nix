@@ -12,7 +12,12 @@
         };
       };
     })
-    ({config, ...}: {
+    ({
+      config,
+      pkgs,
+      ...
+    }: {
+      home.packages = with pkgs; [junction];
       xdg = {
         enable = true;
         mimeApps = {
