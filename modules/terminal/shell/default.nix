@@ -105,10 +105,12 @@
               print Building system...
               let name = (sys | get host.hostname )
               cd ~/sys-nix/
-              git diff
-              git add -A
-              git commit -m $"SYSTEM REBUILD ( date now )"
-              sudo nixos-rebuild $opp --flake ( $"~/sys-nix#($name)" | path expand ) -p $name
+              try {
+                git diff
+                git add -A
+                git commit -m $"SYSTEM REBUILD ( date now )"
+              }
+             sudo nixos-rebuild $opp --flake ( $"~/sys-nix#($name)" | path expand ) -p $name
               ${pkgs.libnotify}/bin/notify-send $"Rebuild complete: ($name)"
             }
           '';
