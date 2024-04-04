@@ -51,7 +51,7 @@
           binds = [
             {
               binding = "<Super>Return";
-              command = "kitty";
+              command = "wezterm";
               name = "open-terminal";
             }
             {
