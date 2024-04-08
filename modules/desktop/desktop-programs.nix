@@ -6,6 +6,7 @@
         inlyne
         # libreoffice
         thunderbird
+        psst
         nextcloud-client
       ];
     })
