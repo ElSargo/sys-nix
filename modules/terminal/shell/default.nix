@@ -151,6 +151,14 @@
              sudo nixos-rebuild $opp --flake ( $"~/sys-nix#($name)" | path expand ) -p $name
               ${pkgs.libnotify}/bin/notify-send $"Rebuild complete: ($name)"
             }
+
+            export def --env y [] {
+              let dir = mktemp
+              ${pkgs.yazi}/bin/yazi --cwd-file $dir
+              cd (cat $dir)
+              rm $dir
+            }
+
           '';
         shellAliases = config.shellAliases // {lf = " cd ( ${pkgs.lf}/bin/lf -print-last-dir )";};
       };

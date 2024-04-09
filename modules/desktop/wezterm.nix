@@ -53,7 +53,18 @@
                     key = 'e',
                     mods = 'CTRL',
                     action = act.EmitEvent 'hx-scrollback',
-                }
+                },
+                {
+                  key = 'v',
+                  mods = 'ALT',
+                  action = act.SplitHorizontal
+                },
+                {
+                  key = 'h',
+                  mods = 'ALT',
+                  action = act.SplitVertical
+                },
+
 
           }
           for i = 1, 8 do
