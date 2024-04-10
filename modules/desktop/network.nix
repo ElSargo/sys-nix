@@ -12,6 +12,13 @@
           from = 1714;
           to = 1764;
         } # KDE Connect
+        {
+          from = 21115;
+          to = 21117;
+        }
+      ];
+      allowedUDPPorts = [
+        21116
       ];
       allowedUDPPortRanges = [
         {

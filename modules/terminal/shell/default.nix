@@ -153,7 +153,7 @@
             }
 
             export def --env y [] {
-              let dir = mktemp
+              let dir = mktemp -t
               ${pkgs.yazi}/bin/yazi --cwd-file $dir
               cd (cat $dir)
               rm $dir
