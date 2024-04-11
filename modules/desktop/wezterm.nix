@@ -56,7 +56,7 @@
                 },
                 {
                   key = 'v',
-                  mods = 'ALT',
+                  mods = 'ALT|SHIFT',
                   action = act.SplitHorizontal
                 },
                 {

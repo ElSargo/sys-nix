@@ -25,7 +25,7 @@
   };
 
   config = {
-    stylix.base16Scheme = config.theme;
+    stylix.base16Scheme = lib.mkIf config.theme config.theme;
     stylix.image = config.wallpaper;
     stylix.opacity = {
       applications = 0.85;
