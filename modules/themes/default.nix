@@ -4,7 +4,7 @@
   config,
   ...
 }: {
-  imports = [./gruvbox.nix];
+  imports = [./fjord.nix];
 
   options = {
     wallpaper = lib.mkOption {
