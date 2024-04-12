@@ -5,6 +5,7 @@
         keepassxc
         inlyne
         # libreoffice
+        apostrophe
         thunderbird
         psst
         nextcloud-client

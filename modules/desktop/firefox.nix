@@ -463,18 +463,9 @@ in {
                   user_pref("layout.css.backdrop-filter.enabled", true);
 
                 '';
-
-              # userChrome = ''
-              #   @import "firefox-gnome-theme/userChrome.css";
-              # '';
-
-              # userContent = ''
-              #   @import "firefox-gnome-theme/userContent.css";
-              # '';
             };
           };
         };
-        # home.file.".mozilla/firefox/sargo/chrome/firefox-gnome-theme/".source = "${config.firefox-gnome-theme}";
       };
     })
   ];

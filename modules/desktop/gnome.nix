@@ -124,7 +124,7 @@
 
               favorite-apps = [
                 "firefox.desktop"
-                "kitty.desktop"
+                "wezterm.desktop"
                 "org.gnome.Console.desktop"
                 "org.keepassxc.KeePassXC.desktop"
                 "org.gnome.Nautilus.desktop"
