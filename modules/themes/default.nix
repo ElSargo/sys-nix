@@ -4,7 +4,7 @@
   config,
   ...
 }: {
-  imports = [./shore.nix];
+  imports = [./exorsist.nix];
 
   options = {
     wallpaper = lib.mkOption {
