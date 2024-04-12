@@ -7,4 +7,5 @@
 in {
   theme = null;
   wallpaper = "${repo}/abstract.jpg";
+  stylix.polarity = "dark";
 }
