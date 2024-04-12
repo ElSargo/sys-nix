@@ -4,7 +4,7 @@
   config,
   ...
 }: {
-  imports = [./shore.];
+  imports = [./shore.nix];
 
   options = {
     wallpaper = lib.mkOption {
