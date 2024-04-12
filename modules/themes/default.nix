@@ -4,7 +4,7 @@
   config,
   ...
 }: {
-  imports = [./beach.nix];
+  imports = [./shorenix];
 
   options = {
     wallpaper = lib.mkOption {
