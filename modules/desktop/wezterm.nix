@@ -56,12 +56,12 @@
                 },
                 {
                   key = 'v',
-                  mods = 'ALT|SHIFT',
+                  mods = 'ALT',
                   action = act.SplitHorizontal
                 },
                 {
-                  key = 'h',
-                  mods = 'ALT',
+                  key = 'v',
+                  mods = 'ALT|SHIFT',
                   action = act.SplitVertical
                 },
 
