@@ -4,7 +4,7 @@
   config,
   ...
 }: {
-  imports = [./fjord.nix];
+  imports = [./beachnix];
 
   options = {
     wallpaper = lib.mkOption {
