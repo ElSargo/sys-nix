@@ -7,7 +7,6 @@
     unstable,
     utils,
     home-manager,
-    firefox-gnome-theme,
     stylix,
     ...
   }:
@@ -26,9 +25,6 @@
           ./users
           home-manager.nixosModules.home-manager
           stylix.nixosModules.stylix
-          {
-            home-manager.sharedModules = [{config.firefox-gnome-theme = firefox-gnome-theme;}];
-          }
         ];
       };
 
@@ -44,10 +40,6 @@
     home-manager.url = "github:nix-community/home-manager/release-23.11";
     unstable.url = "nixpkgs/nixos-unstable";
     utils.url = "github:gytis-ivaskevicius/flake-utils-plus";
-    firefox-gnome-theme = {
-      url = "github:rafaelmardojai/firefox-gnome-theme";
-      flake = false;
-    };
     stylix.url = "github:danth/stylix/release-23.11";
   };
 }
