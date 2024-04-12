@@ -4,7 +4,7 @@
   config,
   ...
 }: {
-  imports = [./exorsist.nix];
+  imports = [./sakura.nix];
 
   options = {
     wallpaper = lib.mkOption {
