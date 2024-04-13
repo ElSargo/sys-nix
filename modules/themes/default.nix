@@ -4,7 +4,7 @@
   config,
   ...
 }: {
-  imports = [./sakura.nix];
+  imports = [./canoe.nix];
 
   options = {
     wallpaper = lib.mkOption {
