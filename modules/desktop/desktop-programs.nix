@@ -4,7 +4,7 @@
       home.packages = with pkgs; [
         keepassxc
         inlyne
-        obsidian
+        unstable.obsidian
         # libreoffice
         apostrophe
         thunderbird
