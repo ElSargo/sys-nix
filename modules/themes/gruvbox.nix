@@ -13,10 +13,10 @@
   home-manager.sharedModules = [
     ({pkgs, ...}: {
       # stylix.autoEnable = false;
-      stylix.targets.wezterm.enable = true;
-      stylix.targets.nushell.enable = true;
-      stylix.targets.fish.enable = true;
-      stylix.targets.bat.enable = true;
+      # stylix.targets.wezterm.enable = true;
+      # stylix.targets.nushell.enable = true;
+      # stylix.targets.fish.enable = true;
+      # stylix.targets.bat.enable = true;
       programs.helix.settings.theme = "gruvy";
       programs.helix.themes = {
         gruvy = {
