@@ -12,6 +12,7 @@
   stylix.autoEnable = false;
   home-manager.sharedModules = [
     ({pkgs, ...}: {
+      stylix.targets.wezterm.enable = true;
       # stylix.autoEnable = false;
       # stylix.targets.wezterm.enable = true;
       # stylix.targets.nushell.enable = true;
