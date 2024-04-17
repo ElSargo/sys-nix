@@ -8,6 +8,7 @@
     utils,
     home-manager,
     stylix,
+    firefox-gnome-theme,
     ...
   }:
     utils.lib.mkFlake {
@@ -25,6 +26,22 @@
           ./users
           home-manager.nixosModules.home-manager
           stylix.nixosModules.stylix
+          {
+            home-manager.sharedModules = [
+              ({...}: {
+                home.file.".mozilla/firefox/sargo/chrome/firefox-gnome-theme/".source = "${firefox-gnome-theme}";
+                programs.firefox.profiles.sargo = {
+                  userChrome = ''
+                    @import "firefox-gnome-theme/userChrome.css";
+                  '';
+
+                  userContent = ''
+                    @import "firefox-gnome-theme/userContent.css";
+                  '';
+                };
+              })
+            ];
+          }
         ];
       };
 
