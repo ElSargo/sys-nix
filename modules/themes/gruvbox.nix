@@ -17,7 +17,6 @@
       stylix.targets.wezterm.enable = true;
       stylix.targets.nushell.enable = true;
       stylix.targets.fish.enable = true;
-      stylix.targets.bash.enable = true;
       stylix.targets.lazygit.enable = true;
       stylix.targets.bat.enable = true;
       programs.helix.settings.theme = "gruvy";
