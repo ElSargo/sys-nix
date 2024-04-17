@@ -9,9 +9,17 @@
     sha256 = "sha256-MfXswI2VqCxb5Q/67bEqxJeibSJ5bk1FlcMTgln7Zqo=";
   };
 
+  stylix.autoEnable = false;
   home-manager.sharedModules = [
     ({pkgs, ...}: {
-      stylix.targets.helix.enable = false;
+      stylix.targets.helix.enable = true;
+      stylix.autoEnable = false;
+      stylix.targets.wezterm.enable = true;
+      stylix.targets.nushell.enable = true;
+      stylix.targets.fish.enable = true;
+      stylix.targets.bash.enable = true;
+      stylix.targets.lazygit.enable = true;
+      stylix.targets.bat.enable = true;
       programs.helix.settings.theme = "gruvy";
       programs.helix.themes = {
         gruvy = {

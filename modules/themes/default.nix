@@ -4,7 +4,7 @@
   config,
   ...
 }: {
-  imports = [./sakura.nix];
+  imports = [./gruvbox.nix];
 
   options = {
     wallpaper = lib.mkOption {
