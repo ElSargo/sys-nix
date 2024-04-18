@@ -24,6 +24,7 @@
         modules = [
           ./modules
           ./users
+          ./virt/virt-manager.nix
           home-manager.nixosModules.home-manager
           stylix.nixosModules.stylix
           {
