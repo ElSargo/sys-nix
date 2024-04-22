@@ -37,7 +37,10 @@
       icon-theme = pkgs.callPackage ./icons.nix {};
     in [
       {
-        gtk.iconTheme.package = icon-theme;
+        gtk.iconTheme = {
+          package = icon-theme;
+          name = "more-waita";
+        };
         stylix.polarity = "dark";
         # stylix.targets.firefox.enable = false;
         stylix.targets.firefox.profileNames = ["sargo"];
