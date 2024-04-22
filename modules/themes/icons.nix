@@ -14,7 +14,7 @@ stdenvNoCC.mkDerivation rec {
     owner = "somepaulo";
     repo = "MoreWaita";
     rev = version;
-    hash = "sha256-tv0C4mW2A3dScUXBWa7a3lkG4lPIjZTsj5b1/oEVuiw=";
+    hash = "sha256-UtwigqJjkin53Wg3PU14Rde6V42eKhmP26a3fDpbJ4Y=";
   };
 
   nativeBuildInputs = [gtk3 jdupes];
