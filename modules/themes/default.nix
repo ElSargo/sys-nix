@@ -33,8 +33,11 @@
       # popups = 0.85;
       # desktop = 0.85;
     };
-    home-manager.sharedModules = [
+    home-manager.sharedModules = let
+      icon-theme = pkgs.callPackage ./icons.nix {};
+    in [
       {
+        gtk.iconTheme.package = icon-theme;
         stylix.polarity = "dark";
         # stylix.targets.firefox.enable = false;
         stylix.targets.firefox.profileNames = ["sargo"];
