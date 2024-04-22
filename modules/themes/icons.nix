@@ -30,9 +30,9 @@ stdenvNoCC.mkDerivation rec {
   installPhase = ''
     runHook preInstall
 
-    patchShebangs install.sh
+    patchShebangs local-install.sh
     mkdir -p $out/share/icons
-    ./install.sh -a -d $out/share/icons
+    ./local-install.sh -a -d $out/share/icons
     jdupes -l -r $out/share/icons
 
     runHook postInstall
