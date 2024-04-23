@@ -40,7 +40,7 @@
           # rounded-window-corners
           browser-tabs
           onedrive
-          blur-my-shell
+          # blur-my-shell
           just-perfection
         ];
       in {
