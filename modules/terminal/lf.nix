@@ -7,7 +7,7 @@
     poppler_utils
     unrar
     lsix
-    zoxide
+    unstable.zoxide
     skim
     ripgrep
     fish

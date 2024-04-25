@@ -1,6 +1,6 @@
 {pkgs, ...}: {
   programs.zoxide = {
-    package = pkgs.zoxide;
+    package = pkgs.unstable.zoxide;
     enable = true;
     # enableNushellIntegration = false;
   };

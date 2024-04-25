@@ -26,7 +26,7 @@
 
       programs.carapace.enable = true;
       programs.carapace.enableNushellIntegration = false;
-      programs.zoxide.package = pkgs.unstable.zoxide;
+
       programs.nushell = {
         package = pkgs.unstable.nushellFull; # Nu shell 0.91 is broken with carapace
         enable = true;
