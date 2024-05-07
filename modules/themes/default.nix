@@ -33,26 +33,18 @@
       # popups = 0.85;
       # desktop = 0.85;
     };
-    home-manager.sharedModules =
-      # let
-      # icon-theme = pkgs.callPackage ./icons.nix {};
-      # in
-      [
-        {
-          gtk.iconTheme = {
-            # package = icon-theme;
-            name = "more-waita";
-          };
-          stylix.polarity = "dark";
-          # stylix.targets.firefox.enable = false;
-          stylix.targets.firefox.profileNames = ["sargo"];
-          stylix.opacity = {
-            # applications = 0.85;
-            terminal = 0.85;
-            # popups = 0.85;
-            # desktop = 0.85;
-          };
-        }
-      ];
+    home-manager.sharedModules = [
+      {
+        stylix.polarity = "dark";
+        # stylix.targets.firefox.enable = false;
+        stylix.targets.firefox.profileNames = ["sargo"];
+        stylix.opacity = {
+          # applications = 0.85;
+          terminal = 0.85;
+          # popups = 0.85;
+          # desktop = 0.85;
+        };
+      }
+    ];
   };
 }
