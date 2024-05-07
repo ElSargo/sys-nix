@@ -326,18 +326,16 @@
         "nixpkgs": "nixpkgs_3"
       },
       "locked": {
+        "dirtyRev": "a9e3ce064a778b386fb88fb152c02ae95aa2cbd2-dirty",
+        "dirtyShortRev": "a9e3ce0-dirty",
         "lastModified": 1705668784,
-        "narHash": "sha256-U/1Qol9H5nb8FtWSXSiHY8T4Y7TOIo7NHuqe4uuiBec=",
-        "owner": "danth",
-        "repo": "stylix",
-        "rev": "a9e3ce064a778b386fb88fb152c02ae95aa2cbd2",
-        "type": "github"
+        "narHash": "sha256-46WgO5Ace6C6XoWrl3RnoIIXKgPRtZHJo+DZTUvVF14=",
+        "type": "git",
+        "url": "file:///home/sargo/stylix"
       },
       "original": {
-        "owner": "danth",
-        "ref": "release-23.11",
-        "repo": "stylix",
-        "type": "github"
+        "type": "git",
+        "url": "file:///home/sargo/stylix"
       }
     },
     "systems": {
