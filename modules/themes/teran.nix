@@ -5,5 +5,5 @@
     sha256 = "sha256-fg7K/pnqePOj4XDAb1RQremx2FQF4fs1TSBOHQFqVXs=";
   };
 
-  stylix.polarity = "light";
+  # stylix.polarity = "light";
 }
