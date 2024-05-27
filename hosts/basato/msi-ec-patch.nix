@@ -11,8 +11,8 @@ stdenv.mkDerivation rec {
   src = fetchFromGitHub {
     owner = "BeardOverflow";
     repo = "msi-ec";
-    rev = "c39fe616c24e2ff12f086dfbc34358499c13f6bf";
-    sha256 = "m7xrv+FvggYHIvtysdY9M2BWL8WkE57aM7RWEmHp2m4=";
+    rev = "8632888bec84724f3521261286ccf4a9f9f56f7d";
+    sha256 = "sha256-yDDZUKD8r6dqQg5V5DMgdumLVkLfS6DRHVXtmFJWnQ4=";
   };
 
   hardeningDisable = ["pic" "format"]; # 1
@@ -30,7 +30,6 @@ stdenv.mkDerivation rec {
     description = "MSI laptop ec support";
     homepage = "https://github.com/aramg/droidcam";
     license = licenses.gpl3;
-    # maintainers = [ maintainers.makefu ];
     platforms = platforms.linux;
   };
 }

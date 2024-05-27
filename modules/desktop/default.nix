@@ -13,6 +13,7 @@
     ./mime.nix
     ./gnome.nix
     ./wezterm.nix
+    ./games.nix
   ];
 
   services.preload.enable = true;
