@@ -53,11 +53,14 @@
     };
 
   inputs = {
-    nixpkgs.url = "nixpkgs/release-23.11";
-    home-manager.url = "github:nix-community/home-manager/release-23.11";
+    nixpkgs.url = "nixpkgs/release-24.05";
+    home-manager.url = "github:nix-community/home-manager/release-24.05";
     unstable.url = "nixpkgs/nixos-unstable";
     utils.url = "github:gytis-ivaskevicius/flake-utils-plus";
-    stylix.url = "/home/sargo/stylix";
+    stylix = {
+      url = "github:danth/stylix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     firefox-gnome-theme = {
       url = "github:rafaelmardojai/firefox-gnome-theme";
       flake = false;

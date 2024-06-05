@@ -18,7 +18,6 @@
         trash-cli
         delta
         htop
-        nixfmt
         typos
         pastel
         cargo

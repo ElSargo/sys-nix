@@ -4,6 +4,7 @@
   ...
 }: {
   theme = config.mkTheme "gruvbox-dark-medium";
+
   wallpaper = pkgs.fetchurl {
     url = "https://codeberg.org/exorcist/wallpapers/raw/commit/7f2d29df30958703bc3c3fe1e20eb2e5a0ccaf22/abstract-2.jpg";
     sha256 = "sha256-MfXswI2VqCxb5Q/67bEqxJeibSJ5bk1FlcMTgln7Zqo=";

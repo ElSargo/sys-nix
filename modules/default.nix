@@ -1,1 +1,9 @@
-{imports = [./desktop ./essentials ./terminal ./themes ./virt/virt-manager.nix];}
+{
+  imports = [
+    ./desktop
+    ./essentials
+    ./terminal
+    ./themes
+    ./virt/virt-manager.nix
+  ];
+}

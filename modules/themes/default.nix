@@ -36,7 +36,7 @@
     home-manager.sharedModules = [
       {
         stylix.polarity = "dark";
-        # stylix.targets.firefox.enable = false;
+        stylix.targets.firefox.enable = false;
         stylix.targets.firefox.profileNames = ["sargo"];
         stylix.opacity = {
           # applications = 0.85;

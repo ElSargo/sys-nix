@@ -12,13 +12,13 @@
   services = {
     printing.enable = true;
     flatpak.enable = true;
+    libinput.enable = true;
     syncthing.enable = true;
     xserver = {
       enable = true;
       desktopManager = {xterm.enable = false;};
-      libinput.enable = true;
       excludePackages = [pkgs.xterm];
-      layout = "us";
+      xkb.layout = "us";
     };
   };
   systemd.watchdog.rebootTime = "10s";

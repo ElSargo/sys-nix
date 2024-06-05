@@ -139,7 +139,7 @@
             C-j = mkJump quote-file;
             C-k = mkJump quote-file;
             esc = ["collapse_selection" "keep_primary_selection"];
-            space = {n = [":write-all" ":sh nixfmt *.nix" ":reload-all"];};
+            # space = {n = [":write-all" ":sh nixfmt *.nix" ":reload-all"];};
           };
         };
       };
