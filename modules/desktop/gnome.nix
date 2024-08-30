@@ -7,6 +7,7 @@
   options = {gnome.enable = lib.mkOption {default = true;};};
 
   config = lib.mkIf config.gnome.enable {
+    programs.fuse.userAllowOther = true;
     services.xserver.desktopManager.gnome.enable = true;
     services.xserver.displayManager.gdm.enable = true;
     services.gnome.sushi.enable = true;
@@ -36,11 +37,7 @@
       }: let
         extensions = with pkgs.gnomeExtensions; [
           caffeine
-          pano
           # rounded-window-corners
-          browser-tabs
-          onedrive
-          # blur-my-shell
           just-perfection
         ];
       in {
