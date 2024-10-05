@@ -25,6 +25,7 @@
   };
 
   config = {
+    stylix.enable = true;
     stylix.base16Scheme = lib.mkIf (config.theme != null) config.theme;
     stylix.image = config.wallpaper;
     stylix.opacity = {
@@ -35,6 +36,7 @@
     };
     home-manager.sharedModules = [
       {
+        stylix.enable = true;
         stylix.polarity = "dark";
         stylix.targets.firefox.enable = false;
         stylix.targets.firefox.profileNames = ["sargo"];

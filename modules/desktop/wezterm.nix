@@ -5,13 +5,13 @@
       programs.wezterm.extraConfig =
         #lua
         ''
-          local wezterm = require 'wezterm'
           local act = wezterm.action
           local io = require 'io'
           local os = require 'os'
           local config = {}
           local mux = wezterm.mux
           config.enable_wayland = true
+          config.front_end = "WebGpu"
           config.tab_bar_at_bottom = true
           config.hide_tab_bar_if_only_one_tab = true
           config.font = wezterm.font {
@@ -73,6 +73,16 @@
               key = 'g',
               mods = 'ALT|SHIFT',
               action = act.EmitEvent 'test',
+            },
+            {
+              key = 'q',
+              mods = 'ALT',
+              action = wezterm.action.CloseCurrentPane { confirm = false },
+            },
+            {
+              key = "s",
+              mods = 'ALT',
+              action = act.EmitEvent 'sesh',
             }
           }
 
@@ -185,10 +195,59 @@
           config.default_gui_startup_args = { 'connect', 'unix' }
 
 
-          wezterm.on('gui-startup', function(cmd)
-            local tab, pane, window = mux.spawn_window(cmd or {})
-            window:gui_window():maximize()
-          end)
+
+          -- From https://github.com/wez/wezterm/discussions/4796#discussioncomment-8354795
+          local fd = "${pkgs.fd}/bin/fd"
+          local rootPath = "/home/sargo/"
+
+          local toggle = function(window, pane)
+            local projects = {}
+
+            local success, stdout, stderr = wezterm.run_child_process({
+              fd,
+              "-HI",
+              "-td",
+              "^.git$",
+              "--max-depth=4",
+              rootPath,
+              -- add more paths here
+            })
+
+            if not success then
+              wezterm.log_error("Failed to run fd: " .. stderr)
+              return
+            end
+
+            for line in stdout:gmatch("([^\n]*)\n?") do
+              local project = line:gsub("/.git/$", "")
+              local label = project
+              local id = project:gsub(".*/", "")
+              table.insert(projects, { label = tostring(label), id = tostring(id) })
+            end
+
+            window:perform_action(
+              act.InputSelector({
+                action = wezterm.action_callback(function(win, _, id, label)
+                  if not id and not label then
+                    wezterm.log_info("Cancelled")
+                  else
+                    wezterm.log_info("Selected " .. label)
+                    win:perform_action(
+                      act.SwitchToWorkspace({ name = id, spawn = { cwd = label } }),
+                      pane
+                    )
+                  end
+                end),
+                fuzzy = true,
+                title = "Select project",
+                choices = projects,
+              }),
+              pane
+            )
+          end
+          -- End
+
+          wezterm.on("sesh", toggle)
 
           return config
         '';

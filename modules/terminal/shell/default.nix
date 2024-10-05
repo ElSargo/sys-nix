@@ -152,11 +152,14 @@
               ${pkgs.libnotify}/bin/notify-send $"Rebuild complete: ($name)"
             }
 
-            export def --env y [] {
-              let dir = mktemp -t
-              ${pkgs.yazi}/bin/yazi --cwd-file $dir
-              cd (cat $dir)
-              rm $dir
+            def --env y [...args] {
+            	let tmp = (mktemp -t "yazi-cwd.XXXXXX")
+            	${pkgs.yazi}/bin/yazi ...$args --cwd-file $tmp
+            	let cwd = (open $tmp)
+            	if $cwd != "" and $cwd != $env.PWD {
+            		cd $cwd
+            	}
+            	rm -fp $tmp
             }
 
           '';

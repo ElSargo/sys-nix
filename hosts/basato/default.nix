@@ -31,6 +31,9 @@
     in [msi-ec];
   };
 
+  hardware.enableAllFirmware = true;
+  environment.systemPackages = with pkgs; [sof-firmware];
+
   services = {
     fprintd = {enable = true;};
     xserver.videoDrivers = ["intel" "modsetting"];

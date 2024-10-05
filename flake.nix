@@ -9,6 +9,7 @@
     home-manager,
     stylix,
     firefox-gnome-theme,
+    helix,
     ...
   }:
     utils.lib.mkFlake {
@@ -19,6 +20,8 @@
         vaapiIntel = pkgs.vaapiIntel.override {enableHybridCodec = true;};
       };
       channels.nixpkgs.overlaysBuilder = channels: [(f: p: {unstable = channels.unstable;})];
+
+      sharedOverlays = [helix.overlays.default];
 
       hostDefaults = {
         modules = [
@@ -53,6 +56,7 @@
     };
 
   inputs = {
+    helix.url = "github:ElSargo/helix";
     nixpkgs.url = "nixpkgs/release-24.05";
     home-manager.url = "github:nix-community/home-manager/release-24.05";
     unstable.url = "nixpkgs/nixos-unstable";
