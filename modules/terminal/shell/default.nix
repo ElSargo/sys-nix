@@ -1,5 +1,5 @@
 {pkgs, ...}: {
-  users.defaultUserShell = pkgs.unstable.nushellFull;
+  users.defaultUserShell = pkgs.unstable.nushell;
   home-manager.sharedModules = [
     ({config, ...}: {
       imports = [
@@ -7,6 +7,7 @@
         ./fish.nix
         ./shell_aliases.nix
         ./task.nix
+        ./prompt.nix
       ];
 
       home.packages = with pkgs; [
@@ -27,7 +28,7 @@
       programs.carapace.enableNushellIntegration = false;
 
       programs.nushell = {
-        package = pkgs.unstable.nushellFull; # Nu shell 0.91 is broken with carapace
+        package = pkgs.unstable.nushell; # Nu shell 0.91 is broken with carapace
         enable = true;
         configFile.text =
           # nu

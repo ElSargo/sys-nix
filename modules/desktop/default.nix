@@ -10,7 +10,7 @@
     ./desktop-programs.nix
     ./firefox.nix
     ./kitty.nix
-    ./mime.nix
+    # ./mime.nix
     ./gnome.nix
     ./wezterm.nix
     ./games.nix
