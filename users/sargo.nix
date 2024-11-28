@@ -22,10 +22,6 @@
     programs = {
       nix-index.enable = true;
       home-manager.enable = true;
-      bat = {
-        enable = true;
-        config = {theme = "gruvbox-dark";};
-      };
       lazygit = {
         enable = true;
         settings = {

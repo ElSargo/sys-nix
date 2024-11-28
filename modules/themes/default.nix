@@ -4,7 +4,7 @@
   config,
   ...
 }: {
-  imports = [./gruvbox.nix];
+  imports = [./tokyonight.nix];
 
   options = {
     wallpaper = lib.mkOption {

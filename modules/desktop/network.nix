@@ -3,7 +3,7 @@
     networkmanager.enable = true;
     stevenblack = {
       block = ["fakenews" "gambling" "porn"];
-      enable = true;
+      enable = false;
     };
     firewall = {
       enable = true;

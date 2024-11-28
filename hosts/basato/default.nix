@@ -27,7 +27,7 @@
     ];
 
     extraModulePackages = let
-      msi-ec = config.boot.kernelPackages.callPackage ./msi-ec-patch.nix {};
+      msi-ec = config.boot.kernelPackages.msi-ec;
     in [msi-ec];
   };
 

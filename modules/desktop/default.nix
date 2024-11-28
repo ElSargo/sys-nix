@@ -14,6 +14,7 @@
     ./gnome.nix
     ./wezterm.nix
     ./games.nix
+    ./wayfire.nix
   ];
 
   services.preload.enable = true;

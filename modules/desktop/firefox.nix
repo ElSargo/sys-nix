@@ -23,7 +23,7 @@
           };
           programs.firefox = {
             enable = true;
-            package = pkgs.wrapFirefox pkgs.firefox-esr-unwrapped {
+            package = pkgs.wrapFirefox pkgs.firefox-unwrapped {
               extraPolicies = {
                 CaptivePortal = false;
                 DisableFirefoxStudies = true;
@@ -31,9 +31,7 @@
                 DisableTelemetry = true;
                 DisableFirefoxAccounts = true;
                 NoDefaultBookmarks = true;
-                OfferToSaveLogins = false;
-                OfferToSaveLoginsDefault = false;
-                PasswordManagerEnabled = false;
+                OfferToSaveLoginsDefault = true;
                 FirefoxHome = {
                   Search = true;
                   Pocket = false;
@@ -61,18 +59,6 @@
               sargo = {
                 id = 0;
                 name = "sargo";
-                # extensions = with pkgs.nur.repos.rycee.firefox-addons; [
-                #   clearurls
-                #   decentraleyes
-                #   adnauseam
-                #   keepassxc-browser
-                #   re-enable-right-click
-                #   sponsorblock
-                #   tabliss
-                #   vimium-c
-                #   youtube-shorts-block
-                #   tabcenter-reborn
-                # ];
                 search = {
                   force = true;
                   default = "Brave";
