@@ -6,7 +6,6 @@
         ./bash.nix
         ./fish.nix
         ./shell_aliases.nix
-        ./task.nix
         ./prompt.nix
       ];
 
@@ -21,7 +20,6 @@
         htop
         typos
         pastel
-        cargo
       ];
 
       programs.carapace.enable = true;

@@ -7,13 +7,11 @@
           "{74145f27-f039-47ce-a470-a662b129930a}" = "https://addons.mozilla.org/firefox/downloads/latest/clearurls/latest.xpi";
           "jid1-BoFifL9Vbdl2zQ@jetpack" = "https://addons.mozilla.org/firefox/downloads/latest/decentraleyes/latest.xpi";
           "adnauseam@rednoise.org" = "https://addons.mozilla.org/firefox/downloads/latest/adnauseam/latest.xpi";
-          "keepassxc-browser@keepassxc.org" = "https://addons.mozilla.org/firefox/downloads/latest/keepassxc-browser/latest.xpi";
           "{278b0ae0-da9d-4cc6-be81-5aa7f3202672}" = "https://addons.mozilla.org/firefox/downloads/latest/re-enable-right-click/latest.xpi";
           "sponsorBlocker@ajay.app" = "https://addons.mozilla.org/firefox/downloads/latest/sponsorblock/latest.xpi";
           "extension@tabliss.io" = "https://addons.mozilla.org/firefox/downloads/latest/tabliss/latest.xpi";
           "vimium-c@gdh1995.cn" = "https://addons.mozilla.org/firefox/downloads/latest/vimium-c/latest.xpi";
           "{34daeb50-c2d2-4f14-886a-7160b24d66a4}" = "https://addons.mozilla.org/firefox/downloads/latest/youtube-shorts-block/latest.xpi";
-          "tabcenter-reborn@ariasuni" = "https://addons.mozilla.org/firefox/downloads/latest/tabcenter-reborn/latest.xpi";
         };
       in {
         config = {

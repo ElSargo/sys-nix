@@ -14,7 +14,7 @@
     services.gnome.gnome-browser-connector.enable = true;
     environment = {
       systemPackages = with pkgs; [valent];
-      gnome.excludePackages = with pkgs.gnome;
+      gnome.excludePackages = with pkgs;
         [
           cheese # webcam tool
           gnome-music

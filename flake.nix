@@ -5,10 +5,10 @@
     self,
     nixpkgs,
     unstable,
+    qtile,
     utils,
     home-manager,
     stylix,
-    firefox-gnome-theme,
     helix,
     ...
   }:
@@ -21,7 +21,10 @@
       };
       channels.nixpkgs.overlaysBuilder = channels: [(f: p: {unstable = channels.unstable;})];
 
-      sharedOverlays = [helix.overlays.default];
+      sharedOverlays = [
+        helix.overlays.default
+        # qtile.overlays.default
+      ];
 
       hostDefaults = {
         modules = [
@@ -29,22 +32,6 @@
           ./users
           home-manager.nixosModules.home-manager
           stylix.nixosModules.stylix
-          {
-            home-manager.sharedModules = [
-              ({...}: {
-                home.file.".mozilla/firefox/sargo/chrome/firefox-gnome-theme/".source = "${firefox-gnome-theme}";
-                programs.firefox.profiles.sargo = {
-                  userChrome = ''
-                    @import "firefox-gnome-theme/userChrome.css";
-                  '';
-
-                  userContent = ''
-                    @import "firefox-gnome-theme/userContent.css";
-                  '';
-                };
-              })
-            ];
-          }
         ];
       };
 
@@ -62,12 +49,12 @@
     unstable.url = "nixpkgs/nixos-unstable";
     utils.url = "github:gytis-ivaskevicius/flake-utils-plus";
     stylix = {
-      url = "github:danth/stylix/release-24.11";
+      url = "github:danth/stylix/d13ffb381c83b6139b9d67feff7addf18f8408fe";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    firefox-gnome-theme = {
-      url = "github:rafaelmardojai/firefox-gnome-theme";
-      flake = false;
+    qtile = {
+      url = "github:qtile/qtile";
+      inputs.nixpkgs.follows = "nixpkgs";
     };
   };
 }

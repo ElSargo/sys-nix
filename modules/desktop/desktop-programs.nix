@@ -5,11 +5,6 @@
         keepassxc
         inlyne
         unstable.obsidian
-        # libreoffice
-        apostrophe
-        thunderbird
-        psst
-        nextcloud-client
       ];
     })
   ];

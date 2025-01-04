@@ -35,7 +35,7 @@
   environment.systemPackages = with pkgs; [sof-firmware];
 
   services = {
-    fprintd = {enable = true;};
+    fprintd = {enable = false;};
     xserver.videoDrivers = ["intel" "modsetting"];
     xserver.deviceSection = ''
       Option "DRI" "3"
@@ -44,8 +44,7 @@
 
   nix.settings.system-features = ["gccarch-alderlake" "kvm" "nixos-test" "big-parallel"];
 
-  hardware.opengl = {
-    driSupport = true;
+  hardware.graphics = {
     enable = true;
     extraPackages = with pkgs; [intel-media-driver intel-compute-runtime];
   };
@@ -57,7 +56,7 @@
     fsType = "ext4";
   };
 
-  swapDevices = [{device = "/dev/disk/by-label/Swap";}];
+  # swapDevices = [{device = "/dev/disk/by-label/Swap";}];
 
   fileSystems."/boot" = {
     device = "/dev/disk/by-uuid/DDFD-8F0E";

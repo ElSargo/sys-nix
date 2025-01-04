@@ -4,6 +4,6 @@
     ./essentials
     ./terminal
     ./themes
-    ./virt/virt-manager.nix
+    # ./virt/virt-manager.nix
   ];
 }
