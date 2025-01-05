@@ -1,41 +1,19 @@
-# Copyright (c) 2010 Aldo Cortesi
-# Copyright (c) 2010, 2014 dequis
-# Copyright (c) 2012 Randall Ma
-# Copyright (c) 2012-2014 Tycho Andersen
-# Copyright (c) 2012 Craig Barnes
-# Copyright (c) 2013 horsik
-# Copyright (c) 2013 Tao Sauvage
-#
-# Permission is hereby granted, free of charge, to any person obtaining a copy
-# of this software and associated documentation files (the "Software"), to deal
-# in the Software without restriction, including without limitation the rights
-# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-# copies of the Software, and to permit persons to whom the Software is
-# furnished to do so, subject to the following conditions:
-#
-# The above copyright notice and this permission notice shall be included in
-# all copies or substantial portions of the Software.
-#
-# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-# SOFTWARE.
-
 from libqtile.log_utils import logger
 from libqtile.backend.wayland import InputConfig
 from libqtile.config import Click, Drag, Group, Key, Match, Screen
 from libqtile.lazy import lazy
 from libqtile.utils import guess_terminal
 from libqtile import extension, hook, bar, layout, qtile, widget
-import subprocess
+import os
+
+def spawn_os(path):
+    os.spawnlp(os.P_NOWAIT, path, path)
 
 @hook.subscribe.startup_once
 def launch_startup():
-    subprocess.run(["swayosd-server"])
-    subprocess.run(["swaync"])
+    for bin in ["wezterm-mux-server", "swayosd-server", "swaync" ]:
+        spawn_os(bin)
+    
 
 
 mod = "mod4"
@@ -50,24 +28,14 @@ def add_research_wm_class(window):
     global spawning_research, research_wids
     if spawning_research:
         info = window.info()
-        logger.warning(f"Adding window to goodies {info}")
         research_wids.add(info['id'])
 
 @lazy.function
 def group_research_browser(*args, **kwargs):
     global spawning_research, research_wids
     for window in qtile.current_group.windows:
-        logger.warning(window.info())
         if window.info()['id'] in  research_wids:
-            logger.warning("Found window") 
-            if window.minimized:
-                logger.warning("Hiding window") 
-                window.floating = False
-                window.minimized = False
-            else:
-                logger.warning("Showing window") 
-                window.floating = True
-                window.minimized = True
+            window.minimized = not window.minimized
             return
     spawning_research = True
     qtile.spawn("firefox")
@@ -92,6 +60,34 @@ def wezterm_tab(tab: int):
 def laz(*args):
     qtile.simulate_keypress(["alt"], "3")
 
+
+
+@lazy.function
+def wezterm_with_group_workspace(*args):
+    if not focus_wezterm():
+        qtile.spawn(f"wezterm connect --workspace qtile-group-{qtile.current_group.name} unix")
+
+
+
+def open_workspace(path: str):
+    name = path.strip("~/").strip('/')
+    cmd = ""
+    logger.warning(path)
+    abspath = os.path.abspath(os.path.expanduser(path))
+    if not os.path.isdir(abspath):
+        cmd = f"hx {abspath}"
+        path = os.path.dirname(abspath)
+    com = f"wezterm connect unix --workspace {name} -- nu --execute 'cd {path}; {cmd}'"
+    logger.warning(com)
+    qtile.spawn(com)
+
+@lazy.function
+def wezterm_in_workspace(*args):
+    if focus_wezterm():
+        return
+
+    qtile.widgets_map["prompt"].start_input("Working dir", open_workspace, complete="file")
+        
 
 keys = [
     Key([mod], "p", group_research_browser, desc="Focus or spawn research browser"),
@@ -124,10 +120,11 @@ keys = [
     Key(
         [mod, "shift"],
         "Return",
-        lazy.layout.toggle_split(),
-        desc="Toggle between split and unsplit sides of stack",
+        wezterm_in_workspace,
+        desc="Open a workspace in a wezterm session",
     ),
-    Key([mod], "Return", lazy.spawn(terminal), desc="Launch terminal"),
+    # Key([mod], "Return", lazy.spawn(terminal), desc="Launch terminal"),
+    Key([mod], "Return", wezterm_with_group_workspace,desc="Launch wezterm"),
     # Toggle between different layouts as defined below
     Key([mod], "Tab", lazy.next_layout(), desc="Toggle between layouts"),
     Key([mod], "q", lazy.window.kill(), desc="Kill focused window"),
@@ -142,22 +139,35 @@ keys = [
     Key([mod, "control"], "q", lazy.shutdown(), desc="Shutdown Qtile"),
     Key([mod], "r", lazy.spawncmd(), desc="Spawn a command using a prompt widget"),
 
-    Key([], "XF86AudioLowerMute", lazy.spawn("swayosd-client --output-volume mute-toggle")),
+    # Key([], "XF86AudioLowerMute", lazy.spawn("swayosd-client --output-volume mute-toggle")),
     Key([], "f20", lazy.spawn("swayosd-client --brightness lower")),
     Key([], "XF86AudioLowerVolume", lazy.spawn("swayosd-client --output-volume lower")),
     Key([], "XF86AudioRaiseVolume", lazy.spawn("swayosd-client --output-volume raise")),
     Key([], "XF86MonBrightnessDown", lazy.spawn("swayosd-client --brightness lower")),
-    Key([], "XF86MonBrightnessUp", lazy.spawn("swayosd-client --brightness up"))
-
-    
-    # Key([mod, "control"], 'Return', lazy.run_extension(extension.CommandSet(
-    #     commands={
-    #         'f': "firefox",
-    #         'y': "wezterm start yazi"
-    #     }
-    # **Theme.dmenu
-    # )))
+    Key([], "XF86MonBrightnessUp", lazy.spawn("swayosd-client --brightness raise"))
 ]
+
+def set_volume(volume):
+    qtile.spawn("swayosd-client --output-volume -100")
+    qtile.spawn(f"swayosd-client --output-volume +{int(volume)}")
+
+@lazy.function
+def volume_prompt(*args):
+    logger.warning("Prompted")
+    qtile.widgets_map["prompt"].start_input("Set volume", set_volume)
+
+for key in [ "XF86AudioLowerVolume", "XF86AudioRaiseVolume" ]:
+    keys.append(Key([mod], key,volume_prompt, desc="Set the brightness using a prompted value"))
+
+def set_brightness(brightness):
+    qtile.spawn(f"swayosd-cleint --brightness {int(brightness)}")
+
+@lazy.function
+def brightness_prompt(*args):
+    qtile.widgets_map["prompt"].start_input("Set brightness", set_brightness)
+
+for key in [ "XF86MonBrightnessDown", "XF86MonBrightnessUp" ]:
+    keys.append(Key([mod], key, brightness_prompt,desc="Set the brightness using a prompted value"))
 
 for tab in range(1,10):
     keys.append(
@@ -183,42 +193,20 @@ groups = [Group(i) for i in "123456789"]
 for i in groups:
     keys.extend(
         [
-            # mod + group number = switch to group
             Key(
-                [mod],
-                i.name,
+                [mod], i.name,
                 lazy.group[i.name].toscreen(),
                 desc=f"Switch to group {i.name}",
             ),
-            # mod + shift + group number = switch to & move focused window to group
             Key(
-                [mod, "shift"],
-                i.name,
+                [mod, "shift"], i.name,
                 lazy.window.togroup(i.name, switch_group=True),
                 desc=f"Switch to & move focused window to group {i.name}",
             ),
-            # Or, use below if you prefer not to switch to that group.
-            # # mod + shift + group number = move focused window to group
-            # Key([mod, "shift"], i.name, lazy.window.togroup(i.name),
-            #     desc="move focused window to group {}".format(i.name)),
         ]
     )
 
-layouts = [
-    layout.Tile(add_on_top=False, border_focus="#e79b73", border_width=0, border_on_single=False)
-    # layout.Columns(border_focus_stack=["#d75f5f", "#8f3d3d"], border_width=0),
-    # layout.Max(),
-    # Try more layouts by unleashing below layouts.
-    # layout.Stack(num_stacks=2),
-    # layout.Bsp(),
-    # layout.Matrix(),
-    # layout.MonadTall(),
-    # layout.MonadWide(),
-    # layout.RatioTile(),
-    # layout.TreeTab(),
-    # layout.VerticalTile(),
-    # layout.Zoomy()
-]
+layouts = [ layout.Tile(add_on_top=False, border_focus="#e79b73", border_width=0, border_on_single=False) ]
 
 widget_defaults = dict(
     font="UbuntuMono",
@@ -227,13 +215,34 @@ widget_defaults = dict(
 )
 extension_defaults = widget_defaults.copy()
 
+
+
+from libqtile.widget.battery import BatteryStatus, BatteryState
+class BatteryWidget(widget.Battery):
+    def build_string(self, status: BatteryStatus) -> str:
+            """Determine the string to return for the given battery state """
+            is_charging = ""
+            if status.state == BatteryState.CHARGING:
+                is_charging = ""
+            charge_icon = [ "", "", "", "", "" ][int(status.percent * 5)] + " " 
+            return charge_icon + is_charging
+            
+
 screens = [
     Screen(
         bottom=bar.Bar(
             [
-                widget.GroupBox(),
-                widget.Prompt(),
+                widget.GroupBox(
+                    active="#DE956E",
+                    highlight_method='line',
+                    this_current_screen_border='#8bcbe7'
+                ),
+                # widget.TaskList(),
+                widget.Prompt(width=bar.STRETCH,bell_style=None,
+                              prompt='{prompt} > ',
+                          foreground='#8bcbe7'),
                 # widget.WindowName(),
+                # widget.Spacer(width=bar.STRETCH),
                 widget.Chord(
                     chords_colors={
                         "launch": ("#ff0000", "#ffffff"),
@@ -241,20 +250,20 @@ screens = [
                     name_transform=lambda name: name.upper(),
                 ),
                 # NB Systray is incompatible with Wayland, consider using StatusNotifier instead
-                widget.StatusNotifier(),
+                widget.StatusNotifier(foreground="#b3bbde"),
                 # widget.Systray(),
-                widget.Clock(format="%Y-%m-%d %a %I:%M %p"),
-                widget.QuickExit()
-            #     widget.SwayNC()
+                BatteryWidget(
+                    low_foreground="#e07d8e",
+                    foreground="#DE956E"
+                ),
+                widget.Bluetooth(foreground="#b3bbde"),
+                widget.Clock(format="%Y-%m-%d %a %I:%M %p",foreground="#b3bbde"),
+                widget.QuickExit(foreground="#b3bbde")
+                # widget.SwayNC()
             ],
             24,
-            # border_width=[2, 0, 2, 0],  # Draw top and bottom borders
-            # border_color=["ff00ff", "000000", "ff00ff", "000000"]  # Borders are magenta
+            background="#13131A",
         ),
-        # You can uncomment this variable if you see that on X11 floating resize/moving is laggy
-        # By default we handle these events delayed to already improve performance, however your system might still be struggling
-        # This variable is set to None (no cap) by default, but you can set it to 60 to indicate that you limit it to 60 events per second
-        # x11_drag_polling_rate = 60,
     ),
 ]
 
@@ -302,13 +311,6 @@ wl_input_rules = {
 wl_xcursor_theme = None
 wl_xcursor_size = 24
 
-# XXX: Gasp! We're lying here. In fact, nobody really uses or cares about this
-# string besides java UI toolkits; you can see several discussions on the
-# mailing lists, GitHub issues, and other WM documentation that suggest setting
-# this string if your java app doesn't work correctly. We may as well just lie
-# and say that we're a working one by default.
-#
-# We choose LG3D to maximize irony: it is a 3D non-reparenting WM written in
-# java that happens to be on java's whitelist.
+# Java app compatibility
 wmname = "LG3D"
 

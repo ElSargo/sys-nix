@@ -28,7 +28,7 @@
         lib,
         ...
       }: {
-        programs.helix.settings.theme = lib.mkForce "tok";
+        programs.helix.settings.theme = lib.mkForce "tokyonight";
         programs.helix.themes = {
           tok = {
             inherits = "tokyonight";

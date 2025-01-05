@@ -28,24 +28,12 @@
     stylix.enable = true;
     stylix.base16Scheme = lib.mkIf (config.theme != null) config.theme;
     stylix.image = config.wallpaper;
-    stylix.opacity = {
-      applications = 0.65;
-      terminal = 0.65;
-      popups = 0.65;
-      desktop = 0.65;
-    };
     home-manager.sharedModules = [
       {
         stylix.enable = true;
         stylix.polarity = "dark";
         stylix.targets.firefox.enable = false;
         stylix.targets.firefox.profileNames = ["sargo"];
-        stylix.opacity = {
-          applications = 0.65;
-          terminal = 0.65;
-          popups = 0.65;
-          desktop = 0.65;
-        };
       }
     ];
   };

@@ -13,6 +13,9 @@
           config.set_environment_variables = {
             SSH_AUTH_SOCK = "/run/user/1000/keyring/ssh"
           }
+          config.tiling_desktop_environments = {
+            'Wayland'
+          }
           config.enable_wayland = true
           config.front_end = "WebGpu"
           config.tab_bar_at_bottom = true
