@@ -5,7 +5,6 @@
     self,
     nixpkgs,
     unstable,
-    qtile,
     utils,
     home-manager,
     stylix,
@@ -21,10 +20,7 @@
       };
       channels.nixpkgs.overlaysBuilder = channels: [(f: p: {unstable = channels.unstable;})];
 
-      sharedOverlays = [
-        helix.overlays.default
-        # qtile.overlays.default
-      ];
+      sharedOverlays = [helix.overlays.default];
 
       hostDefaults = {
         modules = [
@@ -50,10 +46,6 @@
     utils.url = "github:gytis-ivaskevicius/flake-utils-plus";
     stylix = {
       url = "github:danth/stylix/d13ffb381c83b6139b9d67feff7addf18f8408fe";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-    qtile = {
-      url = "github:qtile/qtile";
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };

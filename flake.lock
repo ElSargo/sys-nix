@@ -301,32 +301,11 @@
         "type": "indirect"
       }
     },
-    "qtile": {
-      "inputs": {
-        "nixpkgs": [
-          "nixpkgs"
-        ]
-      },
-      "locked": {
-        "lastModified": 1735571478,
-        "narHash": "sha256-g/PxvvjE5T2eCJzNEKv69asfa1q37xk7dfI0YEZgGOU=",
-        "owner": "qtile",
-        "repo": "qtile",
-        "rev": "09a65d469af5e88740b495e266bb42df6f33a215",
-        "type": "github"
-      },
-      "original": {
-        "owner": "qtile",
-        "repo": "qtile",
-        "type": "github"
-      }
-    },
     "root": {
       "inputs": {
         "helix": "helix",
         "home-manager": "home-manager",
         "nixpkgs": "nixpkgs_3",
-        "qtile": "qtile",
         "stylix": "stylix",
         "unstable": "unstable",
         "utils": "utils"

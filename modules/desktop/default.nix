@@ -8,9 +8,8 @@
     ./settings.nix
     ./desktop-programs.nix
     ./firefox.nix
-    ./wezterm.nix
+    ./wezterm
     ./games.nix
-    # ./wayfire.nix
     ./qtile
     ./rofi.nix
   ];

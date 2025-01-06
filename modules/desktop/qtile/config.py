@@ -1,10 +1,13 @@
 from libqtile.log_utils import logger
 from libqtile.backend.wayland import InputConfig
-from libqtile.config import Click, Drag, Group, Key, Match, Screen
+from libqtile.config import Click, Drag, Group, Key, KeyChord, Match, Screen
 from libqtile.lazy import lazy
 from libqtile.utils import guess_terminal
 from libqtile import extension, hook, bar, layout, qtile, widget
+from xkbcommon import xkb
+import subprocess
 import os
+import json
 
 def spawn_os(path):
     os.spawnlp(os.P_NOWAIT, path, path)
@@ -12,8 +15,7 @@ def spawn_os(path):
 @hook.subscribe.startup_once
 def launch_startup():
     for bin in ["wezterm-mux-server", "swayosd-server", "swaync" ]:
-        spawn_os(bin)
-    
+        spawn_os(bin)   
 
 
 mod = "mod4"
@@ -29,6 +31,7 @@ def add_research_wm_class(window):
     if spawning_research:
         info = window.info()
         research_wids.add(info['id'])
+        spawning_research = False
 
 @lazy.function
 def group_research_browser(*args, **kwargs):
@@ -36,10 +39,21 @@ def group_research_browser(*args, **kwargs):
     for window in qtile.current_group.windows:
         if window.info()['id'] in  research_wids:
             window.minimized = not window.minimized
+            if window.minimized and window.has_focus():
+                qtile.current_group.focus_back()
             return
     spawning_research = True
     qtile.spawn("firefox")
 
+@lazy.function
+def toggle_reasearch_window(*args):
+    global research_wids
+    id = qtile.current_window.info()['id']
+    try:
+        research_wids.remove(id)
+    except KeyError:
+        research_wids.add(id)
+    
 
 
 def focus_wezterm() -> bool:
@@ -53,13 +67,8 @@ def wezterm_tab(tab: int):
     @lazy.function 
     def wezterm_tab_inner(*args):
         if focus_wezterm():
-            qtile.simulate_keypress(["mod1"], str(tab))
+            qtil.simulate_keypress(["mod1"], str(tab))
     return wezterm_tab_inner
-
-@lazy.function 
-def laz(*args):
-    qtile.simulate_keypress(["alt"], "3")
-
 
 
 @lazy.function
@@ -68,18 +77,51 @@ def wezterm_with_group_workspace(*args):
         qtile.spawn(f"wezterm connect --workspace qtile-group-{qtile.current_group.name} unix")
 
 
+def find_parent_git(path):
+    if os.path.isdir(path + "/.git"):
+        return path
+    if (parent := path.rpartition("/")[0]) == '':
+        return None
+    return find_parent_git(parent)
+
+def find_hx_pane(panes):
+    for pane in panes:
+        if pane['workspace'] == 'sys-nix' and pane['title'].endswith('> hx'):
+            return pane['pane_id']
+    return None
 
 def open_workspace(path: str):
-    name = path.strip("~/").strip('/')
-    cmd = ""
-    logger.warning(path)
-    abspath = os.path.abspath(os.path.expanduser(path))
-    if not os.path.isdir(abspath):
-        cmd = f"hx {abspath}"
-        path = os.path.dirname(abspath)
-    com = f"wezterm connect unix --workspace {name} -- nu --execute 'cd {path}; {cmd}'"
-    logger.warning(com)
-    qtile.spawn(com)
+    abspath = os.path.expanduser(path)
+    is_file = os.path.isfile(abspath)
+    target_dir = abspath
+    if (git := find_parent_git(abspath)) is not None:
+        target_dir = git
+    elif is_file :
+        target_dir = os.path.dirname(abspath) 
+
+    if is_file:
+        target_dir += '/'
+  
+
+    name = target_dir.split("/")[-2]
+    logger.warning("ABCD", target_dir, name)
+    tail = f"-- nu --execute 'cd {target_dir}'"
+
+    if is_file:
+        panes = json.loads(subprocess.run(["wezterm", "cli", "list", "--format", "json"], capture_output=True).stdout)
+        if any( pane['workspace'] == name for pane in panes ):
+            if (target_pane_id := find_hx_pane(panes)) is not None:
+                os.spawnlp(os.P_NOWAIT, "wezterm", "wezterm", "cli", "send-text", "--no-paste", "--pane-id", str(target_pane_id), f"\27\27:open {abspath}\r\n")
+                os.spawnlp(os.P_NOWAIT, "wezterm", "wezterm", "cli", "activate-pane", "--pane-id", str(target_pane_id) )
+                tail = ""
+        
+        if tail != "":
+            tail = f"-- nu --execute 'cd {target_dir}; hx {abspath}'"
+
+    command = f'wezterm connect unix --workspace {name} {tail}'
+    logger.warning(command)
+    qtile.spawn(command)
+    
 
 @lazy.function
 def wezterm_in_workspace(*args):
@@ -91,7 +133,7 @@ def wezterm_in_workspace(*args):
 
 keys = [
     Key([mod], "p", group_research_browser, desc="Focus or spawn research browser"),
-    # Key([mod, "shift"], "p", lambda: laz, desc="Test"),
+    Key([mod, "shift"], "p", toggle_reasearch_window, desc="Toggle research window"),
     # A list of available commands that can be bound to keys can be found
     # at https://docs.qtile.org/en/latest/manual/config/lazy.html
     # Switch between windows
@@ -140,11 +182,25 @@ keys = [
     Key([mod], "r", lazy.spawncmd(), desc="Spawn a command using a prompt widget"),
 
     # Key([], "XF86AudioLowerMute", lazy.spawn("swayosd-client --output-volume mute-toggle")),
-    Key([], "f20", lazy.spawn("swayosd-client --brightness lower")),
     Key([], "XF86AudioLowerVolume", lazy.spawn("swayosd-client --output-volume lower")),
     Key([], "XF86AudioRaiseVolume", lazy.spawn("swayosd-client --output-volume raise")),
     Key([], "XF86MonBrightnessDown", lazy.spawn("swayosd-client --brightness lower")),
-    Key([], "XF86MonBrightnessUp", lazy.spawn("swayosd-client --brightness raise"))
+    Key([], "XF86MonBrightnessUp", lazy.spawn("swayosd-client --brightness raise")),
+
+    KeyChord([mod], "s",[
+       Key([], "b", lazy.spawn("blueberry"),                                                              desc="Bluetooth connections"),
+       Key([], "d", lazy.spawn("wdisplays"),                                                              desc="Display settings"     ),
+       Key([], "w", lazy.spawn("blueberry"),                                                              desc="Wifi settings"        ),
+       Key([], "n", lazy.function(lambda x: open_workspace("~/sys-nix/")),                                desc="Nix settings"         ),
+       Key([], "q", lazy.function(lambda x: open_workspace("~/sys-nix/modules/desktop/qtile/config.py")), desc="Nix settings"         )          
+     ]),
+    KeyChord([mod], "d",[
+       Key([], "w", lazy.spawn("firefox https://wezfurlong.org/wezterm/config/files.html"), desc="Wezterm docs"           ),
+       Key([], "q", lazy.spawn("firefox https://docs.qtile.org/"                         ), desc="Qtile docs"             ),
+       Key([], "r", lazy.spawn("firefox https://crates.io/"                              ), desc="Crates.io (rust crates)"),
+       Key([], "p", lazy.spaen("firefox https://docs.python.org/3/"                      ), desc="Python docs"            ),
+       Key([], "n", lazy.spawn("firefox https://nixos.wiki/wiki/"                        ), desc="Nixos wiki"             )          
+     ])
 ]
 
 def set_volume(volume):
@@ -153,7 +209,6 @@ def set_volume(volume):
 
 @lazy.function
 def volume_prompt(*args):
-    logger.warning("Prompted")
     qtile.widgets_map["prompt"].start_input("Set volume", set_volume)
 
 for key in [ "XF86AudioLowerVolume", "XF86AudioRaiseVolume" ]:
@@ -250,7 +305,7 @@ screens = [
                     name_transform=lambda name: name.upper(),
                 ),
                 # NB Systray is incompatible with Wayland, consider using StatusNotifier instead
-                widget.StatusNotifier(foreground="#b3bbde"),
+                # widget.StatusNotifier(foreground="#b3bbde"),
                 # widget.Systray(),
                 BatteryWidget(
                     low_foreground="#e07d8e",
