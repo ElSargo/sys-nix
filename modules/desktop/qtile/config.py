@@ -2,12 +2,17 @@ from libqtile.log_utils import logger
 from libqtile.backend.wayland import InputConfig
 from libqtile.config import Click, Drag, Group, Key, KeyChord, Match, Screen
 from libqtile.lazy import lazy
-from libqtile.utils import guess_terminal
 from libqtile import extension, hook, bar, layout, qtile, widget
-from xkbcommon import xkb
+from asyncio import create_task, sleep
 import subprocess
 import os
 import json
+import wezpy
+
+wc = wezpy.WeztermClient()
+
+def lazy_async(fn):
+    return lazy.function( lambda call: create_task(fn()) )
 
 def spawn_os(path):
     os.spawnlp(os.P_NOWAIT, path, path)
@@ -19,7 +24,7 @@ def launch_startup():
 
 
 mod = "mod4"
-terminal = guess_terminal()
+terminal = "wezterm"
 
 
 spawning_research = False
@@ -54,11 +59,14 @@ def toggle_reasearch_window(*args):
     except KeyError:
         research_wids.add(id)
     
-
+def window_is_wezterm(window):
+    if (info := window.info()) is not None:
+        return info['wm_class'] == ['org.wezfurlong.wezterm']
+    return False
 
 def focus_wezterm() -> bool:
     for window in qtile.current_group.windows:
-        if window.info()['wm_class'] == ['org.wezfurlong.wezterm']:
+        if window_is_wezterm(window):
             window.focus()
             return True
     return False
@@ -67,7 +75,7 @@ def wezterm_tab(tab: int):
     @lazy.function 
     def wezterm_tab_inner(*args):
         if focus_wezterm():
-            qtil.simulate_keypress(["mod1"], str(tab))
+            qtile.simulate_keypress(["mod1"], str(tab))
     return wezterm_tab_inner
 
 
@@ -90,7 +98,10 @@ def find_hx_pane(panes):
             return pane['pane_id']
     return None
 
-def open_workspace(path: str):
+def command_json_output(command):
+    return json.loads(subprocess.run(command, capture_output=True).stdout)
+
+async def open_workspace(path: str):
     abspath = os.path.expanduser(path)
     is_file = os.path.isfile(abspath)
     target_dir = abspath
@@ -104,43 +115,79 @@ def open_workspace(path: str):
   
 
     name = target_dir.split("/")[-2]
-    logger.warning("ABCD", target_dir, name)
     tail = f"-- nu --execute 'cd {target_dir}'"
 
     if is_file:
-        panes = json.loads(subprocess.run(["wezterm", "cli", "list", "--format", "json"], capture_output=True).stdout)
-        if any( pane['workspace'] == name for pane in panes ):
-            if (target_pane_id := find_hx_pane(panes)) is not None:
-                os.spawnlp(os.P_NOWAIT, "wezterm", "wezterm", "cli", "send-text", "--no-paste", "--pane-id", str(target_pane_id), f"\27\27:open {abspath}\r\n")
-                os.spawnlp(os.P_NOWAIT, "wezterm", "wezterm", "cli", "activate-pane", "--pane-id", str(target_pane_id) )
-                tail = ""
-        
-        if tail != "":
+        if (pane_id := await wc.find_pane(workspace_pattern=name, title_pattern="> hx$")) is not None:
+            await wc.focus_pane(pane_id)
+            await wc.send_esc(pane_id)
+            await wc.write_to_pane(pane_id, ":")
+            await wc.send_paste(pane_id, f'open {abspath}')
+            await wc.send_enter(pane_id)
+        else:
             tail = f"-- nu --execute 'cd {target_dir}; hx {abspath}'"
+
+    logger.warning(is_file)
 
     command = f'wezterm connect unix --workspace {name} {tail}'
     logger.warning(command)
     qtile.spawn(command)
     
 
+
+
 @lazy.function
 def wezterm_in_workspace(*args):
     if focus_wezterm():
         return
 
-    qtile.widgets_map["prompt"].start_input("Working dir", open_workspace, complete="file")
+    qtile.widgets_map["prompt"].start_input("Working dir", 
+                                            lambda name: create_task(open_workspace(name)),
+                                            complete="file")
         
+
+def get_focused_wezterm_panes():
+    return [output['focused_pane_id'] for output in command_json_output(["wezterm", "cli", "list-clients", "--format", "json"])]
+
+
+
+@lazy_async
+async def async_firefox():
+    id = await wc.find_pane(title_pattern="> hx$")
+    await wc.send_esc(id)
+    await wc.write_to_pane(id, ":")
+    await wc.send_paste(id, "open ~/.bashrc")
+    await wc.send_enter(id)
+
+
+def smart_navigate(direction: str):
+    @lazy_async
+    async def inner(*args):
+        # Try to navigate within wezterm
+        if window_is_wezterm(qtile.current_window):
+            if await getattr(wc, f'navigate_{direction}')():
+                return
+
+        getattr(qtile.current_group.layout, direction)()
+    return inner
+
 
 keys = [
     Key([mod], "p", group_research_browser, desc="Focus or spawn research browser"),
     Key([mod, "shift"], "p", toggle_reasearch_window, desc="Toggle research window"),
+    Key([mod, "shift"], "t", async_firefox, desc="Toggle research window"),
     # A list of available commands that can be bound to keys can be found
+
     # at https://docs.qtile.org/en/latest/manual/config/lazy.html
     # Switch between windows
-    Key([mod], "h", lazy.layout.left(), desc="Move focus to left"),
-    Key([mod], "l", lazy.layout.right(), desc="Move focus to right"),
-    Key([mod], "j", lazy.layout.down(), desc="Move focus down"),
-    Key([mod], "k", lazy.layout.up(), desc="Move focus up"),
+    # Key([mod], "h", lazy.layout.left(), desc="Move focus to left"),
+    # Key([mod], "l", lazy.layout.right(), desc="Move focus to right"),
+    # Key([mod], "j", lazy.layout.down(), desc="Move focus down"),
+    # Key([mod], "k", lazy.layout.up(), desc="Move focus up"),
+    Key([mod], "h", smart_navigate("left"), desc="Move focus to left"),
+    Key([mod], "l", smart_navigate("right"), desc="Move focus to right"),
+    Key([mod], "j", smart_navigate("down"), desc="Move focus down"),
+    Key([mod], "k", smart_navigate("up"), desc="Move focus up"),
     Key([mod], "space", lazy.layout.next(), desc="Move window focus to other window"),
     # Move windows between left/right columns or move up/down in current stack.
     # Moving out of range in Columns layout will create new column.
@@ -191,8 +238,8 @@ keys = [
        Key([], "b", lazy.spawn("blueberry"),                                                              desc="Bluetooth connections"),
        Key([], "d", lazy.spawn("wdisplays"),                                                              desc="Display settings"     ),
        Key([], "w", lazy.spawn("blueberry"),                                                              desc="Wifi settings"        ),
-       Key([], "n", lazy.function(lambda x: open_workspace("~/sys-nix/")),                                desc="Nix settings"         ),
-       Key([], "q", lazy.function(lambda x: open_workspace("~/sys-nix/modules/desktop/qtile/config.py")), desc="Nix settings"         )          
+       Key([], "n", lazy.function(lambda x: create_task( open_workspace("~/sys-nix/"))),                                desc="Nix settings"         ),
+       Key([], "q", lazy.function(lambda x: create_task( open_workspace("~/sys-nix/modules/desktop/qtile/config.py"))), desc="Nix settings"         )          
      ]),
     KeyChord([mod], "d",[
        Key([], "w", lazy.spawn("firefox https://wezfurlong.org/wezterm/config/files.html"), desc="Wezterm docs"           ),
@@ -283,43 +330,52 @@ class BatteryWidget(widget.Battery):
             return charge_icon + is_charging
             
 
+def mk_bar():
+    return bar.Bar(
+    [
+        widget.GroupBox(
+            active="#DE956E",
+            highlight_method='line',
+            this_current_screen_border='#8bcbe7'
+        ),
+        # widget.TaskList(),
+        widget.Prompt(width=bar.STRETCH,bell_style=None,
+                      prompt='{prompt} > ',
+                  foreground='#8bcbe7'),
+        # widget.WindowName(),
+        widget.Clock(format="%Y-%m-%d %a %I:%M %p",foreground="#b3bbde"),
+
+        widget.Spacer(width=bar.STRETCH),
+        widget.Chord(
+            chords_colors={
+                "launch": ("#ff0000", "#ffffff"),
+            },
+            name_transform=lambda name: name.upper(),
+        ),
+        # NB Systray is incompatible with Wayland, consider using StatusNotifier instead
+        # widget.StatusNotifier(foreground="#b3bbde"),
+        # widget.Systray(),
+        BatteryWidget(
+            low_foreground="#e07d8e",
+            foreground="#DE956E"
+        ),
+        widget.Bluetooth(foreground="#b3bbde"),
+        widget.QuickExit(foreground="#b3bbde")
+        # widget.SwayNC()
+    ],
+    24,
+    background="#13131A",
+)    
 screens = [
     Screen(
-        bottom=bar.Bar(
-            [
-                widget.GroupBox(
-                    active="#DE956E",
-                    highlight_method='line',
-                    this_current_screen_border='#8bcbe7'
-                ),
-                # widget.TaskList(),
-                widget.Prompt(width=bar.STRETCH,bell_style=None,
-                              prompt='{prompt} > ',
-                          foreground='#8bcbe7'),
-                # widget.WindowName(),
-                # widget.Spacer(width=bar.STRETCH),
-                widget.Chord(
-                    chords_colors={
-                        "launch": ("#ff0000", "#ffffff"),
-                    },
-                    name_transform=lambda name: name.upper(),
-                ),
-                # NB Systray is incompatible with Wayland, consider using StatusNotifier instead
-                # widget.StatusNotifier(foreground="#b3bbde"),
-                # widget.Systray(),
-                BatteryWidget(
-                    low_foreground="#e07d8e",
-                    foreground="#DE956E"
-                ),
-                widget.Bluetooth(foreground="#b3bbde"),
-                widget.Clock(format="%Y-%m-%d %a %I:%M %p",foreground="#b3bbde"),
-                widget.QuickExit(foreground="#b3bbde")
-                # widget.SwayNC()
-            ],
-            24,
-            background="#13131A",
-        ),
+        bottom=mk_bar()
     ),
+    Screen(
+        bottom=mk_bar()
+    ),
+    Screen(
+        bottom=mk_bar()
+    )
 ]
 
 # Drag floating layouts.

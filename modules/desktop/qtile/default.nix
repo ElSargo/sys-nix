@@ -1,7 +1,21 @@
-{pkgs, ...}: {
+{
+  pkgs,
+  inputs,
+  ...
+}: let
+  interpreter = pkgs.python311.withPackages (pypkgs: with pypkgs; [qtile qtile-extras python-lsp-server pyflakes rope]);
+  lsp =
+    pkgs.writeScriptBin "pylsp"
+    ''
+      #! ${interpreter}/bin/python
+      from pylsp.__main__ import main
+      import sys
+      sys.exit(main())
+    '';
+in {
   environment.systemPackages =
-    (with pkgs.python311Packages; [qtile qtile-extras])
-    ++ (with pkgs; [swayosd swaynotificationcenter brightnessctl blueberry wdisplays]);
+    [(pkgs.python311Packages.qtile.override {extraPackages = [(inputs.wezpy.packages.${pkgs.system}.default pkgs.python311Packages)];})]
+    ++ (with pkgs; [lsp swayosd swaynotificationcenter brightnessctl blueberry wdisplays]);
 
   services.udev.extraRules = ''ACTION=="add", SUBSYSTEM=="backlight", RUN+="${pkgs.coreutils}/bin/chgrp video /sys/class/backlight/%k/brightness" ACTION=="add", SUBSYSTEM=="backlight", RUN+="${pkgs.coreutils}/bin/chmod g+w /sys/class/backlight/%k/brightness"'';
   services.gnome.gnome-keyring.enable = true;

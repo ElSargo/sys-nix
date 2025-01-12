@@ -4,7 +4,7 @@
   home-manager.sharedModules = [
     {
       imports = [
-        ./helix.nix
+        ./helix
         ./zoxide.nix
         ./cli-utils.nix
       ];
