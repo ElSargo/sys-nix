@@ -36,3 +36,6 @@ other-lines = "error"
 X = ["goto_first_nonwhitespace", "select_mode", "goto_line_end", "normal_mode"]
 esc = ["collapse_selection", "keep_primary_selection"]
 
+[keys.normal.space]
+"+" = "@<space>=\"=q"
+

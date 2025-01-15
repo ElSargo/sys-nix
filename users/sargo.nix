@@ -3,7 +3,7 @@
     isNormalUser = true;
     initialHashedPassword = "$6$Z7Ty/RzwsUJtd43I$6dCbqpYN1HOhTr5EoEgu6XyctK8lCYu6OqJGzREOjR5L0i6mn12vl2wF.nJzrAxqTCIl5idftqSOPI8WLNVky0";
     description = "Oliver Sargison";
-    extraGroups = ["networkmanager" "wheel" "libvirt-qemu" "video"];
+    extraGroups = ["networkmanager" "wheel" "libvirt-qemu" "video" "ydotool"];
   };
   home-manager.users.sargo = {
     browser = "firefox";

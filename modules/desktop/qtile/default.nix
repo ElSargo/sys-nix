@@ -3,7 +3,11 @@
   inputs,
   ...
 }: let
-  interpreter = pkgs.python311.withPackages (pypkgs: with pypkgs; [qtile qtile-extras python-lsp-server pyflakes rope]);
+  extraQtilePackages = [
+    (inputs.wezpy.packages.${pkgs.system}.default pkgs.python311Packages)
+    pkgs.python311Packages.qtile-extras
+  ];
+  interpreter = pkgs.python311.withPackages (pypkgs: with pypkgs; [qtile python-lsp-server pyflakes rope] ++ extraQtilePackages);
   lsp =
     pkgs.writeScriptBin "pylsp"
     ''
@@ -14,8 +18,10 @@
     '';
 in {
   environment.systemPackages =
-    [(pkgs.python311Packages.qtile.override {extraPackages = [(inputs.wezpy.packages.${pkgs.system}.default pkgs.python311Packages)];})]
+    [(pkgs.python311Packages.qtile.override {extraPackages = extraQtilePackages;})]
     ++ (with pkgs; [lsp swayosd swaynotificationcenter brightnessctl blueberry wdisplays]);
+
+  programs.ydotool.enable = true;
 
   services.udev.extraRules = ''ACTION=="add", SUBSYSTEM=="backlight", RUN+="${pkgs.coreutils}/bin/chgrp video /sys/class/backlight/%k/brightness" ACTION=="add", SUBSYSTEM=="backlight", RUN+="${pkgs.coreutils}/bin/chmod g+w /sys/class/backlight/%k/brightness"'';
   services.gnome.gnome-keyring.enable = true;

@@ -82,15 +82,12 @@
       }
     },
     "crane_2": {
-      "inputs": {
-        "nixpkgs": "nixpkgs_4"
-      },
       "locked": {
-        "lastModified": 1709610799,
-        "narHash": "sha256-5jfLQx0U9hXbi2skYMGodDJkIgffrjIOgMRjZqms2QE=",
+        "lastModified": 1736566337,
+        "narHash": "sha256-SC0eDcZPqISVt6R0UfGPyQLrI0+BppjjtQ3wcSlk0oI=",
         "owner": "ipetkov",
         "repo": "crane",
-        "rev": "81c393c776d5379c030607866afef6406ca1be57",
+        "rev": "9172acc1ee6c7e1cbafc3044ff850c568c75a5a3",
         "type": "github"
       },
       "original": {
@@ -200,11 +197,11 @@
         "systems": "systems_4"
       },
       "locked": {
-        "lastModified": 1709126324,
-        "narHash": "sha256-q6EQdSeUZOG26WelxqkmR7kArjgWCdw5sfJVHPH/7j8=",
+        "lastModified": 1731533236,
+        "narHash": "sha256-l0KFg5HjrsfsO/JpG+r7fRrqm12kzFHyUHqHCVpMMbI=",
         "owner": "numtide",
         "repo": "flake-utils",
-        "rev": "d465f4819400de7c8d874d50b982301f28a84605",
+        "rev": "11707dc2f618dd54ca8739b309ec4fc024de578b",
         "type": "github"
       },
       "original": {
@@ -352,22 +349,6 @@
         "id": "nixpkgs",
         "ref": "release-24.11",
         "type": "indirect"
-      }
-    },
-    "nixpkgs_4": {
-      "locked": {
-        "lastModified": 1736420959,
-        "narHash": "sha256-dMGNa5UwdtowEqQac+Dr0d2tFO/60ckVgdhZU9q2E2o=",
-        "owner": "NixOS",
-        "repo": "nixpkgs",
-        "rev": "32af3611f6f05655ca166a0b1f47b57c762b5192",
-        "type": "github"
-      },
-      "original": {
-        "owner": "NixOS",
-        "ref": "nixpkgs-unstable",
-        "repo": "nixpkgs",
-        "type": "github"
       }
     },
     "root": {
@@ -605,11 +586,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1736674261,
-        "narHash": "sha256-0rwE+XjJKu44oSuZ4Tzse6xKaCC3rIr0ZQ/unsryY1U=",
+        "lastModified": 1736903107,
+        "narHash": "sha256-klnxlea0qQoPOOjYnv/jK7REn27TBPoO7DDO5uaNZZ4=",
         "owner": "ElSargo",
         "repo": "wezpy",
-        "rev": "61d241f3c5a96b5b6fe10dfd45312624dfbdfa53",
+        "rev": "6b8f602d3c4b1c84817dc4b83963f5fe14e081e9",
         "type": "github"
       },
       "original": {

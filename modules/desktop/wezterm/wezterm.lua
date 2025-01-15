@@ -3,259 +3,342 @@ local wezterm = require("wezterm")
 wezterm.add_to_config_reload_watch_list(wezterm.config_dir)
 local function stylix_wrapped_config()
     local act = wezterm.action
-local io = require 'io'
-local os = require 'os'
-local config = {}
-local mux = wezterm.mux
-config.set_environment_variables = {
-  SSH_AUTH_SOCK = "/run/user/1000/keyring/ssh"
-}
-config.tiling_desktop_environments = {
-  'Wayland'
-}
-config.enable_wayland = true
-config.front_end = "WebGpu"
-config.tab_bar_at_bottom = true
-config.hide_tab_bar_if_only_one_tab = true
-config.font = wezterm.font {
-  family = 'JetBrains Mono Nerd Font',
-  weight = 'DemiBold',
-}
-config.font_size = 13
-config.window_decorations = "RESIZE"
-config.window_padding = {
-    left = 0,
-    right = 0,
-    top = 0,
-    bottom = 0,
-}
-
-config.leader = { key = 'Space', mods = 'CTRL', timeout_milliseconds = 1000 }
-config.keys = {
-  {
-    key = 'Return',
-    mods = 'ALT',
-    action = wezterm.action.ShowLauncher
-  },
-  {
-    key = 'h',
-    mods = 'ALT',
-    action = act.ActivatePaneDirection 'Left',
-  },
-  {
-    key = 'l',
-    mods = 'ALT',
-    action = act.ActivatePaneDirection 'Right',
-  },
-  {
-    key = 'k',
-    mods = 'ALT',
-    action = act.ActivatePaneDirection 'Up',
-  },
-  {
-    key = 'j',
-    mods = 'ALT',
-    action = act.ActivatePaneDirection 'Down',
-  },
-  {
-    key = 'e',
-    mods = 'CTRL',
-    action = act.EmitEvent 'hx-scrollback',
-  },
-  {
-    key = 't',
-    mods = 'CTRL',
-    action = act.TogglePaneZoomState,
-  },
-  {
-    key = 'v',
-    mods = 'ALT',
-    action = act.SplitHorizontal
-  },
-  {
-    key = 'v',
-    mods = 'ALT|SHIFT',
-    action = act.SplitVertical
-  },
-  {
-    key = 'g',
-    mods = 'ALT|SHIFT',
-    action = act.EmitEvent 'test',
-  },
-  {
-    key = 'q',
-    mods = 'ALT',
-    action = wezterm.action.CloseCurrentPane { confirm = false },
-  },
-  {
-    key = "s",
-    mods = 'LEADER',
-    action = act.EmitEvent 'sesh',
+  local io = require 'io'
+  local os = require 'os'
+  local config = {}
+  local mux = wezterm.mux
+  config.set_environment_variables = {
+    SSH_AUTH_SOCK = "/run/user/1000/keyring/ssh"
   }
-}
+  config.tiling_desktop_environments = {
+    'Wayland'
+  }
+  config.enable_tab_bar = false
+  -- config.show_tabs_in_tab_bar = false
+  -- config.show_new_tab_button_in_tab_bar = false
+  -- config.tab_bar_at_bottom = true
+  -- config.hide_tab_bar_if_only_one_tab = true
+  config.enable_wayland = true
+  config.front_end = "WebGpu"
+  config.font = wezterm.font {
+    family = 'JetBrains Mono Nerd Font',
+    weight = 'DemiBold',
+  }
+  config.font_size = 13
+  config.window_decorations = "RESIZE"
+  config.window_padding = {
+      left = 0,
+      right = 0,
+      top = 0,
+      bottom = 0,
+  }
 
-for i = 1, 8 do
-  -- CTRL+ALT + number to activate that tab
-  table.insert(config.keys, {
-    key = tostring(i),
-    mods = 'ALT',
-    action = act.ActivateTab(i - 1),
-  })
-end
+  config.leader = { key = 'Space', mods = 'CTRL', timeout_milliseconds = 1000 }
+  config.keys = {
+    {
+      key = 'Return',
+      mods = 'ALT',
+      action = wezterm.action.ShowLauncher
+    },
+    {
+      key = 'h',
+      mods = 'ALT',
+      action = act.ActivatePaneDirection 'Left',
+    },
+    {
+      key = 'l',
+      mods = 'ALT',
+      action = act.ActivatePaneDirection 'Right',
+    },
+    {
+      key = 'k',
+      mods = 'ALT',
+      action = act.ActivatePaneDirection 'Up',
+    },
+    {
+      key = 'j',
+      mods = 'ALT',
+      action = act.ActivatePaneDirection 'Down',
+    },
+    {
+      key = 's',
+      mods = 'ALT',
+      action = act.EmitEvent 'sesh',
+    },
+    {
+      key = 'e',
+      mods = 'CTRL',
+      action = act.EmitEvent 'hx-scrollback',
+    },
+    {
+      key = 't',
+      mods = 'CTRL',
+      action = act.TogglePaneZoomState,
+    },
+    {
+      key = 'v',
+      mods = 'ALT',
+      action = act.SplitHorizontal
+    },
+    {
+      key = 'v',
+      mods = 'ALT|SHIFT',
+      action = act.SplitVertical
+    },
+    {
+      key = 'g',
+      mods = 'ALT|SHIFT',
+      action = act.EmitEvent 'test',
+    },
+    {
+      key = 'q',
+      mods = 'ALT',
+      action = wezterm.action.CloseCurrentPane { confirm = false },
+    },
+    {
+      key = "s",
+      mods = 'LEADER',
+      action = act.EmitEvent 'sesh',
+    }
+  }
 
-
-
-
-
-wezterm.on('test', function(window, pane)
-
-
-  local dimensions = pane:get_dimensions()
-  local row = dimensions.physical_top + dimensions.viewport_rows - 2
-  local col_start = 7
-  local col_end = dimensions.cols
-  local status_text = pane:get_text_from_region(col_start,row,col_end,row + 1)
-  -- local text = 'cols: '..dimensions.cols.." ".. 'viewport_rows: '..dimensions.viewport_rows.." ".. 'scrollback_rows: '..dimensions.scrollback_rows.." ".. 'physical_top: '..dimensions.physical_top.." "..'scrollback_top: '.. dimensions.scrollback_top
-  local text = ""
-
-
-  for i in string.gmatch(status_text, "%S+") do
-     text = i
-     break
+  for i = 1, 8 do
+    -- CTRL+ALT + number to activate that tab
+    table.insert(config.keys, {
+      key = tostring(i),
+      mods = 'ALT',
+      action = act.ActivateTab(i - 1),
+    })
   end
 
-  for i in string.gmatch(text,"[^%.]+") do
-     text = i
-     break
-  end
 
 
-  local proc = pane:get_foreground_process_info()
-  if pid then
-  local pid = proc.pid
 
-  local env_f = io.open('/proc/'..pid..'/environ', 'r+')
-  local env_vars = env_f:read("*a")
-  text = env_vars
-  end
 
-  local name = os.tmpname()
-  local f = io.open(name, 'w')
-  f:write(text)
-  f:flush()
-  f:close()
+  wezterm.on('test', function(window, pane)
 
-  window:perform_action(
-    act.SplitPane {
-      command = {
-        -- set_environment_variables = { PATH = ""},
-        -- args = {'/nix/store/k65yq9109hqbjlg7sfhcnadga9avqvpm-openjdk-22+36/bin/java', '-ea', '-cp', 'res/', text} },
-        args = { 'hx', name }
+
+    local dimensions = pane:get_dimensions()
+    local row = dimensions.physical_top + dimensions.viewport_rows - 2
+    local col_start = 7
+    local col_end = dimensions.cols
+    local status_text = pane:get_text_from_region(col_start,row,col_end,row + 1)
+    -- local text = 'cols: '..dimensions.cols.." ".. 'viewport_rows: '..dimensions.viewport_rows.." ".. 'scrollback_rows: '..dimensions.scrollback_rows.." ".. 'physical_top: '..dimensions.physical_top.." "..'scrollback_top: '.. dimensions.scrollback_top
+    local text = ""
+
+
+    for i in string.gmatch(status_text, "%S+") do
+       text = i
+       break
+    end
+
+    for i in string.gmatch(text,"[^%.]+") do
+       text = i
+       break
+    end
+
+
+    local proc = pane:get_foreground_process_info()
+    if pid then
+    local pid = proc.pid
+
+    local env_f = io.open('/proc/'..pid..'/environ', 'r+')
+    local env_vars = env_f:read("*a")
+    text = env_vars
+    end
+
+    local name = os.tmpname()
+    local f = io.open(name, 'w')
+    f:write(text)
+    f:flush()
+    f:close()
+
+    window:perform_action(
+      act.SplitPane {
+        command = {
+          -- set_environment_variables = { PATH = ""},
+          -- args = {'/nix/store/k65yq9109hqbjlg7sfhcnadga9avqvpm-openjdk-22+36/bin/java', '-ea', '-cp', 'res/', text} },
+          args = { 'hx', name }
+        },
+        direction = "Right",
       },
-      direction = "Right",
+      pane
+    )
+
+    wezterm.sleep_ms(1000)
+    os.remove(name)
+    end
+  )
+
+  wezterm.on('hx-scrollback', function(window, pane)
+    -- Retrieve the text from the pane
+    local text = pane:get_lines_as_text(pane:get_dimensions().scrollback_rows)
+
+    -- Create a temporary file to pass to vim
+    local name = os.tmpname()
+    local f = io.open(name, 'w+')
+    f:write(text)
+    f:flush()
+    f:close()
+
+    -- Open a new window running vim and tell it to open the file
+    window:perform_action(
+      act.SplitPane {
+        command = { args = { 'hx', name } },
+        direction = "Down",
+      },
+      pane
+    )
+
+    -- Wait "enough" time for vim to read the file before we remove it.
+    -- The window creation and process spawn are asynchronous wrt. running
+    -- this script and are not awaitable, so we just pick a number.
+    --
+    -- Note: We don't strictly need to remove this file, but it is nice
+    -- to avoid cluttering up the temporary directory.
+    wezterm.sleep_ms(1000)
+    os.remove(name)
+  end
+  )
+
+
+  config.unix_domains = {
+    {
+      name = 'unix',
     },
-    pane
-  )
+  }
 
-  wezterm.sleep_ms(1000)
-  os.remove(name)
+  config.default_gui_startup_args = { 'connect', 'unix' }
+
+
+
+  -- From https://github.com/wez/wezterm/discussions/4796#discussioncomment-8354795
+  local fd = "/nix/store/6ycjl52s737iyhqsarah44q9109xdfgc-fd-10.2.0/bin/fd"
+  local rootPath = "/home/sargo/"
+
+  local toggle = function(window, pane)
+    local projects = {}
+
+    local success, stdout, stderr = wezterm.run_child_process({
+      fd,
+      "-HI",
+      "-td",
+      "^.git$",
+      "--max-depth=4",
+      rootPath,
+      -- add more paths here
+    })
+
+    if not success then
+      wezterm.log_error("Failed to run fd: " .. stderr)
+      return
+    end
+
+    for line in stdout:gmatch("([^\n]*)\n?") do
+      local project = line:gsub("/.git/$", "")
+      local label = project
+      local id = project:gsub(".*/", "")
+      table.insert(projects, { label = tostring(label), id = tostring(id) })
+    end
+
+    window:perform_action(
+      act.InputSelector({
+        action = wezterm.action_callback(function(win, _, id, label)
+          if not id and not label then
+            wezterm.log_info("Cancelled")
+          else
+            wezterm.log_info("Selected " .. label)
+            win:perform_action(
+              act.SwitchToWorkspace({ name = id, spawn = { cwd = label } }),
+              pane
+            )
+          end
+        end),
+        fuzzy = true,
+        title = "Select project",
+        choices = projects,
+      }),
+      pane
+    )
   end
-)
-
-wezterm.on('hx-scrollback', function(window, pane)
-  -- Retrieve the text from the pane
-  local text = pane:get_lines_as_text(pane:get_dimensions().scrollback_rows)
-
-  -- Create a temporary file to pass to vim
-  local name = os.tmpname()
-  local f = io.open(name, 'w+')
-  f:write(text)
-  f:flush()
-  f:close()
-
-  -- Open a new window running vim and tell it to open the file
-  window:perform_action(
-    act.SplitPane {
-      command = { args = { 'hx', name } },
-      direction = "Down",
-    },
-    pane
-  )
-
-  -- Wait "enough" time for vim to read the file before we remove it.
-  -- The window creation and process spawn are asynchronous wrt. running
-  -- this script and are not awaitable, so we just pick a number.
-  --
-  -- Note: We don't strictly need to remove this file, but it is nice
-  -- to avoid cluttering up the temporary directory.
-  wezterm.sleep_ms(1000)
-  os.remove(name)
-end
-)
-
-
-config.unix_domains = {
-  {
-    name = 'unix',
-  },
-}
-
-config.default_gui_startup_args = { 'connect', 'unix' }
-
-
-
--- From https://github.com/wez/wezterm/discussions/4796#discussioncomment-8354795
-local fd = "/nix/store/6ycjl52s737iyhqsarah44q9109xdfgc-fd-10.2.0/bin/fd"
-local rootPath = "/home/sargo/"
-
-local toggle = function(window, pane)
-  local projects = {}
-
-  local success, stdout, stderr = wezterm.run_child_process({
-    fd,
-    "-HI",
-    "-td",
-    "^.git$",
-    "--max-depth=4",
-    rootPath,
-    -- add more paths here
-  })
-
-  if not success then
-    wezterm.log_error("Failed to run fd: " .. stderr)
-    return
+  -- End
+  function split(inputstr, sep)
+    if sep == nil then
+      sep = "%s"
+    end
+    local t = {}
+    for str in string.gmatch(inputstr, "([^"..sep.."]+)") do
+      table.insert(t, str)
+    end
+    return t
   end
 
-  for line in stdout:gmatch("([^\n]*)\n?") do
-    local project = line:gsub("/.git/$", "")
-    local label = project
-    local id = project:gsub(".*/", "")
-    table.insert(projects, { label = tostring(label), id = tostring(id) })
-  end
+  
+  wezterm.on('user-var-changed', function(window, pane, name, value)
+    wezterm.log_info('var', name, value)
+    workspace,cwd,cmd = table.unpack(split(value,'@'))
+    wezterm.log_info(workspace, cwd, cmd)
+    if name == "WEZTERM_WORKSPACE" then
+      window:perform_action(
+        act.SwitchToWorkspace({ name = workspace, spawn = { args = { 'sh', '-c', cmd }, cwd = cwd } } ),
+        pane
+      )
+    end
+  end)
 
-  window:perform_action(
-    act.InputSelector({
-      action = wezterm.action_callback(function(win, _, id, label)
-        if not id and not label then
-          wezterm.log_info("Cancelled")
-        else
-          wezterm.log_info("Selected " .. label)
-          win:perform_action(
-            act.SwitchToWorkspace({ name = id, spawn = { cwd = label } }),
-            pane
-          )
-        end
-      end),
-      fuzzy = true,
-      title = "Select project",
-      choices = projects,
-    }),
-    pane
-  )
-end
--- End
 
-wezterm.on("sesh", toggle)
+  wezterm.on("sesh", toggle)
+
+  wezterm.on('window-focus-changed', function(window, pane)
+    wezterm.log_info(
+      'the focus state of ',
+      window:window_id(),
+      ' changed to ',
+      window:is_focused()
+    )
+
+
+    local file = io.open("/tmp/WEZTERM_CMD", 'r+')
+    local read = file:read("*all")
+    wezterm.log_info(read)
+
+    local workspace,cwd,cmd,random = table.unpack(split(read,'@'))
+    wezterm.log_info(workspace, cwd, cmd)
+    if random ~= last_random then 
+      last_random = random
+      wezterm.log_info('switching')
+      window:perform_action(
+        act.SwitchToWorkspace({ name = workspace, spawn = { args = { 'sh', '-c', cmd }, cwd = cwd } } ),
+        pane
+      )
+    end
+    
+    
+  end)  
+
+  -- wezterm.on('format-window-title', function(tab, pane, tabs, panes, config)
+  --   local zoomed = ''
+  --   if tab.active_pane.is_zoomed then
+  --     zoomed = '[Z] '
+  --   end
+
+  --   local index = ''
+  --   if #tabs > 1 then
+  --     index = string.format('[%d/%d] ', tab.tab_index + 1, #tabs)
+  --   end
+
+  --   local title = zoomed .. index .. tab.active_pane.title 
+
+  --   wezterm.emit('sesh')
+    
+  --   -- wezterm.gui.gui_window_for_mux_window(tab.window_id):set_right_status(wezterm.format {
+  --   --   { Attribute = { Underline = 'Single' } },
+  --   --   { Attribute = { Italic = true } },
+  --   --   { Text = title },
+  --   -- })
+
+  --   return title
+  -- end)
 
 return config
 
@@ -266,7 +349,7 @@ stylix_base_config = {
     color_scheme = "stylix",
     font = wezterm.font_with_fallback {
         "DejaVu Sans Mono",
-        "Noto Color Emoji",
+       "Noto Color Emoji",
     },
     font_size = 12,
     window_background_opacity = 1.000000,

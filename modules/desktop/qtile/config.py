@@ -1,21 +1,26 @@
 from libqtile.log_utils import logger
 from libqtile.backend.wayland import InputConfig
-from libqtile.config import Click, Drag, Group, Key, KeyChord, Match, Screen
+from libqtile.config import Click, Drag, Group, Key, KeyChord, Match, Screen,  ScratchPad, DropDown
 from libqtile.lazy import lazy
-from libqtile import extension, hook, bar, layout, qtile, widget
-from asyncio import create_task, sleep
+from libqtile import hook, bar, layout, qtile, widget
+import asyncio
+from asyncio import create_task 
 import subprocess
 import os
 import json
+import base64
 import wezpy
+from qtile_extras.widget.decorations import RectDecoration
 
 wc = wezpy.WeztermClient()
+
+groups = []
 
 def lazy_async(fn):
     return lazy.function( lambda call: create_task(fn()) )
 
-def spawn_os(path):
-    os.spawnlp(os.P_NOWAIT, path, path)
+def spawn_os(path, *args):
+    os.spawnlp(os.P_NOWAIT, path, path, *args)
 
 @hook.subscribe.startup_once
 def launch_startup():
@@ -25,6 +30,29 @@ def launch_startup():
 
 mod = "mod4"
 terminal = "wezterm"
+
+window_open_event = asyncio.Event()
+@hook.subscribe.client_managed
+def notify_window_open(*args):
+    window_open_event.set()
+    window_open_event.clear()
+
+next_group_to_open = None
+def open_on_group(cmd: str, group: str , switch_group: bool = False, toggle: bool = False):
+    global next_group_to_open
+    next_group_to_open = group
+    qtile.spawn(cmd)
+
+@hook.subscribe.client_new
+def move_clients_into_queued_groups(client):
+    global next_group_to_open
+    if next_group_to_open is None:
+        return
+    client.togroup(next_group_to_open)
+    next_group_to_open = None
+    
+def lazy_open_current_group(cmd, **kwargs):
+    return lazy.function(lambda x: open_on_group(cmd, qtile.current_group.name,**kwargs))
 
 
 spawning_research = False
@@ -101,7 +129,61 @@ def find_hx_pane(panes):
 def command_json_output(command):
     return json.loads(subprocess.run(command, capture_output=True).stdout)
 
+async def switch_workspace(workspace,cwd,cmd):
+    import random
+    with open('/tmp/WEZTERM_CMD', 'w') as file:
+        file.write('@'.join([workspace,cwd,cmd,str(random.random())]))
+    focus_wezterm()
+    blink_focus()
+    with open('/tmp/WEZTERM_CMD', 'w') as file:
+        file.write('')
+    
+    # data = base64.encodebytes(f'{workspace}@{cwd}@{cmd}'.encode())[0:-1].decode()
+    # os.spawnlp(os.P_NOWAIT,"wezterm", "wezterm", "cli", "spawn", "sh", "-c", f'echo "\033]1337;SetUserVar=WEZTERM_WORKSPACE={data}\007" ;sleep 2')
+    
+
+def wezterm_switch_workspace(pane_id: int, workspace: str):
+    spawn_os("wezterm", "cli", "spawn", "--pane-id", str(pane_id), "bash", "-c", f'printf \"\033]1337;SetUserVar=%s=%s\007\" WEZTERM_WORKSPACE `echo -n {workspace}| base64`;sleep 1')
+
+async def editor_open(pane_id, abspath):
+    logger.warning("Existing hx")
+    await wc.focus_pane(pane_id)
+    await wc.send_esc(pane_id)
+    await wc.write_to_pane(pane_id, ":")
+    await wc.send_paste(pane_id, f'open {abspath}')
+    await wc.send_enter(pane_id)
+
+async def new_editor(pane_id,target_dir,abspath):
+    logger.warning("New hx")
+    proc = await asyncio.create_subprocess_exec('wezterm', 'cli', 'spawn', '--pane-id', str(pane_id), '--cwd', target_dir,'hx', abspath, stdout=asyncio.subprocess.PIPE)
+    (stdout, stderr) = await proc.communicate()
+    return int(stdout.decode().strip())
+
+obsidian_group_name = ' '
+groups.append(Group(obsidian_group_name, spawn="obsidian"))
+@lazy.function
+def obsidian(*args):
+    g = qtile.groups_map[obsidian_group_name]
+    logger.warning( type(g).__name__ )
+    g.toscreen()
+
+
+    
+async def into_coro(x):
+    return await x
+
+
+async def open_file(path: str):
+    path = os.path.abspath(os.path.expanduser(path))
+    if focus_wezterm():
+        pass
+        # if (id := await )
+
 async def open_workspace(path: str):
+    # Conditions
+    # workspace exists
+    # window exists
+    # target is file
     abspath = os.path.expanduser(path)
     is_file = os.path.isfile(abspath)
     target_dir = abspath
@@ -114,32 +196,89 @@ async def open_workspace(path: str):
         target_dir += '/'
   
 
-    name = target_dir.split("/")[-2]
-    tail = f"-- nu --execute 'cd {target_dir}'"
+    workspace_name = target_dir.split("/")[-2]
+    (editor_pane, workspace_pane) = await asyncio.gather(
+         into_coro(wc.find_pane(workspace_pattern=workspace_name, title_pattern="hx$")),
+         into_coro(wc.find_pane(workspace_pattern=workspace_name))
+    )
 
-    if is_file:
-        if (pane_id := await wc.find_pane(workspace_pattern=name, title_pattern="> hx$")) is not None:
-            await wc.focus_pane(pane_id)
-            await wc.send_esc(pane_id)
-            await wc.write_to_pane(pane_id, ":")
-            await wc.send_paste(pane_id, f'open {abspath}')
-            await wc.send_enter(pane_id)
-        else:
-            tail = f"-- nu --execute 'cd {target_dir}; hx {abspath}'"
+    has_workspace = editor_pane is not None or workspace_pane is not None
 
-    logger.warning(is_file)
+    cd_tail = f" nu --execute 'cd {target_dir}'"
+    hx_open_tail = f' nu --execute "cd {target_dir} ; hx {abspath}"'
 
-    command = f'wezterm connect unix --workspace {name} {tail}'
-    logger.warning(command)
-    qtile.spawn(command)
+    pane_to_focus = None
     
+    if focus_wezterm():
+        # Has window
+        if is_file:
+            # Have a workspace
+            if has_workspace:
+                # Is file has window has editor
+                if editor_pane is not None:
+                    logger.warning("Have window, is file, opening in existing editor")
+                    await editor_open(editor_pane, abspath)    
+                    pane_to_focus = editor_pane
+                else:
+                    logger.warning("Have window, is file, opening in new editor")
+                    pane_to_focus = await new_editor(workspace_pane, target_dir, abspath)
+                    
+                switch_workspace(workspace_name, target_dir, '')
+                
+                # Focus the newly created pane
+                await wc.focus_pane(pane_to_focus)
+            else:
+                # Is file has window no workspace
+                switch_workspace(workspace_name, target_dir, hx_open_tail)
+
+        else:
+            if has_workspace:
+                # Not file have window have workspace
+                switch_workspace(workspace_name, target_dir, '')
+                logger.warning('# Not file have window have workspace')
+                logger.warning(f' Switching to ({workspace_name}, {target_dir}, "" )')
+            else:
+                # Not file have window no workspace
+                switch_workspace(workspace_name, target_dir, 'nu')
+                logger.warning('# Not file have window no workspace')
+                logger.warning(f' Switching to ({workspace_name}, {target_dir}, {"nu"} )')
+
+    else:
+        # No window
+        # This branch always spawns a command
+        command = f'wezterm connect unix --workspace {workspace_name}'
+        # It may be appended to in some branches
+        if is_file:
+            if editor_pane is not None:
+                await editor_open(editor_pane, abspath)
+                pane_to_focus = editor_pane
+                logger.warning("Editor pane aint none")
+                # Open gui no command
+            else:
+                # Open gui with hx command
+                command += ' -- ' + hx_open_tail
+        
+        else:
+            if not has_workspace:
+                command += ' -- ' + cd_tail
+
+        logger.warning(f' Executing > {command} ')
+        qtile.spawn(command)
+
+        # Wait for the window to open then foucs the new pane if needed
+        if pane_to_focus is not None:
+            logger.warning("Waiting for new window")
+            await window_open_event.wait()
+            logger.warning("Focus after wait")
+            await wc.focus_pane()
+   
 
 
 
 @lazy.function
 def wezterm_in_workspace(*args):
-    if focus_wezterm():
-        return
+    # if focus_wezterm():
+    #     return
 
     qtile.widgets_map["prompt"].start_input("Working dir", 
                                             lambda name: create_task(open_workspace(name)),
@@ -164,26 +303,35 @@ def smart_navigate(direction: str):
     @lazy_async
     async def inner(*args):
         # Try to navigate within wezterm
-        if window_is_wezterm(qtile.current_window):
-            if await getattr(wc, f'navigate_{direction}')():
-                return
-
-        getattr(qtile.current_group.layout, direction)()
+        navigated = window_is_wezterm(qtile.current_window) and await wc.navigate_direction(direction)
+        if not navigated:
+            getattr(qtile.current_group.layout, direction)()
     return inner
+groups.append(
+    ScratchPad("scratchpad", [
+        # define a drop down terminal.
+        # it is placed in the upper third of screen by default.
+        DropDown("term", "kitty", opacity=0.0),
 
+        # # define another terminal exclusively for ``qtile shell` at different position
+        # DropDown("qtile shell", "urxvt -hold -e 'qtile shell'",
+        #          x=0.05, y=0.4, width=0.9, height=0.6, opacity=0.9,
+        #          on_focus_lost_hide=True)
+        ]),
+)
+def blink_focus():
+    qtile.groups_map['scratchpad'].dropdown_toggle('term')
+    qtile.groups_map['scratchpad'].dropdown_toggle('term')
+    
+
+@lazy_async
+async def test(*args):
+    switch_workspace("hokey_pokey", '/etc/nixos/', 'htop')
 
 keys = [
     Key([mod], "p", group_research_browser, desc="Focus or spawn research browser"),
     Key([mod, "shift"], "p", toggle_reasearch_window, desc="Toggle research window"),
-    Key([mod, "shift"], "t", async_firefox, desc="Toggle research window"),
-    # A list of available commands that can be bound to keys can be found
-
-    # at https://docs.qtile.org/en/latest/manual/config/lazy.html
-    # Switch between windows
-    # Key([mod], "h", lazy.layout.left(), desc="Move focus to left"),
-    # Key([mod], "l", lazy.layout.right(), desc="Move focus to right"),
-    # Key([mod], "j", lazy.layout.down(), desc="Move focus down"),
-    # Key([mod], "k", lazy.layout.up(), desc="Move focus up"),
+    Key([mod, "shift"], "t", test, desc="Toggle research window"),
     Key([mod], "h", smart_navigate("left"), desc="Move focus to left"),
     Key([mod], "l", smart_navigate("right"), desc="Move focus to right"),
     Key([mod], "j", smart_navigate("down"), desc="Move focus down"),
@@ -234,20 +382,30 @@ keys = [
     Key([], "XF86MonBrightnessDown", lazy.spawn("swayosd-client --brightness lower")),
     Key([], "XF86MonBrightnessUp", lazy.spawn("swayosd-client --brightness raise")),
 
-    KeyChord([mod], "s",[
-       Key([], "b", lazy.spawn("blueberry"),                                                              desc="Bluetooth connections"),
-       Key([], "d", lazy.spawn("wdisplays"),                                                              desc="Display settings"     ),
-       Key([], "w", lazy.spawn("blueberry"),                                                              desc="Wifi settings"        ),
-       Key([], "n", lazy.function(lambda x: create_task( open_workspace("~/sys-nix/"))),                                desc="Nix settings"         ),
-       Key([], "q", lazy.function(lambda x: create_task( open_workspace("~/sys-nix/modules/desktop/qtile/config.py"))), desc="Nix settings"         )          
-     ]),
-    KeyChord([mod], "d",[
-       Key([], "w", lazy.spawn("firefox https://wezfurlong.org/wezterm/config/files.html"), desc="Wezterm docs"           ),
-       Key([], "q", lazy.spawn("firefox https://docs.qtile.org/"                         ), desc="Qtile docs"             ),
-       Key([], "r", lazy.spawn("firefox https://crates.io/"                              ), desc="Crates.io (rust crates)"),
-       Key([], "p", lazy.spaen("firefox https://docs.python.org/3/"                      ), desc="Python docs"            ),
-       Key([], "n", lazy.spawn("firefox https://nixos.wiki/wiki/"                        ), desc="Nixos wiki"             )          
-     ])
+    # Main leader
+    KeyChord([], "Shift_R", [
+        KeyChord([], "s",[
+           Key([], "b", lazy.spawn("blueberry"),                                                              desc="Bluetooth connections"),
+           Key([], "d", lazy.spawn("wdisplays"),                                                              desc="Display settings"     ),
+           Key([], "w", lazy.spawn("blueberry"),                                                              desc="Wifi settings"        ),
+           Key([], "n", lazy.function(lambda x: create_task( open_workspace("~/sys-nix/"))),                                desc="Nix settings"          ),
+           Key([], "q", lazy.function(lambda x: create_task( open_workspace("~/sys-nix/modules/desktop/qtile/config.py"))), desc="Qtile config settings" ),
+         ]),
+        KeyChord([mod], "d",[
+           Key([], "w", lazy.spawn("firefox https://wezfurlong.org/wezterm/config/files.html"), desc="Wezterm docs"           ),
+           Key([], "q", lazy.spawn("firefox https://docs.qtile.org/"                         ), desc="Qtile docs"             ),
+           Key([], "r", lazy.spawn("firefox https://crates.io/"                              ), desc="Crates.io (rust crates)"),
+           Key([], "p", lazy.spaen("firefox https://docs.python.org/3/"                      ), desc="Python docs"            ),
+           Key([], "n", lazy.spawn("firefox https://nixos.wiki/wiki/"                        ), desc="Nixos wiki"             )          
+        ]),
+        KeyChord([mod], "e",[
+                Key([], "n", lazy.function(lambda x: create_task( open_workspace("~/sys-nix/"))),                                desc="Nix settings"         ),
+                Key([], "q", lazy.function(lambda x: create_task( open_workspace("~/sys-nix/modules/desktop/qtile/config.py"))), desc="Qtile config settings"),
+                Key([], "l", lazy.function(lambda x: create_task( open_workspace("~/sys-nix/modules/desktop/qtile/config.py"))), desc="Qtile config settings"),
+            ],
+            name="Edit", desc="Bindings to edit various things",
+        )
+    ]),
 ]
 
 def set_volume(volume):
@@ -290,20 +448,20 @@ for vt in range(1, 8):
     )
 
 
-groups = [Group(i) for i in "123456789"]
 
-for i in groups:
+for group in map(lambda g: Group(str(g)), range(1,10)):
+    groups.append(group)
     keys.extend(
         [
             Key(
-                [mod], i.name,
-                lazy.group[i.name].toscreen(),
-                desc=f"Switch to group {i.name}",
+                [mod], group.name,
+                lazy.group[group.name].toscreen(),
+                desc=f"Switch to group {group.name}",
             ),
             Key(
-                [mod, "shift"], i.name,
-                lazy.window.togroup(i.name, switch_group=True),
-                desc=f"Switch to & move focused window to group {i.name}",
+                [mod, "shift"], group.name,
+                lazy.window.togroup(group.name, switch_group=True),
+                desc=f"Switch to & move focused window to group {group.name}",
             ),
         ]
     )
@@ -330,6 +488,13 @@ class BatteryWidget(widget.Battery):
             return charge_icon + is_charging
             
 
+clock_group = {
+    "decorations": [
+        RectDecoration(colour=["#004040", "#ffffff"], radius=5, filled=True, padding_y=2, group=True)
+    ],
+    "padding": 10,
+}
+
 def mk_bar():
     return bar.Bar(
     [
@@ -343,7 +508,7 @@ def mk_bar():
                       prompt='{prompt} > ',
                   foreground='#8bcbe7'),
         # widget.WindowName(),
-        widget.Clock(format="%Y-%m-%d %a %I:%M %p",foreground="#b3bbde"),
+        widget.Clock(format="%Y-%m-%d %a %I:%M %p" ),
 
         widget.Spacer(width=bar.STRETCH),
         widget.Chord(
@@ -368,7 +533,8 @@ def mk_bar():
 )    
 screens = [
     Screen(
-        bottom=mk_bar()
+        bottom=mk_bar(),
+        wallpaper="~/Pictures/wallpapers/pink-abstract.jpg"
     ),
     Screen(
         bottom=mk_bar()
