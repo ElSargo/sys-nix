@@ -8,7 +8,6 @@ from asyncio import create_task
 import subprocess
 import os
 import json
-import base64
 import wezpy
 from qtile_extras.widget.decorations import RectDecoration
 
@@ -129,14 +128,12 @@ def find_hx_pane(panes):
 def command_json_output(command):
     return json.loads(subprocess.run(command, capture_output=True).stdout)
 
-async def switch_workspace(workspace,cwd,cmd):
+def switch_workspace(workspace,cwd,cmd):
     import random
     with open('/tmp/WEZTERM_CMD', 'w') as file:
         file.write('@'.join([workspace,cwd,cmd,str(random.random())]))
     focus_wezterm()
     blink_focus()
-    with open('/tmp/WEZTERM_CMD', 'w') as file:
-        file.write('')
     
     # data = base64.encodebytes(f'{workspace}@{cwd}@{cmd}'.encode())[0:-1].decode()
     # os.spawnlp(os.P_NOWAIT,"wezterm", "wezterm", "cli", "spawn", "sh", "-c", f'echo "\033]1337;SetUserVar=WEZTERM_WORKSPACE={data}\007" ;sleep 2')
@@ -179,7 +176,7 @@ async def open_file(path: str):
         pass
         # if (id := await )
 
-async def open_workspace(path: str):
+async def open_workspace(path: str, workspace=None):
     # Conditions
     # workspace exists
     # window exists
@@ -196,7 +193,11 @@ async def open_workspace(path: str):
         target_dir += '/'
   
 
-    workspace_name = target_dir.split("/")[-2]
+    if workspace is None:
+        workspace_name = target_dir.split("/")[-2]
+    else:
+        workspace_name = workspace
+
     (editor_pane, workspace_pane) = await asyncio.gather(
          into_coro(wc.find_pane(workspace_pattern=workspace_name, title_pattern="hx$")),
          into_coro(wc.find_pane(workspace_pattern=workspace_name))
@@ -391,21 +392,24 @@ keys = [
            Key([], "n", lazy.function(lambda x: create_task( open_workspace("~/sys-nix/"))),                                desc="Nix settings"          ),
            Key([], "q", lazy.function(lambda x: create_task( open_workspace("~/sys-nix/modules/desktop/qtile/config.py"))), desc="Qtile config settings" ),
          ]),
-        KeyChord([mod], "d",[
+        KeyChord([], "d",[
            Key([], "w", lazy.spawn("firefox https://wezfurlong.org/wezterm/config/files.html"), desc="Wezterm docs"           ),
            Key([], "q", lazy.spawn("firefox https://docs.qtile.org/"                         ), desc="Qtile docs"             ),
            Key([], "r", lazy.spawn("firefox https://crates.io/"                              ), desc="Crates.io (rust crates)"),
            Key([], "p", lazy.spaen("firefox https://docs.python.org/3/"                      ), desc="Python docs"            ),
            Key([], "n", lazy.spawn("firefox https://nixos.wiki/wiki/"                        ), desc="Nixos wiki"             )          
         ]),
-        KeyChord([mod], "e",[
+        KeyChord([], "e",[
                 Key([], "n", lazy.function(lambda x: create_task( open_workspace("~/sys-nix/"))),                                desc="Nix settings"         ),
                 Key([], "q", lazy.function(lambda x: create_task( open_workspace("~/sys-nix/modules/desktop/qtile/config.py"))), desc="Qtile config settings"),
-                Key([], "l", lazy.function(lambda x: create_task( open_workspace("~/sys-nix/modules/desktop/qtile/config.py"))), desc="Qtile config settings"),
+                Key([], "l", lazy.function(lambda x: create_task( open_workspace("~/.local/share/qtile/qtile.log", workspace="sys-nix"))), desc="Qtile logs"),
+                Key([], "w", lazy.function(lambda x: create_task( open_workspace("~/sys-nix/modules/desktop/wezterm/wezterm.lua"))), desc="Wezterm config settings"),
             ],
             name="Edit", desc="Bindings to edit various things",
         )
-    ]),
+    ],
+    name='CHORD'
+    ),
 ]
 
 def set_volume(volume):
