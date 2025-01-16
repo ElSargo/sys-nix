@@ -3,9 +3,11 @@
   inputs,
   ...
 }: let
+  geckordp = import ./geckordp.nix;
   extraQtilePackages = [
     (inputs.wezpy.packages.${pkgs.system}.default pkgs.python311Packages)
     pkgs.python311Packages.qtile-extras
+    (geckordp pkgs.python311Packages)
   ];
   interpreter = pkgs.python311.withPackages (pypkgs: with pypkgs; [qtile python-lsp-server pyflakes rope] ++ extraQtilePackages);
   lsp =

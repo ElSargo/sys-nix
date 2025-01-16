@@ -8,7 +8,7 @@ ps.buildPythonPackage rec {
     sha256 = "sha256-MzoV0usoQBnGMj4kNv/IUOdiEp+2R7GerNuNZQBkyNw=";
   };
   doCheck = false;
-  buildInputs = with ps; [hatchling hatch-fancy-pypi-readme psutil jmespath];
+  dependencies = with ps; [hatchling hatch-fancy-pypi-readme psutil jmespath];
 
   prePatch = ''
     echo MIT > license
