@@ -10,7 +10,6 @@
     htop
     typos
     pastel
-    rustup
     yazi
   ];
   programs = {

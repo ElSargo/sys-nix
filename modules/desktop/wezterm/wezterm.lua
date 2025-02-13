@@ -14,10 +14,10 @@ local function stylix_wrapped_config()
   config.tiling_desktop_environments = {
     'Wayland'
   }
-  config.enable_tab_bar = false
+  -- config.enable_tab_bar = false
   -- config.show_tabs_in_tab_bar = false
   -- config.show_new_tab_button_in_tab_bar = false
-  -- config.tab_bar_at_bottom = true
+  config.tab_bar_at_bottom = true
   -- config.hide_tab_bar_if_only_one_tab = true
   config.enable_wayland = true
   config.front_end = "WebGpu"
@@ -25,6 +25,8 @@ local function stylix_wrapped_config()
     family = 'JetBrains Mono Nerd Font',
     weight = 'DemiBold',
   }
+  config.initial_cols = 180
+  config.initial_rows = 180
   config.font_size = 13
   config.window_decorations = "RESIZE"
   config.window_padding = {
@@ -35,6 +37,7 @@ local function stylix_wrapped_config()
   }
 
   config.leader = { key = 'Space', mods = 'CTRL', timeout_milliseconds = 1000 }
+  
   config.keys = {
     {
       key = 'Return',
@@ -110,6 +113,21 @@ local function stylix_wrapped_config()
       mods = 'ALT',
       action = act.ActivateTab(i - 1),
     })
+  end
+  for key,dir in pairs({h = 'Left', j = 'Down', k = 'Up', l = 'Right'}) do
+    wezterm.log_info(dir)
+    for idx,data in ipairs({
+      {'ALT',  act.ActivatePaneDirection(dir)   },
+      {'ALT|SHIFT', act.AdjustPaneSize {dir, 1} }
+    }) do
+      local mods, action = data[1], data[2]
+      wezterm.log_info('Chopped chin', key, dir, mods, action)
+      table.insert(config.keys, {
+        key = key,
+        mods = mods,
+        action = action
+      })
+    end
   end
 
 

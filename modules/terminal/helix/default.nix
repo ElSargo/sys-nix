@@ -12,7 +12,7 @@
   };
 
   config = {
-    home.packages = with pkgs.unstable; [nil marksman taplo];
+    home.packages = with pkgs.unstable; [nil markdown-oxide taplo rust-analyzer rustfmt clippy];
     xdg.configFile."helix/config.toml".source = lib.mkForce (config.lib.file.mkOutOfStoreSymlink "/home/sargo/sys-nix/modules/terminal/helix/config.toml");
     programs.helix = {
       enable = true;

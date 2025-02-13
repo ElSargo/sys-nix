@@ -9,10 +9,11 @@
     ./desktop-programs.nix
     ./firefox.nix
     ./wezterm
-    ./games.nix
-    ./qtile
-    ./rofi.nix
+    # ./games.nix
+    # ./qtile
+    ./gnome.nix
+    # ./rofi.nix
   ];
 
-  services.preload.enable = true;
+  # services.preload.enable = true;
 }

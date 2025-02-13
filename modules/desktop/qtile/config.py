@@ -2,7 +2,9 @@ from libqtile.log_utils import logger
 from libqtile.backend.wayland import InputConfig
 from libqtile.config import Click, Drag, Group, Key, KeyChord, Match, Screen,  ScratchPad, DropDown
 from libqtile.lazy import lazy
-from libqtile import hook, bar, layout, qtile, widget
+from libqtile import hook, bar, layout, qtile 
+from qtile_extras import widget
+import libqtile
 import asyncio
 from asyncio import create_task 
 import subprocess
@@ -10,8 +12,20 @@ import os
 import psutil
 import json
 import wezpy
+# from firefox import firefox_args
 from qtile_extras.widget.decorations import RectDecoration
 
+def firefox_args(urls = [], new_window=False):
+    params = ['firefox' ]
+    if new_window:
+        params.extend(['-new-window'])        
+    if '.firefox-wrapped' not in (p.name() for p in psutil.process_iter()):
+        params.extend(['-no-default-browser-check', '-P', 'sargo', '--start-debugger-server', '6001'])        
+    params.extend(urls)
+    return params
+
+def firefox(urls=[], *args, **kwargs):
+    return ' '.join(firefox_args(urls, *args,**kwargs))
 
 groups = []
 
@@ -21,18 +35,35 @@ def lazy_async(fn):
 def spawn_os(path, *args):
     os.spawnlp(os.P_NOWAIT, path, path, *args)
 
-wc = None
+class LazyClient:
+    def __init__(self):
+        self.client = None
+
+    def __getattribute__(self, name):
+        client = object.__getattribute__(self,'client')
+        if client is None:
+            client = wezpy.WeztermClient()
+            self.client = client
+            
+        return client.__getattribute__(name)
+
+wc = LazyClient()
+@hook.subscribe.startup
 async def wezterm_client_connect():
     global wc
-    if 'wezterm-mux-server' not in  (p.name() for p in psutil.process_iter()):
+    if 'wezterm-mux-server' not in (p.name() for p in psutil.process_iter()):
         spawn_os('wezterm-mux-server')
         await asyncio.sleep(0.1)
     wc = wezpy.WeztermClient()
 
 @hook.subscribe.startup_once
 async def launch_startup():
-    for bin in ['wezterm-mux-server', 'swayosd-server', 'swaync' ]:
+    for bin in ['swayosd-server', 'swaync' ]:
         spawn_os(bin)   
+    with open('/tmp/WEZTERM_CMD', 'w') as f:
+        f.write(' ')
+    with open('/tmp/WEZTERM_CMD_COMP', 'w') as f:
+        f.write(' ')
 
 
 
@@ -84,7 +115,7 @@ def group_research_browser(*args, **kwargs):
                 qtile.current_group.focus_back()
             return
     spawning_research = True
-    qtile.spawn('firefox')
+    qtile.spawn(firefox())
 
 @lazy.function
 def toggle_reasearch_window(*args):
@@ -100,12 +131,15 @@ def window_is_wezterm(window):
         return info['wm_class'] == ['org.wezfurlong.wezterm']
     return False
 
-def focus_wezterm() -> bool:
+async def focus_wezterm():
+
+    qtile.groups_map[obsidian_group_name].toscreen()
     for window in qtile.current_group.windows:
         if window_is_wezterm(window):
             window.focus()
-            return True
-    return False
+    else:
+        qtile.spawn("wezterm")
+    await window_open_event.wait()
 
 def wezterm_tab(tab: int):
     @lazy.function 
@@ -166,7 +200,9 @@ async def new_editor(pane_id,target_dir,abspath):
     return int(stdout.decode().strip())
 
 obsidian_group_name = ' '
+wezterm_group_name = ' '
 groups.append(Group(obsidian_group_name, spawn='obsidian'))
+groups.append(Group(wezterm_group_name, spawn='wezterm'))
 @lazy.function
 def obsidian(*args):
     g = qtile.groups_map[obsidian_group_name]
@@ -185,11 +221,16 @@ async def open_file(path: str):
         pass
         # if (id := await )
 
-async def open_workspace(path: str, workspace=None):
+async def open_workspace(path: str, workspace=None, search_for=None):
     # Conditions
     # workspace exists
     # window exists
     # target is file
+
+    # Handle file location
+    split = path.split(":")
+    path = split[0]
+    
     abspath = os.path.expanduser(path)
     is_file = os.path.isfile(abspath)
     target_dir = abspath
@@ -214,8 +255,10 @@ async def open_workspace(path: str, workspace=None):
 
     has_workspace = editor_pane is not None or workspace_pane is not None
 
+    file_name = ':'.join([abspath, *split[1:]])
+    
     cd_tail = f" nu --execute 'cd {target_dir}'"
-    hx_open_tail = f' nu --execute "cd {target_dir} ; hx {abspath}"'
+    hx_open_tail = f' nu --execute "cd {target_dir} ; hx {file_name}"'
 
     pane_to_focus = None
     
@@ -227,11 +270,11 @@ async def open_workspace(path: str, workspace=None):
                 # Is file has window has editor
                 if editor_pane is not None:
                     logger.warning("Have window, is file, opening in existing editor")
-                    await editor_open(editor_pane, abspath)    
+                    await editor_open(editor_pane, file_name)    
                     pane_to_focus = editor_pane
                 else:
                     logger.warning("Have window, is file, opening in new editor")
-                    pane_to_focus = await new_editor(workspace_pane, target_dir, abspath)
+                    pane_to_focus = await new_editor(workspace_pane, target_dir, file_name)
                     
                 switch_workspace(workspace_name, target_dir, '')
                 
@@ -260,7 +303,7 @@ async def open_workspace(path: str, workspace=None):
         # It may be appended to in some branches
         if is_file:
             if editor_pane is not None:
-                await editor_open(editor_pane, abspath)
+                await editor_open(editor_pane, file_name)
                 pane_to_focus = editor_pane
                 logger.warning('Editor pane aint none')
                 # Open gui no command
@@ -280,8 +323,20 @@ async def open_workspace(path: str, workspace=None):
             logger.warning('Waiting for new window')
             await window_open_event.wait()
             logger.warning('Focus after wait')
-            await wc.focus_pane()
+            await wc.focus_pane(pane_to_focus)
    
+    # Helix should be focused at this point
+    logger.warning("Opening picker")
+    id = await wc.current_pane()
+    await wc.send_esc(id)
+    if is_file and search_for is not None:
+        await wc.write_to_pane(id, f'/{search_for}')
+        await wc.send_enter(id)
+    elif not is_file:
+        logger.warning("Opening picker")
+        await wc.write_to_pane(id,' f')
+        
+
 
 
 
@@ -299,16 +354,6 @@ def get_focused_wezterm_panes():
     return [output['focused_pane_id'] for output in command_json_output(['wezterm', 'cli', 'list-clients', '--format', 'json'])]
 
 
-
-@lazy_async
-async def async_firefox():
-    id = await wc.find_pane(title_pattern="> hx$")
-    await wc.send_esc(id)
-    await wc.write_to_pane(id, ":")
-    await wc.send_paste(id, "open ~/.bashrc")
-    await wc.send_enter(id)
-
-
 def smart_navigate(direction: str):
     @lazy_async
     async def inner(*args):
@@ -321,7 +366,7 @@ groups.append(
     ScratchPad('scratchpad', [
         # define a drop down terminal.
         # it is placed in the upper third of screen by default.
-        DropDown('term', 'kitty', opacity=0.0),
+        DropDown('term', 'kitty', opacity=0.0, x=0.0,y=0.0,width=0.0,height=0.0),
 
         # # define another terminal exclusively for ``qtile shell` at different position
         # DropDown('qtile shell', "urxvt -hold -e 'qtile shell'",
@@ -329,6 +374,31 @@ groups.append(
         #          on_focus_lost_hide=True)
         ]),
 )
+
+def window_is_firefox(window):
+    if (info := window.info()) is not None:
+        return info['wm_class'] == ['firefox']
+    return False
+    
+
+def focus_firefox() -> bool:
+    for window in qtile.current_group.windows:
+        if window_is_firefox(window):
+            window.focus()
+            return True
+    return False
+    
+
+def prompt_firefox(prompt, formatter):
+    def callback(query: str):
+        new_window = not focus_firefox()
+        qtile.spawn(firefox([formatter(query.replace(' ', '+'))], new_window=new_window))
+
+    return lazy.function(
+         lambda dummy: qtile.widgets_map['prompt'].start_input(prompt, callback)
+    )
+    
+
 def blink_focus():
     qtile.groups_map['scratchpad'].dropdown_toggle('term')
     qtile.groups_map['scratchpad'].dropdown_toggle('term')
@@ -337,6 +407,13 @@ def blink_focus():
 @lazy_async
 async def test(*args):
     switch_workspace('hokey_pokey', '/etc/nixos/', 'htop')
+
+def open_firefox(url):
+    @lazy.function
+    def inner(k):
+        new_win= not focus_firefox()
+        qtile.spawn(firefox([url],new_window=new_win))
+    return inner
 
 keys = [
     Key([mod], 'p', group_research_browser, desc='Focus or spawn research browser'),
@@ -392,6 +469,7 @@ keys = [
     Key([], 'XF86MonBrightnessDown', lazy.spawn('swayosd-client --brightness lower')),
     Key([], 'XF86MonBrightnessUp', lazy.spawn('swayosd-client --brightness raise')),
 
+    # Key chords section
     # Main leader
     KeyChord([], 'Shift_R', [
         KeyChord([], 's',[
@@ -401,21 +479,39 @@ keys = [
            Key([], 'n', lazy.function(lambda x: create_task( open_workspace("~/sys-nix/"))),                                desc='Nix settings'          ),
            Key([], 'q', lazy.function(lambda x: create_task( open_workspace("~/sys-nix/modules/desktop/qtile/config.py"))), desc='Qtile config settings' ),
          ]),
+        KeyChord([], 'f', [
+           Key([], 'b', prompt_firefox("Search brave",lambda query: f'https://search.brave.com/search?q={query}'), desc='Prompt and then search brave with the input'),
+           KeyChord([], 'n', [
+               Key([], 'p', prompt_firefox('Search nix packages',lambda query: f'https://search.nixos.org/packages?type=packages&query={query}')),
+               Key([], 'o', prompt_firefox('Search nixos options',lambda query: f'https://search.nixos.org/options?type=options&query={query}'  ))
+           ],name="Nix", desc="Search nix" ),
+           Key([], 'g', prompt_firefox('Search google',lambda query: f'https://www.google.com/search?q={query}'), desc='Prompt and then search google with the input'),
+           Key([], 'y', prompt_firefox('Search youtube',lambda query: f'https://www.youtube.com/results?search_query={query}'), desc='Prompt and then search youtube with the input')          
+        ],
+        name='Find', desc='Find information',
+        ),
         KeyChord([], 'd',[
-           Key([], 'w', lazy.spawn("firefox https://wezfurlong.org/wezterm/config/files.html"), desc='Wezterm docs'           ),
-           Key([], 'q', lazy.spawn("firefox https://docs.qtile.org/"                         ), desc='Qtile docs'             ),
-           Key([], 'r', lazy.spawn("firefox https://crates.io/"                              ), desc="Crates.io (rust crates)"),
-           Key([], 'p', lazy.spaen("firefox https://docs.python.org/3/"                      ), desc='Python docs'            ),
-           Key([], 'n', lazy.spawn("firefox https://nixos.wiki/wiki/"                        ), desc='Nixos wiki'             )          
-        ]),
+           Key([], 'w', open_firefox('https://wezfurlong.org/wezterm/config/files.html'), desc='Wezterm docs'                        ),
+           Key([], 'q', open_firefox('https://docs.qtile.org/'                         ), desc='Qtile docs'                          ),
+           Key([], 'r', open_firefox('https://crates.io/'                              ), desc='Crates.io (rust crates)'             ),
+           Key([], 'p', open_firefox('https://docs.python.org/3/'                      ), desc='Python docs'                         ),
+           Key([], 'n', open_firefox('https://nixos.wiki/wiki/'                        ), desc='Nixos wiki'                          ),
+           Key([], 'h', open_firefox('https://docs.helix-editor.com/title-page.html'   ), desc='Helix docs'                          ),
+        ],
+        name='Docs', desc="View documentation"
+        ),
         KeyChord([], 'e',[
                 Key([], 'n', lazy.function(lambda x: create_task( open_workspace("~/sys-nix/"))),                                desc='Nix settings'         ),
-                Key([], 'q', lazy.function(lambda x: create_task( open_workspace("~/sys-nix/modules/desktop/qtile/config.py"))), desc='Qtile config settings'),
-                Key([], 'l', lazy.function(lambda x: create_task( open_workspace("~/.local/share/qtile/qtile.log", workspace='sys-nix'))), desc='Qtile logs'),
+                KeyChord([], 'q',[
+                    Key([], 'c', lazy.function(lambda x: create_task( open_workspace("~/sys-nix/modules/desktop/qtile/config.py"))), desc='Qtile config settings'),
+                    Key([], 'l', lazy.function(lambda x: create_task( open_workspace("~/.local/share/qtile/qtile.log", workspace='sys-nix'))), desc='Qtile logs'),
+                    Key([], 'k', lazy.function(lambda x: create_task( open_workspace("~/sys-nix/modules/desktop/qtile/config.py", search_for='Key chords section'))),desc='Edit keybinds'),
+                ],name="Qtile", desc="Edit qtile files"),
                 Key([], 'w', lazy.function(lambda x: create_task( open_workspace("~/sys-nix/modules/desktop/wezterm/wezterm.lua"))), desc='Wezterm config settings'),
             ],
             name='Edit', desc='Bindings to edit various things',
         )
+
     ],
     name='CHORD'
     ),
@@ -483,7 +579,7 @@ layouts = [ layout.Tile(add_on_top=False, border_focus='#e79b73', border_width=0
 
 widget_defaults = dict(
     font='UbuntuMono',
-    fontsize=13,
+    fontsize=15,
     padding=3,
 )
 extension_defaults = widget_defaults.copy()
@@ -508,18 +604,49 @@ clock_group = {
     'padding': 10,
 }
 
+sep_opts = {
+    'fontsize':21,
+    'padding':0,
+    'margin':0
+}
+from qtile_extras.widget.decorations import PowerLineDecoration
+
+r_angle = {
+    "decorations": [
+        PowerLineDecoration(path='forward_slash')
+    ]
+}
+l_angle = {
+    "decorations": [
+        PowerLineDecoration(path='back_slash')
+    ]
+}
+prompt = widget.Prompt(bell_style=None,
+              prompt='{prompt} 󰚺  ',
+          foreground='#8bcbe7',
+          **l_angle
+      )
+
 def mk_bar():
     return bar.Bar(
     [
+        widget.TextBox(background="#4eb3c9", fmt="   ", **l_angle),
+        # widget.TextBox(foreground="#4eb3c9", fmt="", **sep_opts),
         widget.GroupBox(
             active="#DE956E",
             highlight_method='line',
-            this_current_screen_border='#8bcbe7'
+            this_current_screen_border='#8bcbe7',
+            **l_angle
         ),
+        widget.TextBox(background="#4eb3c9", fmt="   ", **l_angle),
+        # widget.TextBox(foreground="#4eb3c9", fmt='', **sep_opts),
+        # widget.TextBox(foreground="#4eb3c9", fmt="󰚺{}", padding=0,margin=0),
         # widget.TaskList(),
-        widget.Prompt(width=bar.STRETCH,bell_style=None,
-                      prompt='{prompt} > ',
-                  foreground='#8bcbe7'),
+        prompt,
+        widget.TextBox(background="#4eb3c9", fmt="   ", **l_angle),
+        # widget.TextBox(foreground="#4eb3c9", fmt="", **sep_opts),
+         # qtile_extras.widget.GlobalMenu(),
+        widget.Spacer(width=bar.STRETCH),
         # widget.WindowName(),
         widget.Clock(format='%Y-%m-%d %a %I:%M %p' ),
 
@@ -535,14 +662,21 @@ def mk_bar():
         # widget.Systray(),
         BatteryWidget(
             low_foreground='#e07d8e',
-            foreground='#DE956E'
+            foreground='#DE956E',
+            **r_angle
         ),
-        widget.Bluetooth(foreground='#b3bbde'),
-        widget.QuickExit(foreground='#b3bbde')
+        
+        # *make_colors([
+            widget.Bluetooth(background="#ff899d",foreground='#1a1b26', **r_angle),
+            widget.Mpris2(background="#bb9af7",scroll=True,foreground='#1a1b26', width=200  , **r_angle),
+            widget.QuickExit(background="#faba4a", foreground='#1a1b26')                         
+         # ], )
         # widget.SwayNC()
     ],
     24,
-    background='#13131A',
+    # background='#13131A',
+    # background='#1a1b26',
+    background='#181821'
 )    
 screens = [
     Screen(
