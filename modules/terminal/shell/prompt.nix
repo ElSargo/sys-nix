@@ -11,8 +11,9 @@
     src = pkgs.fetchFromGitHub {
       owner = "ElSargo";
       repo = "prompt";
-      rev = "0c61c5f9a1998e2231aab981aab2e96d6ad50926";
-      hash = "sha256-sB6tfhsyBHMJdr83gTlHJ/i8J4v6MmsID/1ZnJkJcbo=";
+      rev = "1daf6cea280336a15415e67e3073c11bfde7269a";
+
+      hash = "sha256-hNBgHtnlBIfpRFgAIffflXJ2D8x7gvu+rUeoFsKcc6I=";
     };
     cargoLock.lockFile = "${src}/Cargo.lock";
   };

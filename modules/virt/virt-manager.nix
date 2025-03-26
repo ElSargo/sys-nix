@@ -42,7 +42,10 @@
     win-spice
     libGL
     libGLU
+    distrobox
+    boxbuddy
   ];
+  virtualisation.podman.enable = true;
   users.users.sargo.extraGroups = ["libvirtd"];
   programs.dconf = {
     enable = true;

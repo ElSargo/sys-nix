@@ -125,6 +125,19 @@
             $env.EDITOR = "hx"
             $env.VISUAL = "hx"
 
+            def bat-mode [] {
+              cd /sys/devices/platform/msi-ec
+              echo on | sudo tee super_battery
+              echo eco | sudo tee shift_mode
+              echo silent | sudo tee fan_mode
+            }
+
+            def perf-mode [] {
+              cd /sys/devices/platform/msi-ec
+              echo off | sudo tee super_battery
+              echo sport | sudo tee shift_mode
+              echo auto | sudo tee fan_mode
+            }
 
             def --env bd [] {
               let level = ( [($env.DIR_STACK.level - 1) 0] | math max )

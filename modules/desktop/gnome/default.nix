@@ -13,13 +13,13 @@
     services.gnome.sushi.enable = true;
     services.gnome.gnome-browser-connector.enable = true;
     environment = {
-      systemPackages = with pkgs; [valent];
+      systemPackages = with pkgs; [valent libnotify];
       gnome.excludePackages = with pkgs;
         [
           cheese # webcam tool
           gnome-music
           gnome-terminal
-          # gedit # text editor
+          gedit # text editor
           epiphany # web browser
           tali # poker game
           iagno # go game
@@ -37,8 +37,10 @@
       }: let
         extensions = with pkgs.gnomeExtensions; [
           caffeine
-          # rounded-window-corners
+          run-or-raise
           just-perfection
+          color-picker
+          looking-glass-button
         ];
       in {
         home.packages = extensions;
@@ -78,7 +80,7 @@
           wkb = a: s1: s2: x: setAttr a (addNum s1 x) [(addNum s2 x)];
           workspace_binds =
             foldl'
-            (a: x: (wkb (wkb a "switch-to-workspace-" "<Super>" x)
+            (a: x: (wkb (wkb a "switch-to-workspace-" "<Shift><Alt>" x)
               "move-to-workspace-" "<Shift><Super>"
               x))
             {}
@@ -100,63 +102,34 @@
                 launch-web-browser = ["<Shift><Super>Return"];
               };
 
-            "org/gnome/shell/keybindings" =
-              foldl' (a: x: setAttr a (addNum "switch-to-application-" x) [])
-              {}
-              (range 1 10);
-
             "org/gnome/shell" = {
               enabled-extensions = [
                 "drive-menu@gnome-shell-extensions.gcampax.github.com"
                 "caffeine@patapon.info"
-                "blur-my-shell@aunetx"
-                "pano@elhan.io"
-                "rounded-window-corners@yilozt"
                 "just-perfection-desktop@just-perfection"
-                "windowsNavigator@gnome-shell-extensions.gcampax.github.com"
+                "color-picker@tuberry"
+                "run-or-raise@edvard.cz"
+                "lgbutton@glerro.gnome.gitlab.io"
               ];
-              # enabled-extensions =
-              #   map (extension: extension.extensionUuid) extensions;
-              disabled-extensions = [];
 
               favorite-apps = [
-                "firefox.desktop"
-                "wezterm.desktop"
-                "org.gnome.Console.desktop"
-                "org.keepassxc.KeePassXC.desktop"
+                "app.zen_browser.zen.desktop"
+                "org.wezfurlong.wezterm.desktop"
+                "obsidian.desktop"
                 "org.gnome.Nautilus.desktop"
+                "com.github.neithern.g4music.desktop"
+                "custom-desktop-starter.044528.desktop"
+                "org.speedcrunch.SpeedCrunch.desktop"
+                "ca.andyholmes.Valent.desktop"
                 "org.gnome.Software.desktop"
-                "org.gnome.Calculator.desktop"
                 "org.gnome.Settings.desktop"
-                "thunderbird.desktop"
-                "com.spotify.Client.desktop"
-                "org.onlyoffice.desktopeditors.desktop"
               ];
               disable-user-extensions = false;
             };
-            "org/gnome/shell/custom-accent-colors/theme-shell" = {
-              accent-color = "red";
-              theme-flatpak = true;
-              theme-gtk3 = true;
-              theme-shell = true;
-            };
-            "org/gnome/shell/extensions/blur-my-shell" = {
-              brightness = 0.9;
-              hacks-level = 0;
-              noise-amount = 0.3;
-              noise-lightness = 1.04;
-              sigma = 40;
-            };
-            "org/gnome/shell/extensions/blur-my-shell/overview" = {
-              blur = true;
-              style-components = 2;
-            };
-            "org/gnome/shell/extensions/blur-my-shell/panel" = {
-              blur = true;
-              override-background = true;
-              override-background-dynamically = false;
-              style-panel = 0;
-              unblur-in-overview = false;
+
+            "org/gnome/shell/extensions/run-or-raise" = {
+              dbus = true;
+              minimize-when-unfocused = true;
             };
 
             "org/gnome/shell/extensions/just-perfection" = {

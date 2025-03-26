@@ -3,8 +3,10 @@
     ({pkgs, ...}: {
       home.packages = with pkgs; [
         keepassxc
-        inlyne
         unstable.obsidian
+        libreoffice
+        varia
+        jetbrains-toolbox
       ];
     })
   ];

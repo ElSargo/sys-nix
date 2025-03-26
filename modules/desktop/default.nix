@@ -11,9 +11,10 @@
     ./wezterm
     # ./games.nix
     # ./qtile
-    ./gnome.nix
+    ./gnome
+    ./wacom.nix
     # ./rofi.nix
   ];
 
-  # services.preload.enable = true;
+  services.preload.enable = true;
 }

@@ -14,10 +14,22 @@
   }:
     utils.lib.mkFlake {
       inherit self inputs;
-      channelsConfig.allowUnfree = true;
+      channelsConfig = {
+        allowUnfree = true;
+      };
 
-      channels.nixpkgs.config.packageOverrides = pkgs: {
-        vaapiIntel = pkgs.vaapiIntel.override {enableHybridCodec = true;};
+      channels.nixpkgs.config = {
+        permittedInsecurePackages = [
+          "dotnet-runtime-6.0.36"
+          "dotnet-sdk-wrapped-6.0.428"
+          "dotnet-sdk-6.0.428"
+        ];
+      };
+
+      channels.nixpkgs.config = {
+        packageOverrides = pkgs: {
+          vaapiIntel = pkgs.vaapiIntel.override {enableHybridCodec = true;};
+        };
       };
       channels.nixpkgs.overlaysBuilder = channels: [
         (f: p: {
