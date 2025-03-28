@@ -4,7 +4,7 @@
   config,
   ...
 }: {
-  imports = [./tokyonight.nix];
+  imports = [./ashen.nix];
 
   options = {
     wallpaper = lib.mkOption {

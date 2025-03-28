@@ -34,7 +34,7 @@ wezterm.add_to_config_reload_watch_list(wezterm.config_dir)
   -- config.show_new_tab_button_in_tab_bar = false
   config.tab_bar_at_bottom = true
   -- config.hide_tab_bar_if_only_one_tab = true
-  config.enable_wayland = true
+  config.enable_wayland = false
   config.front_end = "WebGpu"
   config.font = wezterm.font {
     family = 'JetBrains Mono Nerd Font',
@@ -43,7 +43,7 @@ wezterm.add_to_config_reload_watch_list(wezterm.config_dir)
   config.initial_cols = 180
   config.initial_rows = 180
   config.font_size = 13
-  config.window_decorations = "RESIZE"
+  config.window_decorations = "NONE"
   config.window_padding = {
       left = 0,
       right = 0,
@@ -274,24 +274,26 @@ wezterm.add_to_config_reload_watch_list(wezterm.config_dir)
   end
   )
 
-  local scheme = 'Gruvbox Dark (Gogh)'
-  local gruvbox = wezterm.color.get_builtin_schemes()[scheme]
-  -- wezterm.log_info(wezterm.color.get_builtin_schemes()[scheme])
-  gruvbox.ansi = gruvbox.brights
-  config.color_schemes = {
-    ['gruvbox'] = gruvbox
-  }
-  config.color_scheme = 'gruvbox'
-  config.colors = {
-    -- background = "#1D1D1D",
-    background = "#282828",
-    tab_bar = {
-      active_tab = {
-       bg_color = "#fabd2f" ,
-       fg_color = "#282828"
-      },
-    },
-  }
+config.color_scheme = 'stylix'
+  -- local scheme = 'Gruvbox Dark (Gogh)'
+  -- local gruvbox = wezterm.color.get_builtin_schemes()[scheme]
+  -- -- wezterm.log_info(wezterm.color.get_builtin_schemes()[scheme])
+  -- gruvbox.ansi = gruvbox.brights
+  -- config.color_schemes = {
+  --   ['gruvbox'] = gruvbox
+  -- }
+  -- config.color_scheme = 'gruvbox'
+  -- config.colors = {
+  --   -- background = "#1D1D1D",
+  --   background = "#282828",
+  --   tab_bar = {
+  --     active_tab = {
+  --      bg_color = "#fabd2f" ,
+  --      fg_color = "#282828"
+  --     },
+  --   },
+  -- }
+
 
   config.unix_domains = {
     {
@@ -363,5 +365,21 @@ wezterm.add_to_config_reload_watch_list(wezterm.config_dir)
   end)
   
 
+-- Gnome cursor workaround
+local xcursor_size = nil
+local xcursor_theme = nil
+
+local success, stdout, stderr = wezterm.run_child_process({"gsettings", "get", "org.gnome.desktop.interface", "cursor-theme"})
+if success then
+  xcursor_theme = stdout:gsub("'(.+)'\n", "%1")
+end
+
+local success, stdout, stderr = wezterm.run_child_process({"gsettings", "get", "org.gnome.desktop.interface", "cursor-size"})
+if success then
+  xcursor_size = tonumber(stdout)
+end
+
+  config.xcursor_theme = xcursor_theme
+  config.xcursor_size = xcursor_size
   
 return config

@@ -36,11 +36,11 @@
         ...
       }: let
         extensions = with pkgs.gnomeExtensions; [
-          caffeine
-          run-or-raise
-          just-perfection
-          color-picker
-          looking-glass-button
+          # caffeine
+          # run-or-raise
+          # just-perfection
+          # color-picker
+          # looking-glass-button
         ];
       in {
         home.packages = extensions;
@@ -104,12 +104,12 @@
 
             "org/gnome/shell" = {
               enabled-extensions = [
-                "drive-menu@gnome-shell-extensions.gcampax.github.com"
-                "caffeine@patapon.info"
-                "just-perfection-desktop@just-perfection"
-                "color-picker@tuberry"
-                "run-or-raise@edvard.cz"
-                "lgbutton@glerro.gnome.gitlab.io"
+                # "drive-menu@gnome-shell-extensions.gcampax.github.com"
+                # "caffeine@patapon.info"
+                # "just-perfection-desktop@just-perfection"
+                # "color-picker@tuberry"
+                # "run-or-raise@edvard.cz"
+                # "lgbutton@glerro.gnome.gitlab.io"
               ];
 
               favorite-apps = [
@@ -132,43 +132,43 @@
               minimize-when-unfocused = true;
             };
 
-            "org/gnome/shell/extensions/just-perfection" = {
-              accessibility-menu = false;
-              alt-tab-icon-size = 0;
-              animation = 1;
-              app-menu = true;
-              app-menu-icon = true;
-              app-menu-label = true;
-              background-menu = true;
-              controls-manager-spacing-size = 0;
-              dash = true;
-              dash-icon-size = 0;
-              double-super-to-appgrid = true;
-              gesture = true;
-              hot-corner = false;
-              keyboard-layout = true;
-              osd = true;
-              panel = true;
-              panel-arrow = true;
-              panel-corner-size = 0;
-              panel-in-overview = true;
-              ripple-box = true;
-              search = true;
-              show-apps-button = true;
-              startup-status = 1;
-              theme = false;
-              window-demands-attention-focus = true;
-              window-picker-icon = true;
-              window-preview-caption = true;
-              window-preview-close-button = true;
-              workspace = true;
-              workspace-background-corner-size = 0;
-              workspace-popup = true;
-              workspace-switcher-should-show = false;
-              workspace-wrap-around = true;
-              workspaces-in-app-grid = true;
-              world-clock = false;
-            };
+            # "org/gnome/shell/extensions/just-perfection" = {
+            #   accessibility-menu = false;
+            #   alt-tab-icon-size = 0;
+            #   animation = 1;
+            #   app-menu = true;
+            #   app-menu-icon = true;
+            #   app-menu-label = true;
+            #   background-menu = true;
+            #   controls-manager-spacing-size = 0;
+            #   dash = true;
+            #   dash-icon-size = 0;
+            #   double-super-to-appgrid = true;
+            #   gesture = true;
+            #   hot-corner = false;
+            #   keyboard-layout = true;
+            #   osd = true;
+            #   panel = true;
+            #   panel-arrow = true;
+            #   panel-corner-size = 0;
+            #   panel-in-overview = true;
+            #   ripple-box = true;
+            #   search = true;
+            #   show-apps-button = true;
+            #   startup-status = 1;
+            #   theme = false;
+            #   window-demands-attention-focus = true;
+            #   window-picker-icon = true;
+            #   window-preview-caption = true;
+            #   window-preview-close-button = true;
+            #   workspace = true;
+            #   workspace-background-corner-size = 0;
+            #   workspace-popup = true;
+            #   workspace-switcher-should-show = false;
+            #   workspace-wrap-around = true;
+            #   workspaces-in-app-grid = true;
+            #   world-clock = false;
+            # };
 
             "org/gnome/desktop/peripherals/keyboard" = {
               delay = lib.hm.gvariant.mkUint32 175;

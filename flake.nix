@@ -35,6 +35,7 @@
         (f: p: {
           unstable = channels.unstable;
           wezpy = wezpy.packages.${f.system}.default;
+          prompt_src = inputs.prompt;
         })
       ];
 
@@ -69,6 +70,10 @@
     stylix = {
       url = "github:danth/stylix/d13ffb381c83b6139b9d67feff7addf18f8408fe";
       inputs.nixpkgs.follows = "nixpkgs";
+    };
+    prompt = {
+      url = "github:ElSargo/prompt";
+      flake = false;
     };
   };
 }

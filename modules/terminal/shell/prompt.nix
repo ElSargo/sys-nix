@@ -8,13 +8,7 @@
     pname = "prompt";
     version = "0.0.0";
 
-    src = pkgs.fetchFromGitHub {
-      owner = "ElSargo";
-      repo = "prompt";
-      rev = "1daf6cea280336a15415e67e3073c11bfde7269a";
-
-      hash = "sha256-hNBgHtnlBIfpRFgAIffflXJ2D8x7gvu+rUeoFsKcc6I=";
-    };
+    src = pkgs.prompt_src;
     cargoLock.lockFile = "${src}/Cargo.lock";
   };
 in {

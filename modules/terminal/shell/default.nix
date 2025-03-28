@@ -98,12 +98,12 @@
               }
               hooks: {
                   env_change: {
-                     PWD: {|before, after| if $env.DIR_STACK.changed_by_bd {
+                     PWD: [{|before, after| if $env.DIR_STACK.changed_by_bd {
                         $env.DIR_STACK.changed_by_bd = false;
                       } else {
                         push_dir $after
                       }
-                    }
+                    }]
                   }
                   command_not_found: {
                       |cmd| (

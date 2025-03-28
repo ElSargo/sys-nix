@@ -3,7 +3,7 @@
     ./desktop
     ./essentials
     ./terminal
-    # ./themes
+    ./themes
     ./virt/virt-manager.nix
   ];
 }

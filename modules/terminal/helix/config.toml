@@ -1,5 +1,5 @@
 # theme = "adwaita-dark"
-theme = "gruvbox"
+theme = "hex_steel"
 [editor]
 auto-save = true
 bufferline = "multiple"
@@ -55,5 +55,4 @@ g = "@g"
 
 [keys.insert]
 "C-q" = ["record_macro"]
-
 

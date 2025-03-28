@@ -6,7 +6,7 @@
 }: {
   options = {
     helix-package = lib.mkOption {
-      default = pkgs.unstable.evil-helix;
+      default = pkgs.unstable.helix;
       type = lib.types.package;
     };
   };
