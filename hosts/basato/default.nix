@@ -8,7 +8,6 @@
   boot = {
     loader.grub.configurationLimit = 10;
     tmp.cleanOnBoot = true;
-    # kernelPackages = pkgs.unstable.linuxPackages_zen;
     kernelPackages = with pkgs; linuxPackagesFor linuxPackages_cachyos;
     kernelParams = ["i8042.dumbkbd=1"];
     kernelModules = ["kvm-intel" "acpi_ec" "ec_sys" "msi-ec"];
@@ -52,16 +51,19 @@
 
   imports = [(modulesPath + "/installer/scan/not-detected.nix")];
 
+  fileSystems."/boot" = {
+    device = "/dev/disk/by-uuid/DDFD-8F0E";
+    fsType = "vfat";
+  };
   fileSystems."/" = {
     device = "/dev/disk/by-label/NixOS";
     fsType = "ext4";
   };
 
-  # swapDevices = [{device = "/dev/disk/by-label/Swap";}];
-
-  fileSystems."/boot" = {
-    device = "/dev/disk/by-uuid/DDFD-8F0E";
-    fsType = "vfat";
+  nixpkgs.config = {
+    packageOverrides = pkgs: {
+      vaapiIntel = pkgs.vaapiIntel.override {enableHybridCodec = true;};
+    };
   };
 
   networking.useDHCP = lib.mkDefault true;

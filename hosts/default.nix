@@ -7,7 +7,7 @@ in
     acc
     // {
       "${head (split "\\." (last (split "/" (toString x))))}" = {
-        modules = [x];
+        modules = [x {services.swapspace.enable = true;}];
       };
     })
   {}
