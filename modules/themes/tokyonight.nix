@@ -5,6 +5,7 @@
 }: {
   config = {
     theme = config.mkTheme "tokyo-night-dark";
+
     stylix = {
       autoEnable = true;
       targets.grub = {

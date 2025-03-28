@@ -53,11 +53,11 @@
     "base16-vim": {
       "flake": false,
       "locked": {
-        "lastModified": 1731949548,
-        "narHash": "sha256-XIDexXM66sSh5j/x70e054BnUsviibUShW7XhbDGhYo=",
+        "lastModified": 1742865606,
+        "narHash": "sha256-pa/tL778j11FHzS6TTKA96q8EWxAEneeMeXG7kDO0/Q=",
         "owner": "tinted-theming",
         "repo": "base16-vim",
-        "rev": "61165b1632409bd55e530f3dbdd4477f011cadc6",
+        "rev": "3bca166be9ad02e28934fd6e5c38c31f59cd28fe",
         "type": "github"
       },
       "original": {
