@@ -10,6 +10,7 @@
     stylix,
     helix,
     wezpy,
+    nixos-cachyos-kernel,
     ...
   }:
     utils.lib.mkFlake {
@@ -47,6 +48,7 @@
           ./users
           home-manager.nixosModules.home-manager
           stylix.nixosModules.stylix
+          nixos-cachyos-kernel.nixosModules.default
         ];
       };
 
@@ -75,5 +77,6 @@
       url = "github:ElSargo/prompt";
       flake = false;
     };
+    nixos-cachyos-kernel.url = "github:drakon64/nixos-cachyos-kernel";
   };
 }

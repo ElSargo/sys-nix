@@ -304,6 +304,21 @@
         "type": "github"
       }
     },
+    "nixos-cachyos-kernel": {
+      "locked": {
+        "lastModified": 1742394059,
+        "narHash": "sha256-knN9uM2TZX0NvH9mKnpY8ukk4zuTfhljmTYnEAmxfHI=",
+        "owner": "drakon64",
+        "repo": "nixos-cachyos-kernel",
+        "rev": "e585b7a3fca1e7af76da44c4205c87fb53637b70",
+        "type": "github"
+      },
+      "original": {
+        "owner": "drakon64",
+        "repo": "nixos-cachyos-kernel",
+        "type": "github"
+      }
+    },
     "nixpkgs": {
       "locked": {
         "lastModified": 1728018373,
@@ -371,6 +386,7 @@
       "inputs": {
         "helix": "helix",
         "home-manager": "home-manager",
+        "nixos-cachyos-kernel": "nixos-cachyos-kernel",
         "nixpkgs": "nixpkgs_3",
         "prompt": "prompt",
         "stylix": "stylix",

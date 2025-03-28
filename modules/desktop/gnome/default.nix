@@ -13,7 +13,7 @@
     services.gnome.sushi.enable = true;
     services.gnome.gnome-browser-connector.enable = true;
     environment = {
-      systemPackages = with pkgs; [valent libnotify];
+      systemPackages = with pkgs; [valent libnotify morewaita-icon-theme];
       gnome.excludePackages = with pkgs;
         [
           cheese # webcam tool

@@ -8,7 +8,8 @@
   boot = {
     loader.grub.configurationLimit = 10;
     tmp.cleanOnBoot = true;
-    kernelPackages = pkgs.unstable.linuxPackages_zen;
+    # kernelPackages = pkgs.unstable.linuxPackages_zen;
+    kernelPackages = with pkgs; linuxPackagesFor linuxPackages_cachyos;
     kernelParams = ["i8042.dumbkbd=1"];
     kernelModules = ["kvm-intel" "acpi_ec" "ec_sys" "msi-ec"];
 
