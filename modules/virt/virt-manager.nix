@@ -10,7 +10,6 @@
     onBoot = "ignore";
 
     qemu = {
-      package = pkgs.qemu_kvm;
       ovmf.enable = true;
       ovmf.packages = [pkgs.OVMFFull.fd];
       swtpm.enable = true;
@@ -42,19 +41,20 @@
     win-spice
     libGL
     libGLU
-    distrobox
-    boxbuddy
   ];
-  virtualisation.podman.enable = true;
   users.users.sargo.extraGroups = ["libvirtd"];
-  programs.dconf = {
-    enable = true;
-    # For home manager
-    # settings = {
-    #   "org/virt-manager/virt-manager/connections" = {
-    #     autoconnect = ["qemu:///system"];
-    #     uris = ["qemu:///system"];
-    #   };
-    # };
-  };
+  home-manager.sharedModules = [
+    {
+      dconf = {
+        enable = true;
+        settings = {
+          # For home manager
+          "org/virt-manager/virt-manager/connections" = {
+            autoconnect = ["qemu:///system"];
+            uris = ["qemu:///system"];
+          };
+        };
+      };
+    }
+  ];
 }

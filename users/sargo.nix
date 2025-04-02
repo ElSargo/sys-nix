@@ -6,7 +6,6 @@
     extraGroups = ["networkmanager" "wheel" "libvirt-qemu" "video" "ydotool"];
   };
   home-manager.users.sargo = {
-    browser = "firefox";
     programs = {
       nix-index.enable = true;
       home-manager.enable = true;

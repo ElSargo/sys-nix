@@ -12,7 +12,9 @@
     wezpy,
     nixos-cachyos-kernel,
     ...
-  }:
+  }: let
+    pkgs = self.pkgs.x86_64-linux.nixpkgs;
+  in
     utils.lib.mkFlake {
       inherit self inputs;
       channelsConfig = {
@@ -23,6 +25,7 @@
         (f: p: {
           unstable = channels.unstable;
           wezpy = wezpy.packages.${f.system}.default;
+          quickshell = inputs.quickshell.packages.${f.system}.default;
           prompt_src = inputs.prompt;
         })
       ];
@@ -65,5 +68,9 @@
       flake = false;
     };
     nixos-cachyos-kernel.url = "github:drakon64/nixos-cachyos-kernel";
+    quickshell = {
+      url = "git+https://git.outfoxxed.me/outfoxxed/quickshell";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 }

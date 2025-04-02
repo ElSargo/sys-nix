@@ -26,15 +26,14 @@ wezterm.add_to_config_reload_watch_list(wezterm.config_dir)
   config.set_environment_variables = {
     SSH_AUTH_SOCK = "/run/user/1000/keyring/ssh"
   }
-  -- config.tiling_desktop_environments = {
-  --   'Wayland'
-  -- }
-  -- config.enable_tab_bar = false
+  config.tiling_desktop_environments = {
+    'Wayland'
+  }
   -- config.show_tabs_in_tab_bar = false
   -- config.show_new_tab_button_in_tab_bar = false
   config.tab_bar_at_bottom = true
   -- config.hide_tab_bar_if_only_one_tab = true
-  config.enable_wayland = false
+  config.enable_wayland = true
   config.front_end = "WebGpu"
   config.font = wezterm.font {
     family = 'JetBrains Mono Nerd Font',

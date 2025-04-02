@@ -1,0 +1,5 @@
+[language-server.qmlls]
+command = "qmlls"
+args = ["-E"]
+config = { provideFormatter = true }
+environment = { "QML2_IMPORT_PATH" = "/nix/store/k6d4rr2qbdcff6p6kadj30vd4r9w2z27-quickshell-0.1.0/lib/qt-6/qml/:/nix/store/qpf0mp4gn9ln1cv1l143fzvf8mgs2a1s-qtdeclarative-6.8.2/lib/qt-6/qml/" }

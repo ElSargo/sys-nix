@@ -1,4 +1,4 @@
-{pkgs, ...}: {
+{
   programs.nix-index.enable = true;
   programs.command-not-found.enable = false;
 
@@ -19,8 +19,12 @@
       options = "--delete-older-than 7d";
     };
   };
-  environment.systemPackages = with pkgs; [
-    pkgs.nixVersions.nix_2_18
-    fup-repl
+  home-manager.sharedModules = [
+    ({pkgs, ...}: {
+      home.packages = with pkgs; [
+        pkgs.nixVersions.nix_2_18
+        fup-repl
+      ];
+    })
   ];
 }
